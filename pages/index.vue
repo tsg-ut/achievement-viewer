@@ -10,10 +10,10 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr v-for="{rank, achievements, user} in ranking" :key="user">
+				<tr v-for="{rank, achievements, user} in ranking" :key="user.id">
 					<td><strong>{{rank}}</strong></td>
 					<td>
-						{{user}}
+						<nuxt-link :to="`/users/${user.id}`">{{getUserName(user)}}</nuxt-link>
 						<span
 							v-for="achievement in achievements"
 							:key="achievement.id"
@@ -35,6 +35,7 @@
 </template>
 
 <script>
+import get from 'lodash/get.js';
 import groupBy from 'lodash/groupBy.js';
 import {mapState} from 'vuex';
 import randomcolor from 'randomcolor';
@@ -60,7 +61,10 @@ export default {
 		}),
 		ranking() {
 			const entries = Object.entries(groupBy(this.achievements, ({user}) => user))
-				.map(([user, achievements]) => ({user, achievements: achievements.sort((a, b) => a.name.localeCompare(b.name))}));
+				.map(([user, achievements]) => ({
+					user: this.$store.getters['users/getById'](user),
+					achievements: achievements.sort((a, b) => a.name.localeCompare(b.name)),
+				}));
 			entries.sort((a, b) => b.achievements.length - a.achievements.length);
 			let rank = 1;
 			let previousLength = Infinity;
@@ -80,7 +84,8 @@ export default {
 		}
 	},
 	mounted() {
-		this.$store.dispatch('achievements/bindList');
+		this.$store.dispatch('achievements/initList');
+		this.$store.dispatch('users/initList');
 	},
 	methods: {
 		handleClickButton() {
@@ -95,6 +100,10 @@ export default {
 				luminosity: 'bright',
 				seed: id,
 			});
+		},
+		getUserName(user) {
+			const name = get(user, ['info', 'profile', 'display_name'], false) || get(user, ['info', 'real_name'], false) || user.id;
+			return `@${name}`;
 		},
 	},
 	head() {

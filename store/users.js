@@ -28,7 +28,11 @@ const localGetters = {
 			if (state.data[id] !== undefined) {
 				return state.data[id];
 			}
-			return state.list.find((datum) => datum.id === id);
+			const user = state.list.find((datum) => datum.id === id);
+			if (user === undefined) {
+				return {id};
+			}
+			return user;
 		}
 	),
 };
@@ -40,8 +44,9 @@ const localActions = {
 			commit('initList');
 		}
 	},
-	bindList: firestoreAction(async ({bindFirestoreRef}) => {
+	bindList: firestoreAction(async ({bindFirestoreRef, commit}) => {
 		await bindFirestoreRef('list', usersRef);
+		commit('initList');
 	}),
 	bindById: firestoreAction(async ({bindFirestoreRef, state, dispatch, getters, commit}, id) => {
 		const localCharacter = getters.getById(id);
