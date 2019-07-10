@@ -41,6 +41,10 @@
 								</div>
 							</div>
 							<p>{{datum.condition}}</p>
+							<p class="has-text-right is-size-7">
+                初達成者:
+                {{getUserName(achievements[0].user)}}
+							</p>
 						</div>
 					</div>
 				</div>
@@ -77,7 +81,7 @@ export default {
 					return [];
 				}
 
-				return state.achievements.list.slice().sort((a, b) => a.id.localeCompare(b.id));
+				return state.achievements.list;
 			},
 			achievementData: (state) => (
 				state.achievementData.list
@@ -88,7 +92,7 @@ export default {
 				.map(([name, achievements]) => ({
 					name,
 					datum: this.$store.getters['achievementData/getById'](name),
-					achievements,
+					achievements: achievements.sort((a, b) => a.date.seconds - b.date.seconds),
 				}));
 			entries.sort((a, b) => b.achievements.length - a.achievements.length);
 			return entries;
@@ -102,6 +106,7 @@ export default {
 	mounted() {
 		this.$store.dispatch('achievements/initList');
 		this.$store.dispatch('achievementData/initList');
+		this.$store.dispatch('users/initList');
 	},
 	methods: {
 		handleClickButton() {
@@ -117,7 +122,8 @@ export default {
 				seed: id,
 			});
 		},
-		getUserName(user) {
+		getUserName(userId) {
+			const user = this.$store.getters['users/getById'](userId);
 			const name = get(user, ['info', 'profile', 'display_name'], false) || get(user, ['info', 'real_name'], false) || user.id;
 			return `@${name}`;
 		},

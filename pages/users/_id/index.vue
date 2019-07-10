@@ -64,6 +64,9 @@
 								</div>
 							</div>
 							<p>{{datum.condition}}</p>
+							<p class="has-text-right is-size-7">
+								<time :datetime="getDateString(date)">{{getDateStringJa(date)}}</time>
+							</p>
 						</div>
 					</div>
 				</div>
@@ -183,6 +186,14 @@ export default {
 		},
 		getDifficultyRank(difficulty) {
 			return {baby: 1, easy: 2, medium: 3, hard: 4, professional: 5}[difficulty] || 0;
+		},
+		getDateString(date) {
+			const d = new Date(date.seconds * 1000);
+			return d.toISOString().split('T')[0];
+		},
+		getDateStringJa(date) {
+			const d = new Date(date.seconds * 1000);
+			return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
 		},
 	},
 	head() {
