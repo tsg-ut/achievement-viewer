@@ -1,3 +1,4 @@
+import Vue from 'vue';
 import db from '~/components/utils/db.js';
 import {firestoreAction} from 'vuexfire';
 
@@ -15,7 +16,7 @@ const localMutations = {
 		state.isInitList = process.browser;
 	},
 	initData(state, id) {
-		state.isInitData[id] = process.browser;
+		Vue.set(state.isInitData, id, process.browser);
 	},
 };
 
@@ -23,11 +24,12 @@ const localGetters = {
 	list: (state) => state.list,
 	data: (state) => state.data,
 	getByUser: (state) => (
-		(user) => (
-			[...state.list, ...Object.values(state.data)].filter((datum) => (
+		(user) => {
+			const list = state.isInitList ? state.list : Object.entries(state).filter(([key]) => key.startsWith('data_')).map(([, value]) => value);
+			return list.filter((datum) => (
 				datum.user === user
-			))
-		)
+			));
+		}
 	),
 };
 
@@ -38,9 +40,8 @@ const localActions = {
 			commit('initList');
 		}
 	},
-	bindList: firestoreAction(async ({bindFirestoreRef, commit}) => {
+	bindList: firestoreAction(async ({bindFirestoreRef}) => {
 		await bindFirestoreRef('list', achievementsRef);
-		commit('initList');
 	}),
 	bind: firestoreAction(async ({bindFirestoreRef, state, commit}, id) => {
 		if (state.isInitData[id] === process.browser || state.isInitList === process.browser) {
@@ -48,8 +49,8 @@ const localActions = {
 		}
 
 		const docRef = achievementsRef.doc(id);
+		await bindFirestoreRef(`data_${id}`, docRef);
 		commit('initData', id);
-		await bindFirestoreRef(`data.${id}`, docRef);
 	}),
 };
 

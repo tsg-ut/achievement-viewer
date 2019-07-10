@@ -25,8 +25,8 @@ const localGetters = {
 	data: (state) => state.data,
 	getById: (state) => (
 		(id) => {
-			if (state.data[id] !== undefined) {
-				return state.data[id];
+			if (state[`data_${id}`] !== undefined) {
+				return state[`data_${id}`];
 			}
 			const user = state.list.find((datum) => datum.id === id);
 			if (user === undefined) {
@@ -56,7 +56,7 @@ const localActions = {
 
 		const user = await usersRef.doc(id).get();
 		if (user.exists) {
-			const userBindPromise = bindFirestoreRef(`data.${user.id}`, user.ref);
+			const userBindPromise = bindFirestoreRef(`data_${user.id}`, user.ref);
 			commit('initData', user.id);
 
 			const achievements = await achievementsRef.where('user', '==', user.id).get();

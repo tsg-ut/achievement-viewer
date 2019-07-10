@@ -127,28 +127,10 @@ export default {
 		Promise.all([
 			this.$store.dispatch('achievementData/initList'),
 			this.$store.dispatch('users/bindById', this.$route.params.id),
+			this.$store.dispatch('users/initList'),
 		]).then(() => {
 			this.isLoading = false;
 		});
-	},
-	methods: {
-		handleClickButton() {
-			if (!this.online) {
-				return;
-			}
-
-			this.$store.dispatch('increment');
-		},
-		getColor(id) {
-			return randomcolor({
-				luminosity: 'bright',
-				seed: id,
-			});
-		},
-		getUserName(user) {
-			const name = get(user, ['info', 'profile', 'display_name'], false) || get(user, ['info', 'real_name'], false) || user.id;
-			return `@${name}`;
-		},
 	},
 	head() {
 		return {
