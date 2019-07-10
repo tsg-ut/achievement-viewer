@@ -13,7 +13,10 @@
 				<tr v-for="{rank, achievements, user} in ranking" :key="user.id">
 					<td><strong>{{rank}}</strong></td>
 					<td>
-						<nuxt-link :to="`/users/${user.id}`">{{getUserName(user)}}</nuxt-link>
+						<nuxt-link :to="`/users/${user.id}`">
+							<img class="index-icon" :src="getUserIcon(user)">
+							{{getUserName(user)}}
+						</nuxt-link>
 						<span
 							v-for="achievement in achievements"
 							:key="achievement.id"
@@ -112,6 +115,9 @@ export default {
 			const name = get(user, ['info', 'profile', 'display_name'], false) || get(user, ['info', 'real_name'], false) || user.id;
 			return `@${name}`;
 		},
+		getUserIcon(user) {
+			return get(user, ['info', 'profile', 'image_24'], 'https://placehold.it/24x24');
+		},
 		getCategoryColor(category) {
 			return getCategoryColor(category);
 		},
@@ -125,4 +131,7 @@ export default {
 </script>
 
 <style>
+.index-icon {
+	vertical-align: bottom;
+}
 </style>

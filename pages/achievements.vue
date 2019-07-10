@@ -42,8 +42,8 @@
 							</div>
 							<p>{{datum.condition}}</p>
 							<p class="has-text-right is-size-7">
-                初達成者:
-                {{getUserName(achievements[0].user)}}
+								初達成者:
+								{{getUserName(achievements[0].user)}}
 							</p>
 						</div>
 					</div>
