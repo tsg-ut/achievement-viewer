@@ -10,13 +10,27 @@
 							<p class="title">{{datum.title}}</p>
 							<div class="columns">
 								<div class="column achievements-progress">
-									<progress class="progress is-danger" :value="achievements.length" :max="ranking[0].achievements.length">90%</progress>
+									<progress
+										class="progress is-danger"
+										:value="achievements.length"
+										:max="ranking[0].achievements.length"
+									/>
 								</div>
-								<div class="column is-2">
+								<div class="column is-narrow">
 									<p class="subtitle is-6 achievements-count"><strong>{{achievements.length}}人</strong>が<wbr>解除済み</p>
 								</div>
 							</div>
 							<p>{{datum.condition}}</p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="column is-half">
+				<div class="card">
+					<div class="card-content">
+						<div class="content">
+							<p class="title">+{{achievementData.length - ranking.length}}個の未解除の実績</p>
 						</div>
 					</div>
 				</div>
@@ -44,6 +58,9 @@ export default {
 
 				return state.achievements.list.slice().sort((a, b) => a.id.localeCompare(b.id));
 			},
+			achievementData: (state) => (
+				state.achievementData.list
+			),
 		}),
 		ranking() {
 			const entries = Object.entries(groupBy(this.achievements, ({name}) => name))
