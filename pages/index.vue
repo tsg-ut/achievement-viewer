@@ -23,7 +23,7 @@
 								height: '0.5rem',
 								marginLeft: '0.3rem',
 								borderRadius: '100%',
-								backgroundColor: getColor(achievement.id),
+								backgroundColor: getColor(achievement.name),
 							}"
 						/>
 					</td>
@@ -60,7 +60,7 @@ export default {
 		}),
 		ranking() {
 			const entries = Object.entries(groupBy(this.achievements, ({user}) => user))
-				.map(([user, achievements]) => ({user, achievements}));
+				.map(([user, achievements]) => ({user, achievements: achievements.sort((a, b) => a.name.localeCompare(b.name))}));
 			entries.sort((a, b) => b.achievements.length - a.achievements.length);
 			let rank = 1;
 			let previousLength = Infinity;
