@@ -1,39 +1,54 @@
 <template>
 	<div class="container">
-		<div>
-			<logo/>
-			<h1 class="title">
-				achievement-viewer
-			</h1>
-			<h2 class="subtitle">
-				TSGerが集めた実績を見られるページ
-			</h2>
-			<div class="links">
-				<a
-					href="https://nuxtjs.org/"
-					target="_blank"
-					class="button--green"
-				>
-					Documentation
-				</a>
-				<a
-					href="https://github.com/nuxt/nuxt.js"
-					target="_blank"
-					class="button--grey"
-				>
-					GitHub
-				</a>
-			</div>
-		</div>
+		{{users}}
 	</div>
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue';
+import {mapGetters, mapState} from 'vuex';
 
 export default {
-	components: {
-		Logo,
+	data() {
+		return {
+			online: true,
+		};
+	},
+	computed: {
+		...mapGetters(['users']),
+		...mapState({
+			isLoading: (state) => (
+				!state.users.isInitList
+			),
+			users: (state) => {
+				if (!state.users.list) {
+					return [];
+				}
+
+				return state.users.list.slice().sort((a, b) => a.id.localeCompare(b.id));
+			},
+		}),
+	},
+	async fetch({store}) {
+		if (!process.browser) {
+			await store.dispatch('users/bindList');
+		}
+	},
+	mounted() {
+		this.$store.dispatch('users/bindList');
+	},
+	methods: {
+		handleClickButton() {
+			if (!this.online) {
+				return;
+			}
+
+			this.$store.dispatch('increment');
+		},
+	},
+	head() {
+		return {
+			title: 'achievement-viewer',
+		};
 	},
 };
 </script>
