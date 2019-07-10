@@ -33,6 +33,7 @@
     "firebase": "^6.2.4",
     "firebase-admin": "^8.2.0",
     "nodemon": "^1.18.9",
+    "randomcolor": "^0.5.4",
     "vuexfire": "^3.0.1"
   }
 }
