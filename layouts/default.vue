@@ -2,9 +2,9 @@
 	<div>
 		<nav class="navbar is-black" role="navigation" aria-label="main navigation">
 			<div class="navbar-brand">
-				<a class="navbar-item" href="/">
+				<nuxt-link class="navbar-item" to="/">
 					achievement-viewer
-				</a>
+				</nuxt-link>
 
 				<a
 					role="button"
@@ -21,13 +21,13 @@
 
 			<div id="navbarBasicExample" class="navbar-menu">
 				<div class="navbar-start">
-					<a class="navbar-item">
+					<nuxt-link class="navbar-item" to="/">
 						ホーム
-					</a>
+					</nuxt-link>
 
-					<a class="navbar-item">
+					<nuxt-link class="navbar-item" to="/achievements">
 						実績一覧
-					</a>
+					</nuxt-link>
 				</div>
 			</div>
 		</nav>
@@ -46,5 +46,9 @@ html {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   box-sizing: border-box;
+}
+
+.container {
+  padding-top: 2rem;
 }
 </style>

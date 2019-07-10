@@ -56,18 +56,16 @@ const localActions = {
 
 		const user = await usersRef.doc(id).get();
 		if (user.exists) {
-			const characterBindPromise = bindFirestoreRef(`data.${user.id}`, user.ref);
+			const userBindPromise = bindFirestoreRef(`data.${user.id}`, user.ref);
 			commit('initData', user.id);
 
-			/*
 			const achievements = await achievementsRef.where('user', '==', user.id).get();
 			await Promise.all([
-				characterBindPromise,
-				...couplings.docs.map((coupling) => (
-					dispatch('couplings/bind', coupling.id, {root: true})
+				userBindPromise,
+				...achievements.docs.map((achievement) => (
+					dispatch('achievements/bind', achievement.id, {root: true})
 				)),
 			]);
-			*/
 		}
 	}),
 };

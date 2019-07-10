@@ -43,7 +43,7 @@ const localActions = {
 		commit('initList');
 	}),
 	bind: firestoreAction(async ({bindFirestoreRef, state, commit}, id) => {
-		if (state.isInitData[id] === process.browser) {
+		if (state.isInitData[id] === process.browser || state.isInitList === process.browser) {
 			return;
 		}
 

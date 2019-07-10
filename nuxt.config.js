@@ -55,6 +55,10 @@ export default {
 		},
 	},
 
+	generate: {
+		fallback: '404.html',
+	},
+
 	...(process.env.DEPLOY_ENV === 'GH_PAGES' ? {
 		router: {
 			base: '/achievement-viewer/',
