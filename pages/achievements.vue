@@ -5,9 +5,29 @@
 		<div class="columns is-multiline">
 			<div v-for="{achievements, datum, name} in ranking" :key="name" class="column is-half">
 				<div class="card">
+					<div class="card-image">
+						<div class="image achievements-color" :style="{backgroundColor: getCategoryColor(datum.category)}"/>
+					</div>
 					<div class="card-content">
 						<div class="content">
-							<p class="title">{{datum.title}}</p>
+							<p class="title">
+								{{datum.title}}
+								<span v-if="datum.difficulty === 'baby'" class="tag is-light">
+									Baby
+								</span>
+								<span v-if="datum.difficulty === 'easy'" class="tag is-success">
+									Easy
+								</span>
+								<span v-if="datum.difficulty === 'medium'" class="tag is-link">
+									Medium
+								</span>
+								<span v-if="datum.difficulty === 'hard'" class="tag is-warning">
+									Hard
+								</span>
+								<span v-if="datum.difficulty === 'professional'" class="tag is-danger">
+									Pro
+								</span>
+							</p>
 							<div class="columns">
 								<div class="column achievements-progress">
 									<progress
@@ -41,6 +61,7 @@
 
 <script>
 import get from 'lodash/get.js';
+import {getCategoryColor} from '@/components/utils/utils.js';
 import groupBy from 'lodash/groupBy.js';
 import {mapState} from 'vuex';
 import randomcolor from 'randomcolor';
@@ -100,6 +121,9 @@ export default {
 			const name = get(user, ['info', 'profile', 'display_name'], false) || get(user, ['info', 'real_name'], false) || user.id;
 			return `@${name}`;
 		},
+		getCategoryColor(category) {
+			return getCategoryColor(category);
+		},
 	},
 	head() {
 		return {
@@ -116,5 +140,8 @@ export default {
 .achievements-progress {
 	display: flex;
 	align-items: center;
+}
+.achievements-color {
+	height: 0.3rem;
 }
 </style>

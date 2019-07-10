@@ -23,7 +23,7 @@
 								height: '0.5rem',
 								marginLeft: '0.3rem',
 								borderRadius: '100%',
-								backgroundColor: getColor(achievement.name),
+								backgroundColor: getCategoryColor(achievement.category),
 							}"
 						/>
 					</td>
@@ -36,6 +36,7 @@
 
 <script>
 import get from 'lodash/get.js';
+import {getCategoryColor} from '@/components/utils/utils.js';
 import groupBy from 'lodash/groupBy.js';
 import {mapState} from 'vuex';
 import randomcolor from 'randomcolor';
@@ -56,14 +57,19 @@ export default {
 					return [];
 				}
 
-				return state.achievements.list.slice().sort((a, b) => a.id.localeCompare(b.id));
+				return state.achievements.list;
 			},
+			achievementData: (state) => (
+				state.achievementData.list
+			),
 		}),
 		ranking() {
 			const entries = Object.entries(groupBy(this.achievements, ({user}) => user))
 				.map(([user, achievements]) => ({
 					user: this.$store.getters['users/getById'](user),
-					achievements: achievements.sort((a, b) => a.name.localeCompare(b.name)),
+					achievements: achievements
+						.map(({name, id}) => ({...this.$store.getters['achievementData/getById'](name), id}))
+						.sort((a, b) => (a.category && b.category) ? a.category.localeCompare(b.category) : 0),
 				}));
 			entries.sort((a, b) => b.achievements.length - a.achievements.length);
 			let rank = 1;
@@ -85,6 +91,7 @@ export default {
 	},
 	mounted() {
 		this.$store.dispatch('achievements/initList');
+		this.$store.dispatch('achievementData/initList');
 		this.$store.dispatch('users/initList');
 	},
 	methods: {
@@ -104,6 +111,9 @@ export default {
 		getUserName(user) {
 			const name = get(user, ['info', 'profile', 'display_name'], false) || get(user, ['info', 'real_name'], false) || user.id;
 			return `@${name}`;
+		},
+		getCategoryColor(category) {
+			return getCategoryColor(category);
 		},
 	},
 	head() {

@@ -26,9 +26,29 @@
 		<div class="columns is-multiline">
 			<div v-for="{datum, name: id, date} in achievements" :key="id" class="column is-one-third">
 				<div class="card">
+					<div class="card-image">
+						<div class="image achievements-color" :style="{backgroundColor: getCategoryColor(datum.category)}"/>
+					</div>
 					<div class="card-content">
 						<div class="content">
-							<p class="title">{{datum.title}}</p>
+							<p class="title">
+								{{datum.title}}
+								<span v-if="datum.difficulty === 'baby'" class="tag is-light">
+									Baby
+								</span>
+								<span v-if="datum.difficulty === 'easy'" class="tag is-success">
+									Easy
+								</span>
+								<span v-if="datum.difficulty === 'medium'" class="tag is-link">
+									Medium
+								</span>
+								<span v-if="datum.difficulty === 'hard'" class="tag is-warning">
+									Hard
+								</span>
+								<span v-if="datum.difficulty === 'professional'" class="tag is-danger">
+									Pro
+								</span>
+							</p>
 							<div v-if="datum.counter" class="columns">
 								<div class="column achievements-progress">
 									<progress
@@ -53,9 +73,29 @@
 		<div class="columns is-multiline">
 			<div v-for="datum in lockedAchievements" :key="datum.name" class="column is-one-third">
 				<div class="card">
+					<div class="card-image">
+						<div class="image achievements-color" :style="{backgroundColor: getCategoryColor(datum.category)}"/>
+					</div>
 					<div class="card-content">
 						<div class="content">
-							<p class="title">??????</p>
+							<p class="title">
+								??????
+								<span v-if="datum.difficulty === 'baby'" class="tag is-light">
+									Baby
+								</span>
+								<span v-if="datum.difficulty === 'easy'" class="tag is-success">
+									Easy
+								</span>
+								<span v-if="datum.difficulty === 'medium'" class="tag is-link">
+									Medium
+								</span>
+								<span v-if="datum.difficulty === 'hard'" class="tag is-warning">
+									Hard
+								</span>
+								<span v-if="datum.difficulty === 'professional'" class="tag is-danger">
+									Pro
+								</span>
+							</p>
 							<div v-if="datum.counter" class="columns">
 								<div class="column achievements-progress">
 									<progress
@@ -81,8 +121,8 @@
 
 <script>
 import get from 'lodash/get.js';
+import {getCategoryColor} from '@/components/utils/utils.js';
 import {mapState} from 'vuex';
-import randomcolor from 'randomcolor';
 
 export default {
 	data() {
@@ -108,7 +148,12 @@ export default {
 				name,
 				date,
 				datum: this.$store.getters['achievementData/getById'](name),
-			}));
+			})).sort((a, b) => {
+				if (a.datum.difficulty && b.datum.difficulty) {
+					return this.getDifficultyRank(b.datum.difficulty) - this.getDifficultyRank(a.datum.difficulty);
+				}
+				return 0;
+			});
 		},
 		lockedAchievements() {
 			const unlockedAchievements = new Set(this.$store.getters['achievements/getByUser'](this.$route.params.id).map(({name}) => name));
@@ -132,6 +177,14 @@ export default {
 			this.isLoading = false;
 		});
 	},
+	methods: {
+		getCategoryColor(category) {
+			return getCategoryColor(category);
+		},
+		getDifficultyRank(difficulty) {
+			return {baby: 1, easy: 2, medium: 3, hard: 4, professional: 5}[difficulty] || 0;
+		},
+	},
 	head() {
 		return {
 			title: 'achievement-viewer',
@@ -147,5 +200,8 @@ export default {
 .achievements-progress {
 	display: flex;
 	align-items: center;
+}
+.achievements-color {
+	height: 0.3rem;
 }
 </style>
