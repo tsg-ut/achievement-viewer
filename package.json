@@ -10,7 +10,8 @@
     "dev": "nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
-    "generate": "nuxt generate"
+    "generate": "cross-env DEPLOY_ENV=GH_PAGES nuxt generate",
+    "deploy": "npm run generate && cd dist && git init && git remote add origin https://github.com/tsg-ut/achievement-viewer.git && git fetch origin && git symbolic-ref HEAD refs/remotes/origin/gh-pages && git add . && git commit -m \"Update build\" && git push -u origin HEAD:gh-pages && cd .."
   },
   "dependencies": {
     "@nuxtjs/bulma": "^1.2.1",
@@ -21,6 +22,7 @@
     "@nuxtjs/eslint-config": "^0.0.1",
     "@nuxtjs/eslint-module": "^0.0.1",
     "babel-eslint": "^10.0.1",
+    "cross-env": "^5.2.0",
     "eslint": "^5.15.1",
     "eslint-config-standard": ">=12.0.0",
     "eslint-plugin-import": ">=2.16.0",

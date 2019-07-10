@@ -53,11 +53,11 @@ export default {
 				},
 			},
 		},
-
-		/*
-    ** You can extend webpack config here
-    */
-		extend(config, ctx) {
-		},
 	},
+
+	...(process.env.DEPLOY_ENV === 'GH_PAGES' ? {
+		router: {
+			base: '/achievement-viewer/',
+		},
+	} : {}),
 };
