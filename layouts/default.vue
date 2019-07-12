@@ -32,23 +32,36 @@
 			</div>
 		</nav>
 		<nuxt/>
+		<footer class="footer">
+			<div class="content has-text-centered">
+				<p>
+					Achievement Viewer ●
+					by <a href="https://github.com/hakatashi">@hakatashi</a> ●
+					<a href="https://github.com/tsg-ut/achievement-viewer">GitHub</a>
+				</p>
+			</div>
+		</footer>
 	</div>
 </template>
 
 <style>
 html {
-  font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI',
-    Roboto, 'Helvetica Neue', Arial, sans-serif;
-  font-size: 16px;
-  word-spacing: 1px;
-  -ms-text-size-adjust: 100%;
-  -webkit-text-size-adjust: 100%;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
-  box-sizing: border-box;
+	font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+		Roboto, 'Helvetica Neue', Arial, sans-serif;
+	font-size: 16px;
+	word-spacing: 1px;
+	-ms-text-size-adjust: 100%;
+	-webkit-text-size-adjust: 100%;
+	-moz-osx-font-smoothing: grayscale;
+	-webkit-font-smoothing: antialiased;
+	box-sizing: border-box;
 }
 
 .container {
-  padding-top: 2rem;
+	padding: 2rem 1rem 0 1rem;
+}
+
+.footer {
+	margin-top: 3rem;
 }
 </style>

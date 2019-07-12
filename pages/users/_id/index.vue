@@ -1,12 +1,12 @@
 <template>
 	<div class="container">
 		<progress v-if="isLoading" class="progress is-small is-primary" max="100">15%</progress>
-		<div class="columns">
+		<div class="columns has-text-centered">
 			<div class="column is-narrow">
-				<img :src="icon">
+				<img :src="icon" :srcset="`${icon} 1x, ${icon2x} 2x`">
 			</div>
 			<div class="column">
-				<p class="title">{{name}}の解除した実績一覧</p>
+				<p class="title user-title">{{name}}の<wbr>解除した<wbr>実績一覧</p>
 				<div class="columns">
 					<div class="column achievements-progress">
 						<progress
@@ -160,10 +160,15 @@ export default {
 		},
 		lockedAchievements() {
 			const unlockedAchievements = new Set(this.$store.getters['achievements/getByUser'](this.$route.params.id).map(({name}) => name));
-			return this.achievementData.filter(({id}) => !unlockedAchievements.has(id));
+			return this.achievementData
+				.filter(({id}) => !unlockedAchievements.has(id))
+				.sort((a, b) => (a.category && b.category) ? a.category.localeCompare(b.category) : 0);
 		},
 		icon() {
 			return get(this.user, ['info', 'profile', 'image_72'], 'https://placehold.it/72x72');
+		},
+		icon2x() {
+			return get(this.user, ['info', 'profile', 'image_192'], 'https://placehold.it/192x192');
 		},
 	},
 	async fetch({store}) {
@@ -214,5 +219,8 @@ export default {
 }
 .achievements-color {
 	height: 0.3rem;
+}
+.user-title {
+	white-space: nowrap;
 }
 </style>

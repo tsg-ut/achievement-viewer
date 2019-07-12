@@ -14,7 +14,7 @@
 					<td><strong>{{rank}}</strong></td>
 					<td>
 						<nuxt-link :to="`/users/${user.id}`">
-							<img class="index-icon" :src="getUserIcon(user)">
+							<img class="index-icon" :src="getUserIcon(user)" :srcset="`${getUserIcon(user)} 1x, ${getUserIcon2x(user)} 2x`">
 							{{getUserName(user)}}
 						</nuxt-link>
 						<span
@@ -117,6 +117,9 @@ export default {
 		},
 		getUserIcon(user) {
 			return get(user, ['info', 'profile', 'image_24'], 'https://placehold.it/24x24');
+		},
+		getUserIcon2x(user) {
+			return get(user, ['info', 'profile', 'image_48'], 'https://placehold.it/48x48');
 		},
 		getCategoryColor(category) {
 			return getCategoryColor(category);
