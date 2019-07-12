@@ -222,5 +222,6 @@ export default {
 }
 .user-title {
 	white-space: nowrap;
+	overflow: hidden;
 }
 </style>
