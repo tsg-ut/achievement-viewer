@@ -53,7 +53,7 @@
 								<div class="column achievements-progress">
 									<progress
 										class="progress is-success"
-										:value="user[datum.counter]"
+										:value="user[datum.counter] || 0"
 										:max="datum.value"
 									/>
 								</div>
@@ -103,13 +103,13 @@
 								<div class="column achievements-progress">
 									<progress
 										class="progress is-gray"
-										:value="user[datum.counter]"
+										:value="user[datum.counter] || 0"
 										:max="datum.value"
 									/>
 								</div>
 								<div class="column is-narrow">
 									<p class="subtitle is-6 achievements-count">
-										{{user[datum.counter]}}/{{datum.value}}
+										{{user[datum.counter] || 0}}/{{datum.value}}
 									</p>
 								</div>
 							</div>
