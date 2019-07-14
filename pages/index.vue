@@ -5,13 +5,14 @@
 			<thead>
 				<tr>
 					<th>順位</th>
-					<th>名前</th>
 					<th>解除数</th>
+					<th>名前</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr v-for="{rank, achievements, user} in ranking" :key="user.id">
 					<td><strong>{{rank}}</strong></td>
+					<td>{{achievements.length}}</td>
 					<td>
 						<nuxt-link :to="`/users/${user.id}`">
 							<img class="index-icon" :src="getUserIcon(user)" :srcset="`${getUserIcon(user)} 1x, ${getUserIcon2x(user)} 2x`">
@@ -30,7 +31,6 @@
 							}"
 						/>
 					</td>
-					<td>{{achievements.length}}</td>
 				</tr>
 			</tbody>
 		</table>
