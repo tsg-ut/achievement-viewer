@@ -8,22 +8,21 @@ export const updateCounts = functions.firestore.document('achievements/{id}').on
 	db.runTransaction(async (transaction) => {
 		const name = achievement.get('name');
 		const user = achievement.get('user');
-		const achievementDatum = await transaction.get(db.collection('achievement_data').doc(name));
-		const category = achievementDatum.get('category');
 
-		const achievementRef = db.collection('achievements').doc(name);
+		const achievementRef = db.collection('achievement_data').doc(name);
 		const userRef = db.collection('users').doc(user);
 
-		const achievementData = await transaction.get(achievementRef);
-		const userData = await transaction.get(userRef);
+		const achievementDatum = await transaction.get(db.collection('achievement_data').doc(name));
+		const userDatum = await transaction.get(userRef);
+		const category = achievementDatum.get('category');
 
 		await transaction.update(achievementRef, {
-			count: (achievementData.get('count') || 0) + 1,
+			count: (achievementDatum.get('count') || 0) + 1,
 		});
 
 		await transaction.update(userRef, {
 			counts: {
-				[category]: (userData.get(`counts.${category}`) || 0) + 1,
+				[category]: (userDatum.get(`counts.${category}`) || 0) + 1,
 			},
 		});
 	});
