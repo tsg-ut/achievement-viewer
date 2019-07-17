@@ -20,7 +20,7 @@ export const updateCounts = functions.firestore.document('achievements/{id}').on
 			count: (achievementDatum.get('count') || 0) + 1,
 		});
 
-		const oldCounts = userDatum.get('counts');
+		const oldCounts = userDatum.get('counts') || {};
 		await transaction.update(userRef, {
 			counts: {
 				...oldCounts,
