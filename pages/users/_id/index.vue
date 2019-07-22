@@ -203,7 +203,7 @@ export default {
 	},
 	head() {
 		return {
-			title: 'achievement-viewer',
+			title: `${this.name}の解除した実績一覧 - achievement-viewer`,
 		};
 	},
 };

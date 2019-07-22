@@ -11,7 +11,7 @@
 					class="navbar-burger burger"
 					aria-label="menu"
 					aria-expanded="false"
-					data-target="navbarBasicExample"
+					@click="isActive = !isActive"
 				>
 					<span aria-hidden="true"/>
 					<span aria-hidden="true"/>
@@ -19,12 +19,11 @@
 				</a>
 			</div>
 
-			<div id="navbarBasicExample" class="navbar-menu">
+			<div class="navbar-menu" :class="{'is-active': isActive}">
 				<div class="navbar-start">
 					<nuxt-link class="navbar-item" to="/">
 						ホーム
 					</nuxt-link>
-
 					<nuxt-link class="navbar-item" to="/achievements">
 						実績一覧
 					</nuxt-link>
@@ -43,6 +42,16 @@
 		</footer>
 	</div>
 </template>
+
+<script>
+export default {
+	data() {
+		return {
+			isActive: false,
+		};
+	},
+};
+</script>
 
 <style>
 html {
