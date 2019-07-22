@@ -11,13 +11,13 @@
 					<div class="column achievements-progress">
 						<progress
 							class="progress is-success"
-							:value="achievements.length"
+							:value="achievementCount"
 							:max="achievementData.length"
 						/>
 					</div>
 					<div class="column is-narrow">
 						<p class="subtitle is-6 achievements-count">
-							{{achievements.length}}/{{achievementData.length}}達成済み
+							{{achievementCount}}/{{achievementData.length}}達成済み
 						</p>
 					</div>
 				</div>
@@ -126,6 +126,7 @@
 import get from 'lodash/get.js';
 import {getCategoryColor} from '@/components/utils/utils.js';
 import {mapState} from 'vuex';
+import sum from 'lodash/sum.js';
 
 export default {
 	data() {
@@ -141,6 +142,9 @@ export default {
 		}),
 		user() {
 			return this.$store.getters['users/getById'](this.$route.params.id);
+		},
+		achievementCount() {
+			return sum(Object.values(this.user.counts || {}));
 		},
 		name() {
 			const name = get(this.user, ['info', 'profile', 'display_name'], false) || get(this.user, ['info', 'real_name'], false) || this.user.id;
