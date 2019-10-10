@@ -1,6 +1,6 @@
 <template>
 	<div class="container">
-		<progress v-if="isLoading" class="progress is-small is-primary" max="100">15%</progress>
+		<progress v-if="isLoading" class="progress is-small is-primary" max="100"/>
 		<p class="title">実績一覧</p>
 		<div class="columns is-multiline">
 			<div v-for="{category, difficulty, id, count, first, title, condition} in ranking" :key="id" class="column is-half">
@@ -43,7 +43,9 @@
 							<p>{{condition}}</p>
 							<p class="has-text-right is-size-7">
 								初達成者:
-								{{first}}
+								<nuxt-link :to="`/users/${first}`">
+									{{getUserName(first)}}
+								</nuxt-link>
 							</p>
 						</div>
 					</div>
@@ -67,14 +69,15 @@
 import get from 'lodash/get.js';
 import {getCategoryColor} from '@/components/utils/utils.js';
 import {mapState} from 'vuex';
-import randomcolor from 'randomcolor';
 
 export default {
+	data() {
+		return {
+			isLoading: true,
+		};
+	},
 	computed: {
 		...mapState({
-			isLoading: (state) => (
-				!state.achievementData.isInitList
-			),
 			achievementData: (state) => (
 				state.achievementData.list
 			),
@@ -91,7 +94,12 @@ export default {
 		}
 	},
 	mounted() {
-		this.$store.dispatch('achievementData/initList');
+		Promise.all([
+			this.$store.dispatch('achievementData/initList'),
+			this.$store.dispatch('users/initList'),
+		]).then(() => {
+			this.isLoading = false;
+		});
 	},
 	methods: {
 		getUserName(userId) {
