@@ -1,12 +1,13 @@
+import * as cors from 'cors';
+import * as express from 'express';
 import * as firebase from 'firebase-admin';
 import * as functions from 'firebase-functions';
-import express from 'express';
-import cors from 'cors';
+import * as qs from 'querystring';
 
 firebase.initializeApp();
 const db = firebase.firestore();
 
-export const updateCounts = functions.firestore.document('achievements/{id}').onCreate(async (achievement) => {
+export const updateCounts = functions.firestore.document('achievements/{id}').onCreate((achievement) => {
 	db.runTransaction(async (transaction) => {
 		const name = achievement.get('name');
 		const user = achievement.get('user');
@@ -45,8 +46,22 @@ app.post('/tahoiya', (req, res) => {
 	res.send('Hello!');
 });
 
-app.post('/comments', (req, res) => {
-	res.send('Hello!');
+app.post('/comments', async (req, res) => {
+	const data = qs.parse(req.body);
+
+	if (data.text) {
+		const text = data.text.toString().trim().slice(0, 140);
+		const date = new Date();
+		const address = req.headers['fastly-client-ip'];
+
+		await db.collection('tsglive_audience_comments').add({
+			text,
+			date,
+			address,
+		});
+
+		res.send(`Commented: ${text}`);
+	}
 });
 
 export const tsglive = functions.https.onRequest(app);

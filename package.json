@@ -12,8 +12,8 @@
     "start": "nuxt start",
     "generate": "cross-env DEPLOY_ENV=GH_PAGES nuxt generate",
     "deploy": "npm run generate && cd dist && git init && git remote add origin https://github.com/tsg-ut/achievement-viewer.git && git fetch origin && git symbolic-ref HEAD refs/remotes/origin/gh-pages && git add . && git commit -m \"Update build\" && git push -u origin HEAD:gh-pages && cd ..",
-    "deploy:functions": "npx -p firebase-tools firebase deploy --only functions",
-    "deploy:functions:production": "npx -p firebase-tools firebase deploy --project hakata-shi --only functions"
+    "deploy:functions": "npx -p firebase-tools firebase deploy --only functions --runtime nodejs10",
+    "deploy:functions:production": "npx -p firebase-tools firebase deploy --project hakata-shi --only functions --runtime nodejs10"
   },
   "dependencies": {
     "@nuxtjs/bulma": "^1.2.5",
