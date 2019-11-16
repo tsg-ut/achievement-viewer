@@ -12,8 +12,8 @@
     "start": "nuxt start",
     "generate": "cross-env DEPLOY_ENV=GH_PAGES nuxt generate",
     "deploy": "npm run generate && cd dist && git init && git remote add origin https://github.com/tsg-ut/achievement-viewer.git && git fetch origin && git symbolic-ref HEAD refs/remotes/origin/gh-pages && git add . && git commit -m \"Update build\" && git push -u origin HEAD:gh-pages && cd ..",
-    "deploy:functions": "npx -p firebase-tools firebase deploy --only functions",
-    "deploy:functions:production": "npx -p firebase-tools firebase deploy --project hakata-shi --only functions"
+    "deploy:functions": "firebase deploy --only functions",
+    "deploy:functions:production": "firebase deploy --project hakata-shi --only functions"
   },
   "dependencies": {
     "@nuxtjs/bulma": "^1.2.5",
@@ -36,6 +36,7 @@
     "eslint-plugin-vue": "^5.2.3",
     "firebase": "^7.1.0",
     "firebase-admin": "^8.6.0",
+    "firebase-tools": "^7.7.0",
     "nodemon": "^1.19.3",
     "randomcolor": "^0.5.4",
     "vuexfire": "^3.2.0"

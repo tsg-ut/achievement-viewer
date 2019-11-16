@@ -54,12 +54,11 @@ app.post('/comments', async (req, res) => {
 
 	const text = req.body.text.toString().trim().slice(0, 140);
 	const date = new Date();
-	const address = req.headers['fastly-client-ip'];
 
 	await db.collection('tsglive_audience_comments').add({
 		text,
 		date,
-		address,
+		headers: req.headers,
 	});
 
 	res.send(`Commented: ${text}`);
