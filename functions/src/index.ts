@@ -2,7 +2,6 @@ import * as cors from 'cors';
 import * as express from 'express';
 import * as firebase from 'firebase-admin';
 import * as functions from 'firebase-functions';
-import * as qs from 'querystring';
 
 firebase.initializeApp();
 const db = firebase.firestore();
@@ -47,21 +46,23 @@ app.post('/tahoiya', (req, res) => {
 });
 
 app.post('/comments', async (req, res) => {
-	const data = qs.parse(req.body);
-
-	if (data.text) {
-		const text = data.text.toString().trim().slice(0, 140);
-		const date = new Date();
-		const address = req.headers['fastly-client-ip'];
-
-		await db.collection('tsglive_audience_comments').add({
-			text,
-			date,
-			address,
-		});
-
-		res.send(`Commented: ${text}`);
+	if (!req.body.text) {
+		res.status(400);
+		res.send('Bad Request');
+		return;
 	}
+
+	const text = req.body.text.toString().trim().slice(0, 140);
+	const date = new Date();
+	const address = req.headers['fastly-client-ip'];
+
+	await db.collection('tsglive_audience_comments').add({
+		text,
+		date,
+		address,
+	});
+
+	res.send(`Commented: ${text}`);
 });
 
 export const tsglive = functions.https.onRequest(app);
