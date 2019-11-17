@@ -45,9 +45,14 @@ const endCheck = (req: express.Request, res: express.Response, next: express.Nex
 	res.json({errors: errors.array()});
 };
 
-const adminOnly = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+const validateToken = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
 	const token = await auth.verifyIdToken(req.body.token);
-	const userRef = db.collection('tsglive_tahoiya_users').doc(token.uid);
+	req.body.uid = token.uid;
+	next();
+};
+
+const adminOnly = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+	const userRef = db.collection('tsglive_tahoiya_users').doc(req.body.uid);
 	const user = await userRef.get();
 	if (user.get('admin') === true) {
 		next();
@@ -72,6 +77,7 @@ app.post('/tahoiya/theme',
 	check('description').isString(),
 	check('meaning').isString(),
 	endCheck,
+	validateToken,
 	adminOnly,
 	async (req, res) => {
 		const {word, ruby, meaning, description} = req.body;
@@ -97,6 +103,7 @@ app.patch('/tahoiya/theme',
 	check('description').isString(),
 	check('meaning').isString(),
 	endCheck,
+	validateToken,
 	adminOnly,
 	async (req, res) => {
 		const {id, word, ruby, meaning, description} = req.body;
@@ -124,6 +131,7 @@ app.delete('/tahoiya/theme',
 	check('token').isString(),
 	check('id').isString(),
 	endCheck,
+	validateToken,
 	adminOnly,
 	async (req, res) => {
 		const {id} = req.body;
@@ -137,6 +145,62 @@ app.delete('/tahoiya/theme',
 		}
 
 		await docRef.delete();
+
+		res.send('Success');
+	});
+
+app.post('/tahoiya/meaning',
+	check('token').isString(),
+	check('theme_id').isString(),
+	check('text').isString(),
+	check('username').isString(),
+	endCheck,
+	validateToken,
+	async (req, res) => {
+		const {theme_id, text, username, uid} = req.body;
+
+		const themeRef = db.collection('tsglive_tahoiya_themes').doc(theme_id);
+		const theme = await themeRef.get();
+
+		if (!theme.exists) {
+			res.status(404);
+			res.send('Not Found');
+			return;
+		}
+
+		const date = new Date();
+
+		await db.collection('tsglive_tahoiya_meanings').add({
+			themeId: theme_id,
+			text,
+			username,
+			date,
+			uid,
+			isAccepted: false,
+		});
+
+		res.send('Success');
+	});
+
+app.post('/tahoiya/meaning/accept',
+	check('token').isString(),
+	check('meaning_id').isString(),
+	endCheck,
+	validateToken,
+	adminOnly,
+	async (req, res) => {
+		const meaningRef = db.collection('tsglive_tahoiya_meanings').doc(req.body.meaning_id);
+		const meaning = await meaningRef.get();
+
+		if (!meaning.exists) {
+			res.status(404);
+			res.send('Not Found');
+			return;
+		}
+
+		await meaningRef.update({
+			isAccepted: true,
+		});
 
 		res.send('Success');
 	});
