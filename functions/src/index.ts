@@ -87,7 +87,7 @@ app.patch('/tahoiya/theme', async (req, res) => {
 	const meaning = req.body.meaning.toString();
 	const description = req.body.description.toString();
 
-	await docRef.set({
+	await docRef.update({
 		word,
 		ruby,
 		meaning,
