@@ -6,6 +6,7 @@ import {check, validationResult} from 'express-validator';
 
 firebase.initializeApp();
 const db = firebase.firestore();
+const auth = firebase.auth();
 
 export const updateCounts = functions.firestore.document('achievements/{id}').onCreate((achievement) => {
 	db.runTransaction(async (transaction) => {
@@ -44,6 +45,18 @@ const endCheck = (req: express.Request, res: express.Response, next: express.Nex
 	res.json({errors: errors.array()});
 };
 
+const adminOnly = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+	const token = await auth.verifyIdToken(req.body.token);
+	const userRef = db.collection('tsglive_tahoiya_users').doc(token.uid);
+	const user = await userRef.get();
+	if (user.get('admin') === true) {
+		next();
+		return;
+	}
+	res.status(403);
+	res.json({errors: ['Admin only']});
+};
+
 const app = express();
 
 app.use(cors({origin: true}));
@@ -53,12 +66,13 @@ app.get('/', (req, res) => {
 });
 
 app.post('/tahoiya/theme',
-	check('uid').isString(),
+	check('token').isString(),
 	check('word').isString(),
 	check('ruby').isString(),
 	check('description').isString(),
 	check('meaning').isString(),
 	endCheck,
+	adminOnly,
 	async (req, res) => {
 		const {word, ruby, meaning, description} = req.body;
 
@@ -76,13 +90,14 @@ app.post('/tahoiya/theme',
 	});
 
 app.patch('/tahoiya/theme',
-	check('uid').isString(),
+	check('token').isString(),
 	check('id').isString(),
 	check('word').isString(),
 	check('ruby').isString(),
 	check('description').isString(),
 	check('meaning').isString(),
 	endCheck,
+	adminOnly,
 	async (req, res) => {
 		const {id, word, ruby, meaning, description} = req.body;
 
@@ -106,9 +121,10 @@ app.patch('/tahoiya/theme',
 	});
 
 app.delete('/tahoiya/theme',
-	check('uid').isString(),
+	check('token').isString(),
 	check('id').isString(),
 	endCheck,
+	adminOnly,
 	async (req, res) => {
 		const {id} = req.body;
 		const docRef = db.collection('tsglive_tahoiya_themes').doc(id);
