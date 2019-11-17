@@ -2,6 +2,7 @@ import * as cors from 'cors';
 import * as express from 'express';
 import * as firebase from 'firebase-admin';
 import * as functions from 'firebase-functions';
+import {check, validationResult} from 'express-validator';
 
 firebase.initializeApp();
 const db = firebase.firestore();
@@ -33,6 +34,16 @@ export const updateCounts = functions.firestore.document('achievements/{id}').on
 	});
 });
 
+const endCheck = (req: express.Request, res: express.Response, next: express.NextFunction) => {
+	const errors = validationResult(req);
+	if (errors.isEmpty()) {
+		next();
+		return;
+	}
+	res.status(400);
+	res.json({errors: errors.array()});
+};
+
 const app = express();
 
 app.use(cors({origin: true}));
@@ -41,83 +52,78 @@ app.get('/', (req, res) => {
 	res.send('Hello!');
 });
 
-app.post('/tahoiya/theme', async (req, res) => {
-	if (!req.body.word || !req.body.ruby || !req.body.description || !req.body.meaning) {
-		res.status(400);
-		res.send('Bad Request');
-		return;
-	}
+app.post('/tahoiya/theme',
+	check('uid').isString(),
+	check('word').isString(),
+	check('ruby').isString(),
+	check('description').isString(),
+	check('meaning').isString(),
+	endCheck,
+	async (req, res) => {
+		const {word, ruby, meaning, description} = req.body;
 
-	const word = req.body.word.toString();
-	const ruby = req.body.ruby.toString();
-	const meaning = req.body.meaning.toString();
-	const description = req.body.description.toString();
-	const date = new Date();
+		const date = new Date();
 
-	await db.collection('tsglive_tahoiya_themes').add({
-		word,
-		ruby,
-		meaning,
-		description,
-		date,
+		await db.collection('tsglive_tahoiya_themes').add({
+			word,
+			ruby,
+			meaning,
+			description,
+			date,
+		});
+
+		res.send('Success');
 	});
 
-	res.send('Success');
-});
+app.patch('/tahoiya/theme',
+	check('uid').isString(),
+	check('id').isString(),
+	check('word').isString(),
+	check('ruby').isString(),
+	check('description').isString(),
+	check('meaning').isString(),
+	endCheck,
+	async (req, res) => {
+		const {id, word, ruby, meaning, description} = req.body;
 
-app.patch('/tahoiya/theme', async (req, res) => {
-	if (!req.body.word || !req.body.ruby || !req.body.description || !req.body.meaning || !req.body.id) {
-		res.status(400);
-		res.send('Bad Request');
-		return;
-	}
+		const docRef = db.collection('tsglive_tahoiya_themes').doc(id);
+		const doc = await docRef.get();
 
-	const id = req.body.id.toString();
-	const docRef = db.collection('tsglive_tahoiya_themes').doc(id);
-	const doc = await docRef.get();
+		if (!doc.exists) {
+			res.status(404);
+			res.send('Not Found');
+			return;
+		}
 
-	if (!doc.exists) {
-		res.status(404);
-		res.send('Not Found');
-		return;
-	}
+		await docRef.update({
+			word,
+			ruby,
+			meaning,
+			description,
+		});
 
-	const word = req.body.word.toString();
-	const ruby = req.body.ruby.toString();
-	const meaning = req.body.meaning.toString();
-	const description = req.body.description.toString();
-
-	await docRef.update({
-		word,
-		ruby,
-		meaning,
-		description,
+		res.send('Success');
 	});
 
-	res.send('Success');
-});
+app.delete('/tahoiya/theme',
+	check('uid').isString(),
+	check('id').isString(),
+	endCheck,
+	async (req, res) => {
+		const {id} = req.body;
+		const docRef = db.collection('tsglive_tahoiya_themes').doc(id);
+		const doc = await docRef.get();
 
-app.delete('/tahoiya/theme', async (req, res) => {
-	if (!req.body.id) {
-		res.status(400);
-		res.send('Bad Request');
-		return;
-	}
+		if (!doc.exists) {
+			res.status(404);
+			res.send('Not Found');
+			return;
+		}
 
-	const id = req.body.id.toString();
-	const docRef = db.collection('tsglive_tahoiya_themes').doc(id);
-	const doc = await docRef.get();
+		await docRef.delete();
 
-	if (!doc.exists) {
-		res.status(404);
-		res.send('Not Found');
-		return;
-	}
-
-	await docRef.delete();
-
-	res.send('Success');
-});
+		res.send('Success');
+	});
 
 app.post('/comments', async (req, res) => {
 	if (!req.body.text) {
