@@ -42,7 +42,7 @@ app.get('/', (req, res) => {
 });
 
 app.post('/tahoiya/theme', async (req, res) => {
-	if (!req.body.word || !req.body.ruby || !req.body.description) {
+	if (!req.body.word || !req.body.ruby || !req.body.description || !req.body.meaning) {
 		res.status(400);
 		res.send('Bad Request');
 		return;
@@ -50,12 +50,14 @@ app.post('/tahoiya/theme', async (req, res) => {
 
 	const word = req.body.word.toString();
 	const ruby = req.body.ruby.toString();
+	const meaning = req.body.meaning.toString();
 	const description = req.body.description.toString();
 	const date = new Date();
 
 	await db.collection('tsglive_tahoiya_themes').add({
 		word,
 		ruby,
+		meaning,
 		description,
 		date,
 	});
@@ -64,7 +66,7 @@ app.post('/tahoiya/theme', async (req, res) => {
 });
 
 app.patch('/tahoiya/theme', async (req, res) => {
-	if (!req.body.word || !req.body.ruby || !req.body.description || !req.body.id) {
+	if (!req.body.word || !req.body.ruby || !req.body.description || !req.body.meaning || !req.body.id) {
 		res.status(400);
 		res.send('Bad Request');
 		return;
@@ -82,14 +84,14 @@ app.patch('/tahoiya/theme', async (req, res) => {
 
 	const word = req.body.word.toString();
 	const ruby = req.body.ruby.toString();
+	const meaning = req.body.meaning.toString();
 	const description = req.body.description.toString();
-	const date = new Date();
 
 	await docRef.set({
 		word,
 		ruby,
+		meaning,
 		description,
-		date,
 	});
 
 	res.send('Success');
