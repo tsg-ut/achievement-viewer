@@ -41,8 +41,80 @@ app.get('/', (req, res) => {
 	res.send('Hello!');
 });
 
-app.post('/tahoiya', (req, res) => {
-	res.send('Hello!');
+app.post('/tahoiya/theme', async (req, res) => {
+	if (!req.body.word || !req.body.ruby || !req.body.description) {
+		res.status(400);
+		res.send('Bad Request');
+		return;
+	}
+
+	const word = req.body.word.toString();
+	const ruby = req.body.ruby.toString();
+	const description = req.body.description.toString();
+	const date = new Date();
+
+	await db.collection('tsglive_tahoiya_themes').add({
+		word,
+		ruby,
+		description,
+		date,
+	});
+
+	res.send('Success');
+});
+
+app.patch('/tahoiya/theme', async (req, res) => {
+	if (!req.body.word || !req.body.ruby || !req.body.description || !req.body.id) {
+		res.status(400);
+		res.send('Bad Request');
+		return;
+	}
+
+	const id = req.body.id.toString();
+	const docRef = db.collection('tsglive_tahoiya_themes').doc(id);
+	const doc = await docRef.get();
+
+	if (!doc.exists) {
+		res.status(404);
+		res.send('Not Found');
+		return;
+	}
+
+	const word = req.body.word.toString();
+	const ruby = req.body.ruby.toString();
+	const description = req.body.description.toString();
+	const date = new Date();
+
+	await docRef.set({
+		word,
+		ruby,
+		description,
+		date,
+	});
+
+	res.send('Success');
+});
+
+app.delete('/tahoiya/theme', async (req, res) => {
+	if (!req.body.id) {
+		res.status(400);
+		res.send('Bad Request');
+		return;
+	}
+
+	const id = req.body.id.toString();
+	const docRef = db.collection('tsglive_tahoiya_themes').doc(id);
+	const doc = await docRef.get();
+
+	if (!doc.exists) {
+		res.status(404);
+		res.send('Not Found');
+		return;
+	}
+
+	await docRef.delete();
+
+	res.send('Success');
 });
 
 app.post('/comments', async (req, res) => {
