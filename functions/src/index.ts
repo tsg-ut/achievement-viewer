@@ -71,11 +71,11 @@ app.get('/', (req, res) => {
 });
 
 app.post('/tahoiya/theme',
-	check('token').isString(),
-	check('word').isString(),
-	check('ruby').isString(),
-	check('description').isString(),
-	check('meaning').isString(),
+	check('token').isString().not().isEmpty(),
+	check('word').isString().not().isEmpty(),
+	check('ruby').isString().not().isEmpty(),
+	check('description').isString().not().isEmpty(),
+	check('meaning').isString().not().isEmpty(),
 	endCheck,
 	validateToken,
 	adminOnly,
@@ -96,12 +96,12 @@ app.post('/tahoiya/theme',
 	});
 
 app.patch('/tahoiya/theme',
-	check('token').isString(),
-	check('id').isString(),
-	check('word').isString(),
-	check('ruby').isString(),
-	check('description').isString(),
-	check('meaning').isString(),
+	check('token').isString().not().isEmpty(),
+	check('id').isString().not().isEmpty(),
+	check('word').isString().not().isEmpty(),
+	check('ruby').isString().not().isEmpty(),
+	check('description').isString().not().isEmpty(),
+	check('meaning').isString().not().isEmpty(),
 	endCheck,
 	validateToken,
 	adminOnly,
@@ -128,8 +128,8 @@ app.patch('/tahoiya/theme',
 	});
 
 app.delete('/tahoiya/theme',
-	check('token').isString(),
-	check('id').isString(),
+	check('token').isString().not().isEmpty(),
+	check('id').isString().not().isEmpty(),
 	endCheck,
 	validateToken,
 	adminOnly,
@@ -150,10 +150,10 @@ app.delete('/tahoiya/theme',
 	});
 
 app.post('/tahoiya/meaning',
-	check('token').isString(),
-	check('theme_id').isString(),
-	check('text').isString(),
-	check('username').isString(),
+	check('token').isString().not().isEmpty(),
+	check('theme_id').isString().not().isEmpty(),
+	check('text').isString().not().isEmpty(),
+	check('username').isString().not().isEmpty(),
 	endCheck,
 	validateToken,
 	async (req, res) => {
@@ -182,9 +182,32 @@ app.post('/tahoiya/meaning',
 		res.send('Success');
 	});
 
+app.delete('/tahoiya/meaning',
+	check('token').isString().not().isEmpty(),
+	check('id').isString().not().isEmpty(),
+	endCheck,
+	validateToken,
+	adminOnly,
+	async (req, res) => {
+		const {id} = req.body;
+
+		const docRef = db.collection('tsglive_tahoiya_meanings').doc(id);
+		const doc = await docRef.get();
+
+		if (!doc.exists) {
+			res.status(404);
+			res.send('Not Found');
+			return;
+		}
+
+		await docRef.delete();
+
+		res.send('Success');
+	});
+
 app.post('/tahoiya/meaning/accept',
-	check('token').isString(),
-	check('meaning_id').isString(),
+	check('token').isString().not().isEmpty(),
+	check('meaning_id').isString().not().isEmpty(),
 	endCheck,
 	validateToken,
 	adminOnly,
@@ -200,6 +223,29 @@ app.post('/tahoiya/meaning/accept',
 
 		await meaningRef.update({
 			isAccepted: true,
+		});
+
+		res.send('Success');
+	});
+
+app.delete('/tahoiya/meaning/accept',
+	check('token').isString().not().isEmpty(),
+	check('meaning_id').isString().not().isEmpty(),
+	endCheck,
+	validateToken,
+	adminOnly,
+	async (req, res) => {
+		const meaningRef = db.collection('tsglive_tahoiya_meanings').doc(req.body.meaning_id);
+		const meaning = await meaningRef.get();
+
+		if (!meaning.exists) {
+			res.status(404);
+			res.send('Not Found');
+			return;
+		}
+
+		await meaningRef.update({
+			isAccepted: false,
 		});
 
 		res.send('Success');
