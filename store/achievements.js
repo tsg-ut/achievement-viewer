@@ -1,14 +1,14 @@
 import Vue from 'vue';
-import db from '~/components/utils/db.js';
 import {firestoreAction} from 'vuexfire';
+import db from '~/components/utils/db.js';
 
 const achievementsRef = db.collection('achievements');
 
 const localState = () => ({
 	isInitList: null,
 	list: [],
+	isInitUsers: {},
 	isInitData: {},
-	data: {},
 });
 
 const localMutations = {
@@ -18,6 +18,10 @@ const localMutations = {
 	initData(state, id) {
 		Vue.set(state.isInitData, id, process.browser);
 	},
+	setUser(state, {id, achievements}) {
+		Vue.set(state.isInitUsers, id, process.browser);
+		Vue.set(state, `user_${id}`, achievements);
+	},
 };
 
 const localGetters = {
@@ -25,10 +29,12 @@ const localGetters = {
 	data: (state) => state.data,
 	getByUser: (state) => (
 		(user) => {
-			const list = state.isInitList ? state.list : Object.entries(state).filter(([key]) => key.startsWith('data_')).map(([, value]) => value);
-			return list.filter((datum) => (
-				datum.user === user
-			));
+			if (state.isInitList) {
+				return state.list.filter((datum) => (
+					datum.user === user
+				));
+			}
+			return state[`user_${user}`] || [];
 		}
 	),
 };
@@ -52,6 +58,18 @@ const localActions = {
 		await bindFirestoreRef(`data_${id}`, docRef);
 		commit('initData', id);
 	}),
+	fetchByUser: async ({state, commit}, id) => {
+		if (state.isInitUsers[id] === process.browser || state.isInitList === process.browser) {
+			return;
+		}
+
+		const achievements = await achievementsRef.where('user', '==', id).get();
+		commit({
+			type: 'setUser',
+			id,
+			achievements: achievements.docs.map((doc) => doc.data()),
+		});
+	},
 };
 
 export {

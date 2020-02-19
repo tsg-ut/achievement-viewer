@@ -123,10 +123,10 @@
 </template>
 
 <script>
-import get from 'lodash/get.js';
 import {getCategoryColor} from '@/components/utils/utils.js';
-import {mapState} from 'vuex';
+import get from 'lodash/get.js';
 import sum from 'lodash/sum.js';
+import {mapState} from 'vuex';
 
 export default {
 	data() {

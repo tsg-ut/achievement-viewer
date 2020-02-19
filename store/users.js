@@ -1,5 +1,5 @@
-import db from '~/components/utils/db.js';
 import {firestoreAction} from 'vuexfire';
+import db from '~/components/utils/db.js';
 
 const usersRef = db.collection('users');
 const achievementsRef = db.collection('achievements');
@@ -59,12 +59,9 @@ const localActions = {
 			const userBindPromise = bindFirestoreRef(`data_${user.id}`, user.ref);
 			commit('initData', user.id);
 
-			const achievements = await achievementsRef.where('user', '==', user.id).get();
 			await Promise.all([
 				userBindPromise,
-				...achievements.docs.map((achievement) => (
-					dispatch('achievements/bind', achievement.id, {root: true})
-				)),
+				dispatch('achievements/fetchByUser', user.id, {root: true}),
 			]);
 		}
 	}),
