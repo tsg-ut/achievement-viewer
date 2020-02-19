@@ -10,7 +10,7 @@
     "dev": "nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
-    "generate": "cross-env DEPLOY_ENV=GH_PAGES nuxt generate",
+    "generate": "nuxt generate",
     "deploy": "npm run generate && cd dist && git init && git remote add origin https://github.com/tsg-ut/achievement-viewer.git && git fetch origin && git symbolic-ref HEAD refs/remotes/origin/gh-pages && git add . && git commit -m \"Update build\" && git push -u origin HEAD:gh-pages && cd ..",
     "deploy:functions": "firebase deploy --only functions",
     "deploy:functions:production": "firebase deploy --project hakata-shi --only functions"
@@ -24,7 +24,6 @@
     "@nuxtjs/eslint-config": "^2.0.2",
     "@nuxtjs/eslint-module": "^1.1.0",
     "babel-eslint": "^10.0.3",
-    "cross-env": "^7.0.0",
     "eslint": "^6.8.0",
     "eslint-config-standard": ">=14.1.0",
     "eslint-plugin-import": ">=2.20.1",

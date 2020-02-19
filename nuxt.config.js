@@ -2,9 +2,6 @@
 export default {
 	mode: 'spa',
 
-	/*
-  ** Headers of the page
-  */
 	head: {
 		title: process.env.npm_package_name || '',
 		meta: [
@@ -20,34 +17,19 @@ export default {
 		},
 	},
 
-	/*
-  ** Customize the progress-bar color
-  */
 	loading: {color: '#fff'},
 
-	/*
-  ** Global CSS
-  */
 	css: [
 	],
 
-	/*
-  ** Plugins to load before mounting the App
-  */
 	plugins: [
 	],
 
-	/*
-  ** Nuxt.js modules
-  */
 	modules: [
 		// Doc:https://github.com/nuxt-community/modules/tree/master/packages/bulma
 		'@nuxtjs/bulma',
 	],
 
-	/*
-  ** Build configuration
-  */
 	build: {
 		postcss: {
 			preset: {
@@ -61,10 +43,4 @@ export default {
 	generate: {
 		fallback: '404.html',
 	},
-
-	...(process.env.DEPLOY_ENV === 'GH_PAGES' ? {
-		router: {
-			base: '/achievement-viewer/',
-		},
-	} : {}),
 };
