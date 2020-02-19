@@ -16,29 +16,29 @@
     "deploy:functions:production": "firebase deploy --project hakata-shi --only functions"
   },
   "dependencies": {
-    "@nuxtjs/bulma": "^1.2.5",
-    "nuxt": "^2.10.0"
+    "@nuxtjs/bulma": "^1.2.6",
+    "nuxt": "^2.11.0"
   },
   "devDependencies": {
-    "@hakatashi/eslint-config": "^1.10.1",
-    "@nuxtjs/eslint-config": "^1.1.2",
+    "@hakatashi/eslint-config": "^1.12.0",
+    "@nuxtjs/eslint-config": "^2.0.2",
     "@nuxtjs/eslint-module": "^1.1.0",
     "babel-eslint": "^10.0.3",
-    "cross-env": "^6.0.3",
-    "eslint": "^6.5.1",
+    "cross-env": "^7.0.0",
+    "eslint": "^6.8.0",
     "eslint-config-standard": ">=14.1.0",
-    "eslint-plugin-import": ">=2.18.2",
-    "eslint-plugin-jest": ">=22.17.0",
-    "eslint-plugin-node": ">=10.0.0",
-    "eslint-plugin-nuxt": ">=0.4.3",
+    "eslint-plugin-import": ">=2.20.1",
+    "eslint-plugin-jest": ">=23.7.0",
+    "eslint-plugin-node": ">=11.0.0",
+    "eslint-plugin-nuxt": ">=0.5.1",
     "eslint-plugin-promise": ">=4.2.1",
     "eslint-plugin-standard": ">=4.0.1",
-    "eslint-plugin-vue": "^5.2.3",
-    "firebase": "^7.1.0",
-    "firebase-admin": "^8.6.0",
-    "firebase-tools": "^7.7.0",
-    "nodemon": "^1.19.3",
+    "eslint-plugin-vue": "^6.2.1",
+    "firebase": "^7.8.2",
+    "firebase-admin": "^8.9.2",
+    "firebase-tools": "^7.13.1",
+    "nodemon": "^2.0.2",
     "randomcolor": "^0.5.4",
-    "vuexfire": "^3.2.0"
+    "vuexfire": "^3.2.1"
   }
 }
