@@ -38,11 +38,11 @@
 </template>
 
 <script>
+import {getCategoryColor} from '@/components/utils/utils.js';
 import flatten from 'lodash/flatten.js';
 import get from 'lodash/get.js';
-import {getCategoryColor} from '@/components/utils/utils.js';
-import {mapState} from 'vuex';
 import sum from 'lodash/sum.js';
+import {mapState} from 'vuex';
 
 export default {
 	data() {
@@ -64,7 +64,7 @@ export default {
 				achievements: flatten(
 					Object.entries(user.counts || {}).map(([category, count]) => (
 						Array(count).fill().map((_, index) => ({category, index}))
-					))
+					)),
 				).sort(),
 				rank: null,
 			}));

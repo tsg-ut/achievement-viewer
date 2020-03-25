@@ -1,5 +1,5 @@
-import db from '~/components/utils/db.js';
 import {firestoreAction} from 'vuexfire';
+import db from '~/components/utils/db.js';
 
 const achievementDataRef = db.collection('achievement_data');
 
