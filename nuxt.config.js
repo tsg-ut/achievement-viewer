@@ -10,7 +10,7 @@ export default {
 			{hid: 'description', name: 'description', content: process.env.npm_package_description || ''},
 		],
 		link: [
-			{rel: 'icon', type: 'image/x-icon', href: '/favicon.ico'},
+			{rel: 'icon', type: 'image/png', href: 'https://img.icons8.com/flat_round/512/trophy'},
 		],
 		htmlAttrs: {
 			lang: 'ja',
