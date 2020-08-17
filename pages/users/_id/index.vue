@@ -7,20 +7,6 @@
 			</div>
 			<div class="column">
 				<p class="title user-title">{{name}}の<wbr>解除した<wbr>実績一覧</p>
-				<div class="columns">
-					<div class="column achievements-progress">
-						<progress
-							class="progress is-success"
-							:value="achievementCount"
-							:max="achievementData.length"
-						/>
-					</div>
-					<div class="column is-narrow">
-						<p class="subtitle is-6 achievements-count">
-							{{achievementCount}}/{{achievementData.length}}達成済み
-						</p>
-					</div>
-				</div>
 			</div>
 		</div>
 		<div class="columns is-multiline">

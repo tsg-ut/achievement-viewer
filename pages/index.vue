@@ -4,32 +4,16 @@
 		<table class="table">
 			<thead>
 				<tr>
-					<th>順位</th>
-					<th>解除数</th>
 					<th>名前</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr v-for="{rank, count, user, achievements} in ranking" :key="user.id">
-					<td><strong>{{rank}}</strong></td>
-					<td>{{count}}</td>
+				<tr v-for="user in users" :key="user.id">
 					<td>
 						<nuxt-link :to="`/users/${user.id}`">
 							<img class="index-icon" :src="getUserIcon(user)" :srcset="`${getUserIcon(user)} 1x, ${getUserIcon2x(user)} 2x`">
 							{{getUserName(user)}}
 						</nuxt-link>
-						<span
-							v-for="achievement in achievements"
-							:key="`${achievement.category}-${achievement.index}`"
-							:style="{
-								display: 'inline-block',
-								width: '0.5rem',
-								height: '0.5rem',
-								marginLeft: '0.3rem',
-								borderRadius: '100%',
-								backgroundColor: getCategoryColor(achievement.category),
-							}"
-						/>
 					</td>
 				</tr>
 			</tbody>
@@ -57,29 +41,6 @@ export default {
 			),
 			users: (state) => state.users.list,
 		}),
-		ranking() {
-			const users = this.users.map((user) => ({
-				user,
-				count: sum(Object.values(user.counts || {})),
-				achievements: flatten(
-					Object.entries(user.counts || {}).map(([category, count]) => (
-						Array(count).fill().map((_, index) => ({category, index}))
-					)),
-				).sort(),
-				rank: null,
-			}));
-			users.sort((a, b) => b.count - a.count);
-			let rank = 1;
-			let previousCount = Infinity;
-			for (const [index, user] of users.entries()) {
-				if (previousCount !== user.count) {
-					rank = index + 1;
-				}
-				user.rank = rank;
-				previousCount = user.count;
-			}
-			return users;
-		},
 	},
 	async fetch({store}) {
 		if (!process.browser) {

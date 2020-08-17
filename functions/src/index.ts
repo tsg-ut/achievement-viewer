@@ -1,14 +1,14 @@
 import * as cors from 'cors';
 import * as express from 'express';
-import * as firebase from 'firebase-admin';
-import * as functions from 'firebase-functions';
 import {check, validationResult} from 'express-validator';
+import {initializeApp, firestore, auth as firebase_auth} from 'firebase-admin';
+import {firestore as functions_firestore, https} from 'firebase-functions';
 
-firebase.initializeApp();
-const db = firebase.firestore();
-const auth = firebase.auth();
+initializeApp();
+const db = firestore();
+const auth = firebase_auth();
 
-export const updateCounts = functions.firestore.document('achievements/{id}').onCreate((achievement) => {
+export const updateCounts = functions_firestore.document('achievements/{id}').onCreate((achievement) => {
 	db.runTransaction(async (transaction) => {
 		const name = achievement.get('name');
 		const user = achievement.get('user');
@@ -270,4 +270,4 @@ app.post('/comments', async (req, res) => {
 	res.send(`Commented: ${text}`);
 });
 
-export const tsglive = functions.https.onRequest(app);
+export const tsglive = https.onRequest(app);

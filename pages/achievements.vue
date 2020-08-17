@@ -41,12 +41,6 @@
 								</div>
 							</div>
 							<p>{{condition}}</p>
-							<p class="has-text-right is-size-7">
-								初達成者:
-								<nuxt-link :to="`/users/${first}`">
-									{{getUserName(first)}}
-								</nuxt-link>
-							</p>
 						</div>
 					</div>
 				</div>
