@@ -1,4 +1,5 @@
-const firebase = require('firebase/app');
+const {default: firebase} = require('firebase/app');
+
 require('firebase/firestore');
 
 if (firebase.apps.length === 0) {
