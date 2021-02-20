@@ -4,7 +4,7 @@
 		<p class="title">実績一覧</p>
 		<div class="columns is-multiline">
 			<div v-for="{category, difficulty, id, count, first, title, condition} in ranking" :key="id" class="column is-half">
-				<div class="card">
+				<nuxt-link class="card" :to="`/achievements/${id}`" :style="{display: 'block'}">
 					<div class="card-image">
 						<div class="image achievements-color" :style="{backgroundColor: getCategoryColor(category)}"/>
 					</div>
@@ -28,7 +28,7 @@
 							<p>{{condition}}</p>
 						</div>
 					</div>
-				</div>
+				</nuxt-link>
 			</div>
 
 			<div class="column is-half">

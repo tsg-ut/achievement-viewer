@@ -11,7 +11,7 @@
 		</div>
 		<div class="columns is-multiline">
 			<div v-for="{datum, name: id, date} in achievements" :key="id" class="column is-one-third">
-				<div class="card">
+				<nuxt-link class="card" :to="`/achievements/${id}`" :style="{display: 'block'}">
 					<div class="card-image">
 						<div class="image achievements-color" :style="{backgroundColor: getCategoryColor(datum.category)}"/>
 					</div>
@@ -41,13 +41,13 @@
 							</p>
 						</div>
 					</div>
-				</div>
+				</nuxt-link>
 			</div>
 		</div>
 		<p class="title">未解除の実績一覧</p>
 		<div class="columns is-multiline">
 			<div v-for="datum in lockedAchievements" :key="datum.name" class="column is-one-third">
-				<div class="card">
+				<nuxt-link class="card" :to="`/achievements/${id}`" :style="{display: 'block'}">
 					<div class="card-image">
 						<div class="image achievements-color" :style="{backgroundColor: getCategoryColor(datum.category)}"/>
 					</div>
@@ -74,7 +74,7 @@
 							<p>{{datum.condition}}</p>
 						</div>
 					</div>
-				</div>
+				</nuxt-link>
 			</div>
 		</div>
 	</div>

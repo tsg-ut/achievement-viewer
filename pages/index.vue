@@ -18,8 +18,10 @@
 							{{getUserName(getUser(achievement.user))}}
 						</nuxt-link>
 						が
-						<strong>{{getAchievement(achievement.name).title}}</strong>
-						<DifficultyBadge :difficulty="getAchievement(achievement.name).difficulty" />
+						<nuxt-link :to="`/achievements/${achievement.name}`">
+							<strong>{{getAchievement(achievement.name).title}}</strong>
+							<DifficultyBadge :difficulty="getAchievement(achievement.name).difficulty" />
+						</nuxt-link>
 						を解除しました。
 					</td>
 				</tr>

@@ -10,6 +10,7 @@ const localState = () => ({
 	isInitLatestAchievemnts: null,
 	latestAchievements: [],
 	isInitUsers: {},
+	isInitNames: {},
 	isInitData: {},
 });
 
@@ -27,6 +28,10 @@ const localMutations = {
 		Vue.set(state.isInitUsers, id, process.browser);
 		Vue.set(state, `user_${id}`, achievements);
 	},
+	setName(state, {name, achievements}) {
+		Vue.set(state.isInitNames, name, process.browser);
+		Vue.set(state, `name_${name}`, achievements);
+	},
 };
 
 const localGetters = {
@@ -41,6 +46,16 @@ const localGetters = {
 				));
 			}
 			return state[`user_${user}`] || [];
+		}
+	),
+	getByName: (state) => (
+		(name) => {
+			if (state.isInitList) {
+				return state.list.filter((datum) => (
+					datum.name === name
+				));
+			}
+			return state[`name_${name}`] || [];
 		}
 	),
 };
@@ -82,6 +97,18 @@ const localActions = {
 		commit({
 			type: 'setUser',
 			id,
+			achievements: achievements.docs.map((doc) => doc.data()),
+		});
+	},
+	fetchByName: async ({state, commit}, name) => {
+		if (state.isInitNames[name] === process.browser || state.isInitList === process.browser) {
+			return;
+		}
+
+		const achievements = await achievementsRef.where('name', '==', name).get();
+		commit({
+			type: 'setName',
+			name,
 			achievements: achievements.docs.map((doc) => doc.data()),
 		});
 	},
