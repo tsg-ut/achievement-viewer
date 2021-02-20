@@ -12,21 +12,6 @@
 						<div class="content">
 							<p class="title">
 								{{title}}
-								<span v-if="difficulty === 'baby'" class="tag is-light">
-									Baby
-								</span>
-								<span v-if="difficulty === 'easy'" class="tag is-success">
-									Easy
-								</span>
-								<span v-if="difficulty === 'medium'" class="tag is-link">
-									Medium
-								</span>
-								<span v-if="difficulty === 'hard'" class="tag is-warning">
-									Hard
-								</span>
-								<span v-if="difficulty === 'professional'" class="tag is-danger">
-									Pro
-								</span>
 							</p>
 							<div class="columns">
 								<div class="column achievements-progress">

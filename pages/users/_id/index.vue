@@ -19,21 +19,7 @@
 						<div class="content">
 							<p class="title">
 								{{datum.title}}
-								<span v-if="datum.difficulty === 'baby'" class="tag is-light">
-									Baby
-								</span>
-								<span v-if="datum.difficulty === 'easy'" class="tag is-success">
-									Easy
-								</span>
-								<span v-if="datum.difficulty === 'medium'" class="tag is-link">
-									Medium
-								</span>
-								<span v-if="datum.difficulty === 'hard'" class="tag is-warning">
-									Hard
-								</span>
-								<span v-if="datum.difficulty === 'professional'" class="tag is-danger">
-									Pro
-								</span>
+								<DifficultyBadge :difficulty="datum.difficulty" />
 							</p>
 							<div v-if="datum.counter" class="columns">
 								<div class="column achievements-progress">
@@ -69,21 +55,7 @@
 						<div class="content">
 							<p class="title">
 								??????
-								<span v-if="datum.difficulty === 'baby'" class="tag is-light">
-									Baby
-								</span>
-								<span v-if="datum.difficulty === 'easy'" class="tag is-success">
-									Easy
-								</span>
-								<span v-if="datum.difficulty === 'medium'" class="tag is-link">
-									Medium
-								</span>
-								<span v-if="datum.difficulty === 'hard'" class="tag is-warning">
-									Hard
-								</span>
-								<span v-if="datum.difficulty === 'professional'" class="tag is-danger">
-									Pro
-								</span>
+								<DifficultyBadge :difficulty="datum.difficulty" />
 							</p>
 							<div v-if="datum.counter" class="columns">
 								<div class="column achievements-progress">
@@ -113,6 +85,7 @@ import {getCategoryColor} from '@/components/utils/utils.js';
 import get from 'lodash/get.js';
 import sum from 'lodash/sum.js';
 import {mapState} from 'vuex';
+import DifficultyBadge from '../../../components/DifficultyBadge.vue';
 
 export default {
 	data() {

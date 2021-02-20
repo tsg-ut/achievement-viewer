@@ -7,6 +7,8 @@ const achievementsRef = db.collection('achievements');
 const localState = () => ({
 	isInitList: null,
 	list: [],
+	isInitLatestAchievemnts: null,
+	latestAchievements: [],
 	isInitUsers: {},
 	isInitData: {},
 });
@@ -14,6 +16,9 @@ const localState = () => ({
 const localMutations = {
 	initList(state) {
 		state.isInitList = process.browser;
+	},
+	initLatestAchievements(state) {
+		state.isInitLatestAchievemnts = process.browser;
 	},
 	initData(state, id) {
 		Vue.set(state.isInitData, id, process.browser);
@@ -26,6 +31,7 @@ const localMutations = {
 
 const localGetters = {
 	list: (state) => state.list,
+	initLatestAchievements: (state) => state.latestAchievements,
 	data: (state) => state.data,
 	getByUser: (state) => (
 		(user) => {
@@ -48,6 +54,15 @@ const localActions = {
 	},
 	bindList: firestoreAction(async ({bindFirestoreRef}) => {
 		await bindFirestoreRef('list', achievementsRef);
+	}),
+	async initLatestAchievements({state, dispatch, commit}) {
+		if (!state.isInitLatestAchievemnts) {
+			await dispatch('bindLatestAchievements');
+			commit('initLatestAchievements');
+		}
+	},
+	bindLatestAchievements: firestoreAction(async ({bindFirestoreRef}) => {
+		await bindFirestoreRef('latestAchievements', achievementsRef.orderBy('date', 'desc').limit(15));
 	}),
 	bind: firestoreAction(async ({bindFirestoreRef, state, commit}, id) => {
 		if (state.isInitData[id] === process.browser || state.isInitList === process.browser) {
