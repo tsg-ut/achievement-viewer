@@ -2,14 +2,47 @@
 	<div class="container">
 		<progress v-if="isLoading" class="progress is-small is-primary" max="100">15%</progress>
 		<div class="box">
-			<h1 class="title is-size-1 ">{{title}}<DifficultyBadge :difficulty="difficulty" /></h1>
+			<h1 class="title is-size-1">{{title}}<DifficultyBadge :difficulty="difficulty" /></h1>
 			<h2 class="subtitle">{{condition}}</h2>
 		</div>
 		<div class="block">{{count}}人が解除済み</div>
 		<div class="block">
 			<nuxt-link v-for="user in users" :key="user.id" :to="`/users/${user.id}`">
-				<img :src="getIcon(user)" />
+				<img :src="getUserIcon3x(user)" />
 			</nuxt-link>
+		</div>
+		<div v-if="counter !== null">
+			<h1 class="title is-3">実績の達成状況</h1>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>ユーザー</th>
+						<th :style="{width: '100%'}">達成状況</th>
+						<th/>
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="user in sortedUserList" :key="user.id">
+						<td :style="{whiteSpace: 'nowrap'}">
+							<nuxt-link :to="`/users/${user.id}`">
+								<img class="index-icon" :src="getUserIcon(user)" :srcset="`${getUserIcon(user)} 1x, ${getUserIcon2x(user)} 2x`">
+								{{getUserName(user)}}
+							</nuxt-link>
+						</td>
+						<td>
+							<progress
+								class="progress is-success"
+								:class="(user[counter] || 0) >= value ? 'is-success' : 'is-warning'"
+								:value="user[counter] || 0"
+								:max="value"
+							/>
+						</td>
+						<td :style="{whiteSpace: 'nowrap'}">
+							{{user[counter] || 0}} / {{value}}
+						</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 	</div>
 </template>
@@ -28,6 +61,9 @@ export default {
 		};
 	},
 	computed: {
+		...mapState({
+			userList: (state) => state.users.list,
+		}),
 		achievementDatum() {
 			return this.$store.getters['achievementData/getById'](this.$route.params.id);
 		},
@@ -38,7 +74,13 @@ export default {
 			return get(this.achievementDatum, ['condition'], '');
 		},
 		count() {
-			return get(this.achievementDatum, ['count'], '');
+			return get(this.achievementDatum, ['count'], 0);
+		},
+		counter() {
+			return get(this.achievementDatum, ['counter'], null);
+		},
+		value() {
+			return get(this.achievementDatum, ['value'], 0);
 		},
 		difficulty() {
 			return get(this.achievementDatum, ['difficulty'], '');
@@ -51,8 +93,10 @@ export default {
 			})).sort((a, b) => {
 				return a.date - b.date;
 			}).map(({user}) => user);
-			console.log(users);
 			return users;
+		},
+		sortedUserList() {
+			return this.userList.slice().sort((a, b) => (b[this.counter] || 0) - (a[this.counter] || 0));
 		},
 	},
 	async fetch({store}) {
@@ -70,7 +114,17 @@ export default {
 		});
 	},
 	methods: {
-		getIcon(user) {
+		getUserName(user) {
+			const name = get(user, ['info', 'profile', 'display_name'], false) || get(user, ['info', 'real_name'], false) || user.id;
+			return `@${name}`;
+		},
+		getUserIcon(user) {
+			return get(user, ['info', 'profile', 'image_24'], 'https://placehold.it/24x24');
+		},
+		getUserIcon2x(user) {
+			return get(user, ['info', 'profile', 'image_48'], 'https://placehold.it/48x48');
+		},
+		getUserIcon3x(user) {
 			return get(user, ['info', 'profile', 'image_72'], 'https://placehold.it/72x72');
 		},
 	},
