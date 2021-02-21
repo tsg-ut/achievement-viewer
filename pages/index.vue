@@ -27,6 +27,18 @@
 				</tr>
 			</tbody>
 		</table>
+		<h2>統計情報</h2>
+		<div class="columns is-multiline block">
+			<div class="column is-half">
+				<PieChartStat :chart-data="statsByDifficulty"></PieChartStat>
+			</div>
+			<div class="column is-half">
+				<PieChartStat :chart-data="statsByCategory"></PieChartStat>
+			</div>
+			<div class="column is-full">
+				<TimeSeriesStat :chart-data="statsByMonth"></TimeSeriesStat>
+			</div>
+		</div>
 		<h2>ユーザー一覧</h2>
 		<table class="table">
 			<thead>
@@ -62,20 +74,63 @@ export default {
 		return {
 			online: true,
 			isLoading: true,
+			datacollection: null
 		};
 	},
 	computed: {
 		...mapState({
 			users: (state) => state.users.list,
 			achievementData: (state) => state.achievementData.list,
+			achievementStatsByDifficulty: (state) => state.achievementStatsByDifficulty.list,
+			achievementStatsByCategory: (state) => state.achievementStatsByCategory.list,
+			achievementStatsByMonth: (state) => state.achievementStatsByMonth.list,
 			latestAchievements: (state) => state.achievements.latestAchievements,
 		}),
+		statsByDifficulty() {
+			const labels = ['baby', 'easy', 'medium', 'hard', 'professional'];
+			return {
+				datasets: [{
+					data: labels.map((label) => {
+						const stat = this.achievementStatsByDifficulty.find((stat) => stat.id === label);
+						if (stat) {
+							return stat.count;
+						}
+						return 0;
+					}),
+					backgroundColor: ['whitesmoke', '#48c774', '#3273dc', '#ffdd57', '#f14668'],
+				}],
+				labels,
+			};
+		},
+		statsByCategory() {
+			return {
+				datasets: [{
+					data: this.achievementStatsByCategory.map((stat) => stat.count),
+					backgroundColor: this.achievementStatsByCategory.map((stat) => getCategoryColor(stat.id)),
+				}],
+				labels: this.achievementStatsByCategory.map((stat) => stat.id),
+			};
+		},
+		statsByMonth() {
+			return {
+				datasets: [{
+					label: '実績解除数',
+					data: this.achievementStatsByMonth.map((stat) => stat.count),
+					fill: false,
+					borderColor: '#3273dc',
+				}],
+				labels: this.achievementStatsByMonth.map((stat) => new Date(stat.id)),
+			};
+		},
 	},
 	async fetch({store}) {
 		if (!process.browser) {
 			await store.dispatch('users/bindList');
 			await store.dispatch('achievements/bindLatestAchievements');
 			await store.dispatch('achievementsData/bindList');
+			await store.dispatch('achievementStatsByDifficulty/bindList');
+			await store.dispatch('achievementStatsByCategory/bindList');
+			await store.dispatch('achievementStatsByMonth/bindList');
 		}
 	},
 	mounted() {
@@ -83,6 +138,9 @@ export default {
 			this.$store.dispatch('users/initList'),
 			this.$store.dispatch('achievements/initLatestAchievements'),
 			this.$store.dispatch('achievementData/initList'),
+			this.$store.dispatch('achievementStatsByDifficulty/initList'),
+			this.$store.dispatch('achievementStatsByCategory/initList'),
+			this.$store.dispatch('achievementStatsByMonth/initList'),
 		]).then(() => {
 			this.isLoading = false;
 		});
