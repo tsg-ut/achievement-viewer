@@ -13,36 +13,38 @@
 		</div>
 		<div v-if="counter !== null">
 			<h1 class="title is-3">実績の達成状況</h1>
-			<table class="table">
-				<thead>
-					<tr>
-						<th>ユーザー</th>
-						<th :style="{width: '100%'}">達成状況</th>
-						<th/>
-					</tr>
-				</thead>
-				<tbody>
-					<tr v-for="user in sortedUserList" :key="user.id">
-						<td :style="{whiteSpace: 'nowrap'}">
-							<nuxt-link :to="`/users/${user.id}`">
-								<img class="index-icon" :src="getUserIcon(user)" :srcset="`${getUserIcon(user)} 1x, ${getUserIcon2x(user)} 2x`">
-								{{getUserName(user)}}
-							</nuxt-link>
-						</td>
-						<td>
-							<progress
-								class="progress is-success"
-								:class="(user[counter] || 0) >= value ? 'is-success' : 'is-warning'"
-								:value="user[counter] || 0"
-								:max="value"
-							/>
-						</td>
-						<td :style="{whiteSpace: 'nowrap'}">
-							{{user[counter] || 0}} / {{value}}
-						</td>
-					</tr>
-				</tbody>
-			</table>
+			<div class="table-container">
+				<table class="table">
+					<thead>
+						<tr>
+							<th>ユーザー</th>
+							<th :style="{width: '100%'}">達成状況</th>
+							<th/>
+						</tr>
+					</thead>
+					<tbody>
+						<tr v-for="user in sortedUserList" :key="user.id">
+							<td :style="{whiteSpace: 'nowrap', maxWidth: '15rem', textOverflow: 'ellipsis', overflow: 'hidden'}">
+								<nuxt-link :to="`/users/${user.id}`">
+									<img class="index-icon" :src="getUserIcon(user)" :srcset="`${getUserIcon(user)} 1x, ${getUserIcon2x(user)} 2x`">
+									{{getUserName(user)}}
+								</nuxt-link>
+							</td>
+							<td :style="{minWidth: '15rem'}">
+								<progress
+									class="progress is-success"
+									:class="(user[counter] || 0) >= value ? 'is-success' : 'is-warning'"
+									:value="user[counter] || 0"
+									:max="value"
+								/>
+							</td>
+							<td :style="{whiteSpace: 'nowrap'}">
+								{{user[counter] || 0}} / {{value}}
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</div>
 </template>
