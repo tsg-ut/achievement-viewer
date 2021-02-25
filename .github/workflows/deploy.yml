@@ -26,6 +26,8 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
+      - name: Install dependencies
+        run: npm --prefix functions install
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@master
         with:
