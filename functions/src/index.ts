@@ -12,7 +12,7 @@ export const updateCounts = functions_firestore.document('achievements/{id}').on
 	db.runTransaction(async (transaction) => {
 		const name = achievement.get('name');
 		const user = achievement.get('user');
-		const date = new Date(achievement.get('date').seconds);
+		const date = new Date(achievement.get('date').seconds * 1000);
 		const month = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
 
 		const achievementRef = db.collection('achievement_data').doc(name);
@@ -36,9 +36,9 @@ export const updateCounts = functions_firestore.document('achievements/{id}').on
 			...(achievementDatum.get('first') === undefined ? {first: user} : {}),
 		});
 
-		transaction.update(categoryStatRef, {count: (categoryStatDatum.get('count') || 0) + 1});
-		transaction.update(difficultyStatRef, {count: (difficultyStatDatum.get('count') || 0) + 1});
-		transaction.update(monthStatRef, {count: (monthStatDatum.get('count') || 0) + 1});
+		transaction.set(categoryStatRef, {count: (categoryStatDatum.get('count') || 0) + 1});
+		transaction.set(difficultyStatRef, {count: (difficultyStatDatum.get('count') || 0) + 1});
+		transaction.set(monthStatRef, {count: (monthStatDatum.get('count') || 0) + 1});
 
 		const oldCounts = userDatum.get('counts') || {};
 		transaction.update(userRef, {
