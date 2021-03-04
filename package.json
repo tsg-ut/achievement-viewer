@@ -35,7 +35,7 @@
     "eslint-plugin-promise": ">=4.3.1",
     "eslint-plugin-standard": ">=4.1.0",
     "eslint-plugin-vue": "^7.6.0",
-    "firebase": "^8.2.9",
+    "firebase": "^8.2.10",
     "firebase-admin": "^9.5.0",
     "firebase-tools": "^9.4.0",
     "nodemon": "^2.0.7",
