@@ -37,7 +37,7 @@
     "eslint-plugin-vue": "^7.7.0",
     "firebase": "^8.3.0",
     "firebase-admin": "^9.5.0",
-    "firebase-tools": "^9.4.0",
+    "firebase-tools": "^9.6.1",
     "nodemon": "^2.0.7",
     "randomcolor": "^0.6.2",
     "vuexfire": "^3.2.5"
