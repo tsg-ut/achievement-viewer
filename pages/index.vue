@@ -53,8 +53,8 @@
 				<tr v-for="user in users" :key="user.id">
 					<td>
 						<nuxt-link :to="`/users/${user.id}`">
-							<img class="index-icon" :src="getUserIcon(user)" :srcset="`${getUserIcon(user)} 1x, ${getUserIcon2x(user)} 2x`">
-							{{getUserName(user)}}
+							<img class="index-icon" :src="getUserIcon(getUser(user.id))" :srcset="`${getUserIcon(getUser(user.id))} 1x, ${getUserIcon2x(getUser(user.id))} 2x`">
+							{{getUserName(getUser(user.id))}}
 						</nuxt-link>
 					</td>
 				</tr>
