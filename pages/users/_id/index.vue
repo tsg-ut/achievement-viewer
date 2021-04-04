@@ -1,6 +1,9 @@
 <template>
 	<div class="container">
 		<progress v-if="isLoading" class="progress is-small is-primary" max="100">15%</progress>
+		<div v-if="isUnauthorized" class="notification is-danger">
+			ログインしていないためユーザー名などの情報は表示されません。あなたがTSGerである場合は<a href="https://slackbot-api.tsg.ne.jp/">こちら</a>からログインしてください。
+		</div>
 		<div class="columns has-text-centered">
 			<div class="column is-narrow">
 				<img :src="icon" :srcset="`${icon} 1x, ${icon2x} 2x`">
@@ -98,15 +101,19 @@ export default {
 			achievementData: (state) => (
 				state.achievementData.list
 			),
+			isUnauthorized: (state) => state.slackInfos.isUnauthorized,
 		}),
 		user() {
 			return this.$store.getters['users/getById'](this.$route.params.id);
+		},
+		slackUser() {
+			return this.$store.getters['slackInfos/getUser'](this.$route.params.id);
 		},
 		achievementCount() {
 			return sum(Object.values(this.user.counts || {}));
 		},
 		name() {
-			const name = get(this.user, ['info', 'profile', 'display_name'], false) || get(this.user, ['info', 'real_name'], false) || this.user.id;
+			const name = get(this.slackUser, ['profile', 'display_name'], false) || get(this.slackUser, ['real_name'], false) || '匿名ユーザー';
 			return `@${name}`;
 		},
 		achievements() {
@@ -128,10 +135,10 @@ export default {
 				.sort((a, b) => (a.category && b.category) ? a.category.localeCompare(b.category) : 0);
 		},
 		icon() {
-			return get(this.user, ['info', 'profile', 'image_72'], 'https://placehold.it/72x72');
+			return get(this.slackUser, ['profile', 'image_72'], '/images/anonymous-icon_72.png');
 		},
 		icon2x() {
-			return get(this.user, ['info', 'profile', 'image_192'], 'https://placehold.it/192x192');
+			return get(this.slackUser, ['profile', 'image_192'], '/images/anonymous-icon_192.png');
 		},
 	},
 	async fetch({store}) {
@@ -142,6 +149,7 @@ export default {
 	mounted() {
 		Promise.all([
 			this.$store.dispatch('achievementData/initList'),
+			this.$store.dispatch('slackInfos/init'),
 			this.$store.dispatch('users/bindById', this.$route.params.id),
 			this.$store.dispatch('users/initList'),
 		]).then(() => {

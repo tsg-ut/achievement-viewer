@@ -1,6 +1,9 @@
 <template>
 	<div class="container content">
 		<progress v-if="isLoading" class="progress is-small is-primary" max="100">15%</progress>
+		<div v-if="isUnauthorized" class="notification is-danger">
+			ログインしていないためユーザー名などの情報は表示されません。あなたがTSGerである場合は<a href="https://slackbot-api.tsg.ne.jp/">こちら</a>からログインしてください。
+		</div>
 		<h2>最近のアクティビティ</h2>
 		<table class="table">
 			<thead>
@@ -65,7 +68,7 @@ import {getCategoryColor} from '@/components/utils/utils.js';
 import flatten from 'lodash/flatten.js';
 import get from 'lodash/get.js';
 import sum from 'lodash/sum.js';
-import {mapState} from 'vuex';
+import {mapGetters, mapState} from 'vuex';
 
 import db from '~/components/utils/db.js'
 
@@ -85,7 +88,9 @@ export default {
 			achievementStatsByCategory: (state) => state.achievementStatsByCategory.list,
 			achievementStatsByMonth: (state) => state.achievementStatsByMonth.list,
 			latestAchievements: (state) => state.achievements.latestAchievements,
+			isUnauthorized: (state) => state.slackInfos.isUnauthorized,
 		}),
+		...mapGetters('slackInfos', ['getUser']),
 		statsByDifficulty() {
 			const labels = ['baby', 'easy', 'medium', 'hard', 'professional'];
 			return {
@@ -126,6 +131,7 @@ export default {
 	async fetch({store}) {
 		if (!process.browser) {
 			await store.dispatch('users/bindList');
+			await store.dispatch('slackInfos/init');
 			await store.dispatch('achievements/bindLatestAchievements');
 			await store.dispatch('achievementsData/bindList');
 			await store.dispatch('achievementStatsByDifficulty/bindList');
@@ -136,6 +142,7 @@ export default {
 	mounted() {
 		Promise.all([
 			this.$store.dispatch('users/initList'),
+			this.$store.dispatch('slackInfos/init'),
 			this.$store.dispatch('achievements/initLatestAchievements'),
 			this.$store.dispatch('achievementData/initList'),
 			this.$store.dispatch('achievementStatsByDifficulty/initList'),
@@ -146,18 +153,15 @@ export default {
 		});
 	},
 	methods: {
-		getUser(id) {
-			return this.users.find((user) => user.id === id);
-		},
 		getUserName(user) {
-			const name = get(user, ['info', 'profile', 'display_name'], false) || get(user, ['info', 'real_name'], false) || user.id;
+			const name = get(user, ['profile', 'display_name'], false) || get(user, ['real_name'], false) || '匿名ユーザー';
 			return `@${name}`;
 		},
 		getUserIcon(user) {
-			return get(user, ['info', 'profile', 'image_24'], 'https://placehold.it/24x24');
+			return get(user, ['profile', 'image_24'], '/images/anonymous-icon_24.png');
 		},
 		getUserIcon2x(user) {
-			return get(user, ['info', 'profile', 'image_48'], 'https://placehold.it/48x48');
+			return get(user, ['profile', 'image_48'], '/images/anonymous-icon_48.png');
 		},
 		getCategoryColor(category) {
 			return getCategoryColor(category);

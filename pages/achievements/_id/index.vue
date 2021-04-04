@@ -1,6 +1,9 @@
 <template>
 	<div class="container">
 		<progress v-if="isLoading" class="progress is-small is-primary" max="100">15%</progress>
+		<div v-if="isUnauthorized" class="notification is-danger">
+			ログインしていないためユーザー名などの情報は表示されません。あなたがTSGerである場合は<a href="https://slackbot-api.tsg.ne.jp/">こちら</a>からログインしてください。
+		</div>
 		<div class="box">
 			<h1 class="title is-size-1">{{title}}<DifficultyBadge :difficulty="difficulty" /></h1>
 			<h2 class="subtitle">{{condition}}</h2>
@@ -65,6 +68,7 @@ export default {
 	computed: {
 		...mapState({
 			userList: (state) => state.users.list,
+			isUnauthorized: (state) => state.slackInfos.isUnauthorized,
 		}),
 		achievementDatum() {
 			return this.$store.getters['achievementData/getById'](this.$route.params.id);
@@ -91,7 +95,7 @@ export default {
 			const users = this.$store.getters['achievements/getByName'](this.$route.params.id).map(({name, date, user}) => ({
 				name,
 				date,
-				user: this.$store.getters['users/getById'](user),
+				user: this.$store.getters['slackInfos/getUser'](user),
 			})).sort((a, b) => {
 				return a.date - b.date;
 			}).map(({user}) => user);
@@ -110,6 +114,7 @@ export default {
 		Promise.all([
 			this.$store.dispatch('achievementData/initList'),
 			this.$store.dispatch('achievements/fetchByName', this.$route.params.id),
+			this.$store.dispatch('slackInfos/init'),
 			this.$store.dispatch('users/initList'),
 		]).then(() => {
 			this.isLoading = false;
@@ -117,17 +122,17 @@ export default {
 	},
 	methods: {
 		getUserName(user) {
-			const name = get(user, ['info', 'profile', 'display_name'], false) || get(user, ['info', 'real_name'], false) || user.id;
+			const name = get(user, ['profile', 'display_name'], false) || get(user, ['real_name'], false) || '匿名ユーザー';
 			return `@${name}`;
 		},
 		getUserIcon(user) {
-			return get(user, ['info', 'profile', 'image_24'], 'https://placehold.it/24x24');
+			return get(user, ['profile', 'image_24'], '/images/anonymous-icon_24.png');
 		},
 		getUserIcon2x(user) {
-			return get(user, ['info', 'profile', 'image_48'], 'https://placehold.it/48x48');
+			return get(user, ['profile', 'image_48'], '/images/anonymous-icon_48.png');
 		},
 		getUserIcon3x(user) {
-			return get(user, ['info', 'profile', 'image_72'], 'https://placehold.it/72x72');
+			return get(user, ['profile', 'image_72'], '/images/anonymous-icon_72.png');
 		},
 	},
 	head() {
