@@ -1,9 +1,7 @@
 <template>
 	<div class="container content">
 		<progress v-if="isLoading" class="progress is-small is-primary" max="100">15%</progress>
-		<div v-if="isUnauthorized" class="notification is-danger">
-			ログインしていないためユーザー名などの情報は表示されません。あなたがTSGerである場合は<a href="https://slackbot-api.tsg.ne.jp/">こちら</a>からログインしてください。
-		</div>
+		<UnauthorizedNotification/>
 		<h2>最近のアクティビティ</h2>
 		<table class="table">
 			<thead>
@@ -71,8 +69,10 @@ import sum from 'lodash/sum.js';
 import {mapGetters, mapState} from 'vuex';
 
 import db from '~/components/utils/db.js'
+import UnauthorizedNotification from '../components/UnauthorizedNotification.vue';
 
 export default {
+  components: { UnauthorizedNotification },
 	data() {
 		return {
 			online: true,
@@ -88,7 +88,6 @@ export default {
 			achievementStatsByCategory: (state) => state.achievementStatsByCategory.list,
 			achievementStatsByMonth: (state) => state.achievementStatsByMonth.list,
 			latestAchievements: (state) => state.achievements.latestAchievements,
-			isUnauthorized: (state) => state.slackInfos.isUnauthorized,
 		}),
 		...mapGetters('slackInfos', ['getUser']),
 		statsByDifficulty() {

@@ -1,9 +1,7 @@
 <template>
 	<div class="container">
 		<progress v-if="isLoading" class="progress is-small is-primary" max="100">15%</progress>
-		<div v-if="isUnauthorized" class="notification is-danger">
-			ログインしていないためユーザー名などの情報は表示されません。あなたがTSGerである場合は<a href="https://slackbot-api.tsg.ne.jp/">こちら</a>からログインしてください。
-		</div>
+		<UnauthorizedNotification/>
 		<div class="columns has-text-centered">
 			<div class="column is-narrow">
 				<img :src="icon" :srcset="`${icon} 1x, ${icon2x} 2x`">
@@ -101,7 +99,6 @@ export default {
 			achievementData: (state) => (
 				state.achievementData.list
 			),
-			isUnauthorized: (state) => state.slackInfos.isUnauthorized,
 		}),
 		user() {
 			return this.$store.getters['users/getById'](this.$route.params.id);
