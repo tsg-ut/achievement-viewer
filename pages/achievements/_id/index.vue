@@ -27,20 +27,20 @@
 						<tr v-for="user in sortedUserList" :key="user.id">
 							<td :style="{whiteSpace: 'nowrap', maxWidth: '15rem', textOverflow: 'ellipsis', overflow: 'hidden'}">
 								<nuxt-link :to="`/users/${user.id}`">
-									<img class="index-icon" :src="getUserIcon(user)" :srcset="`${getUserIcon(user)} 1x, ${getUserIcon2x(user)} 2x`">
-									{{getUserName(user)}}
+									<img class="index-icon" :src="getUserIcon(user.info)" :srcset="`${getUserIcon(user.info)} 1x, ${getUserIcon2x(user.info)} 2x`">
+									{{getUserName(user.info)}}
 								</nuxt-link>
 							</td>
 							<td :style="{minWidth: '15rem'}">
 								<progress
 									class="progress is-success"
-									:class="(user[counter] || 0) >= value ? 'is-success' : 'is-warning'"
-									:value="user[counter] || 0"
+									:class="(user.count || 0) >= value ? 'is-success' : 'is-warning'"
+									:value="user.count || 0"
 									:max="value"
 								/>
 							</td>
 							<td :style="{whiteSpace: 'nowrap'}">
-								{{user[counter] || 0}} / {{value}}
+								{{user.count || 0}} / {{value}}
 							</td>
 						</tr>
 					</tbody>
@@ -99,7 +99,13 @@ export default {
 			return users;
 		},
 		sortedUserList() {
-			return this.userList.slice().sort((a, b) => (b[this.counter] || 0) - (a[this.counter] || 0));
+			return this.userList.slice()
+				.sort((a, b) => (b[this.counter] || 0) - (a[this.counter] || 0))
+				.map((user) => ({
+					info: this.$store.getters['slackInfos/getUser'](user.id),
+					count: user[this.counter],
+					id: user.id,
+				}));
 		},
 	},
 	async fetch({store}) {
