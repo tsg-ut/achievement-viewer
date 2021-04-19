@@ -20,8 +20,8 @@
 
 <script>
 export default {
-	props: ['difficulty'],
 	components: true,
-}
+	props: ['difficulty'],
+};
 </script>
 

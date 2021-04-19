@@ -25,6 +25,6 @@ export default {
 		this.url = location.href;
 	},
 	components: true,
-}
+};
 </script>
 

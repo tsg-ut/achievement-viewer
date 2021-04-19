@@ -20,7 +20,7 @@
 						<div class="content">
 							<p class="title">
 								{{datum.title}}
-								<DifficultyBadge :difficulty="datum.difficulty" />
+								<DifficultyBadge :difficulty="datum.difficulty"/>
 							</p>
 							<div v-if="datum.counter" class="columns">
 								<div class="column achievements-progress">
@@ -56,7 +56,7 @@
 						<div class="content">
 							<p class="title">
 								??????
-								<DifficultyBadge :difficulty="datum.difficulty" />
+								<DifficultyBadge :difficulty="datum.difficulty"/>
 							</p>
 							<div v-if="datum.counter" class="columns">
 								<div class="column achievements-progress">

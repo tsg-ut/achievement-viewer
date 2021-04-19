@@ -1,7 +1,7 @@
 <template>
 	<div class="container content">
 		<progress v-if="isLoading" class="progress is-small is-primary" max="100">15%</progress>
-		<UnauthorizedNotification/>
+		<unauthorized-notification/>
 		<h2>最近のアクティビティ</h2>
 		<table class="table">
 			<thead>
@@ -21,7 +21,7 @@
 						が
 						<nuxt-link :to="`/achievements/${achievement.name}`">
 							<strong>{{getAchievement(achievement.name).title}}</strong>
-							<DifficultyBadge :difficulty="getAchievement(achievement.name).difficulty" />
+							<DifficultyBadge :difficulty="getAchievement(achievement.name).difficulty"/>
 						</nuxt-link>
 						を解除しました。
 					</td>
@@ -31,13 +31,13 @@
 		<h2>統計情報</h2>
 		<div class="columns is-multiline block">
 			<div class="column is-half">
-				<PieChartStat :chart-data="statsByDifficulty"></PieChartStat>
+				<PieChartStat :chart-data="statsByDifficulty"/>
 			</div>
 			<div class="column is-half">
-				<PieChartStat :chart-data="statsByCategory"></PieChartStat>
+				<PieChartStat :chart-data="statsByCategory"/>
 			</div>
 			<div class="column is-full">
-				<TimeSeriesStat :chart-data="statsByMonth"></TimeSeriesStat>
+				<TimeSeriesStat :chart-data="statsByMonth"/>
 			</div>
 		</div>
 		<h2>ユーザー一覧</h2>
@@ -68,16 +68,16 @@ import get from 'lodash/get.js';
 import sum from 'lodash/sum.js';
 import {mapGetters, mapState} from 'vuex';
 
-import db from '~/components/utils/db.js'
 import UnauthorizedNotification from '../components/UnauthorizedNotification.vue';
+import db from '~/components/utils/db.js';
 
 export default {
-  components: { UnauthorizedNotification },
+	components: {UnauthorizedNotification},
 	data() {
 		return {
 			online: true,
 			isLoading: true,
-			datacollection: null
+			datacollection: null,
 		};
 	},
 	computed: {

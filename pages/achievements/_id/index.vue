@@ -3,13 +3,13 @@
 		<progress v-if="isLoading" class="progress is-small is-primary" max="100">15%</progress>
 		<UnauthorizedNotification/>
 		<div class="box">
-			<h1 class="title is-size-1">{{title}}<DifficultyBadge :difficulty="difficulty" /></h1>
+			<h1 class="title is-size-1">{{title}}<DifficultyBadge :difficulty="difficulty"/></h1>
 			<h2 class="subtitle">{{condition}}</h2>
 		</div>
 		<div class="block">{{count}}人が解除済み</div>
 		<div class="block">
 			<nuxt-link v-for="user in users" :key="user.id" :to="`/users/${user.id}`">
-				<img :src="getUserIcon3x(user)" />
+				<img :src="getUserIcon3x(user)">
 			</nuxt-link>
 		</div>
 		<div v-if="counter !== null">
@@ -93,9 +93,7 @@ export default {
 				name,
 				date,
 				user: this.$store.getters['slackInfos/getUser'](user),
-			})).sort((a, b) => {
-				return a.date - b.date;
-			}).map(({user}) => user);
+			})).sort((a, b) => a.date - b.date).map(({user}) => user);
 			return users;
 		},
 		sortedUserList() {

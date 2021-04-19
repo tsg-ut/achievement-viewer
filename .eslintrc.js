@@ -1,12 +1,5 @@
 module.exports = {
 	root: true,
-	parserOptions: {
-	  parser: 'babel-eslint',
-	},
-	env: {
-		browser: true,
-		node: true,
-	},
 	extends: [
 		'@hakatashi',
 	],
@@ -15,5 +8,4 @@ module.exports = {
 		'node/no-unsupported-features/es-syntax': 'off',
 		'max-params': 'off',
 	},
-	globals: {},
 };

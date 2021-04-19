@@ -4,6 +4,7 @@ import {Line, mixins} from 'vue-chartjs';
 const {reactiveProp} = mixins;
 
 export default {
+	components: true,
 	extends: Line,
 	mixins: [reactiveProp],
 	mounted() {
@@ -20,8 +21,7 @@ export default {
 			aspectRatio: 4,
 		});
 	},
-	components: true,
-}
+};
 </script>
 
 <style></style>
