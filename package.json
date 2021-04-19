@@ -24,8 +24,6 @@
   },
   "devDependencies": {
     "@hakatashi/eslint-config": "^1.15.0",
-    "@nuxtjs/eslint-config": "^6.0.0",
-    "@nuxtjs/eslint-module": "^3.0.2",
     "eslint": "^7.24.0",
     "firebase": "^8.4.1",
     "firebase-admin": "^9.6.0",
