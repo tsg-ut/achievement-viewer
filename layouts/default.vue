@@ -73,4 +73,12 @@ html {
 .footer {
 	margin-top: 3rem;
 }
+
+ul.steps {
+	list-style: none;
+}
+
+.steps p:not(:last-child) {
+	margin-bottom: 0;
+}
 </style>

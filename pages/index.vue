@@ -2,6 +2,7 @@
 	<div class="container content">
 		<progress v-if="isLoading" class="progress is-small is-primary" max="100">15%</progress>
 		<unauthorized-notification/>
+
 		<h2>最近のアクティビティ</h2>
 		<table class="table">
 			<thead>

@@ -25,6 +25,9 @@ const localGetters = {
 			return achievementDatum;
 		}
 	),
+	getByCounter: (state) => (
+		(counter) => state.list.filter((datum) => datum.counter === counter).sort((a, b) => a.value - b.value)
+	),
 };
 
 const localActions = {

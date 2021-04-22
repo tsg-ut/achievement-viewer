@@ -20,6 +20,7 @@ export default {
 	loading: {color: '#fff'},
 
 	css: [
+		'bulma-o-steps/bulma-steps.css',
 	],
 
 	plugins: [

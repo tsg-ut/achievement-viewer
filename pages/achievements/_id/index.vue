@@ -2,6 +2,9 @@
 	<div class="container">
 		<progress v-if="isLoading" class="progress is-small is-primary" max="100">15%</progress>
 		<UnauthorizedNotification/>
+		<div class="block">
+			カテゴリ: <span class="category-tag tag is-medium" :style="{backgroundColor: categoryColor}">{{category}}</span>
+		</div>
 		<div class="box">
 			<h1 class="title is-size-1">{{title}}<DifficultyBadge :difficulty="difficulty"/></h1>
 			<h2 class="subtitle">{{condition}}</h2>
@@ -13,6 +16,19 @@
 			</nuxt-link>
 		</div>
 		<div v-if="counter !== null">
+			<h1 class="title is-3">上位/下位実績</h1>
+			<ul class="steps has-content-centered">
+				<li v-for="achievementData in sameCounterAchievements" :key="achievementData.id" class="steps-segment" :class="{'is-active': achievementData.id === $route.params.id}">
+					<nuxt-link :to="`/achievements/${achievementData.id}`">
+						<span class="steps-marker"></span>
+						<div class="steps-content">
+							<p class="is-size-4">{{achievementData.title}}</p>
+							<p class="is-size-7">{{achievementData.condition}}</p>
+							<DifficultyBadge :difficulty="achievementData.difficulty" />
+						</div>
+					</nuxt-link>
+				</li>
+			</ul>
 			<h1 class="title is-3">実績の達成状況</h1>
 			<div class="table-container">
 				<table class="table">
@@ -53,9 +69,7 @@
 <script>
 import {getCategoryColor} from '@/components/utils/utils.js';
 import get from 'lodash/get.js';
-import sum from 'lodash/sum.js';
 import {mapState} from 'vuex';
-import DifficultyBadge from '../../../components/DifficultyBadge.vue';
 
 export default {
 	data() {
@@ -88,6 +102,9 @@ export default {
 		difficulty() {
 			return get(this.achievementDatum, ['difficulty'], '');
 		},
+		category() {
+			return get(this.achievementDatum, ['category'], '');
+		},
 		users() {
 			const users = this.$store.getters['achievements/getByName'](this.$route.params.id).map(({name, date, user}) => ({
 				name,
@@ -104,6 +121,15 @@ export default {
 					count: user[this.counter],
 					id: user.id,
 				}));
+		},
+		sameCounterAchievements() {
+			if (this.counter === null) {
+				return [];
+			}
+			return this.$store.getters['achievementData/getByCounter'](this.counter);
+		},
+		categoryColor() {
+			return getCategoryColor(this.category);
 		},
 	},
 	async fetch({store}) {
@@ -158,5 +184,11 @@ export default {
 .user-title {
 	white-space: nowrap;
 	overflow: hidden;
+}
+.steps-segment > a {
+	color: inherit;
+}
+.tag.category-tag {
+	color: white;
 }
 </style>
