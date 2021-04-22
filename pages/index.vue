@@ -64,13 +64,10 @@
 
 <script>
 import {getCategoryColor} from '@/components/utils/utils.js';
-import flatten from 'lodash/flatten.js';
 import get from 'lodash/get.js';
-import sum from 'lodash/sum.js';
 import {mapGetters, mapState} from 'vuex';
 
 import UnauthorizedNotification from '../components/UnauthorizedNotification.vue';
-import db from '~/components/utils/db.js';
 
 export default {
 	components: {UnauthorizedNotification},
@@ -121,10 +118,9 @@ export default {
 				datasets: [{
 					label: '実績解除数',
 					data: this.achievementStatsByMonth.map((stat) => stat.count),
-					fill: false,
-					borderColor: '#3273dc',
+					backgroundColor: '#3273dc',
 				}],
-				labels: this.achievementStatsByMonth.map((stat) => new Date(stat.id)),
+				labels: this.achievementStatsByMonth.map((stat) => stat.id),
 			};
 		},
 	},
