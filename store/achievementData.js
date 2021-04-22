@@ -28,6 +28,9 @@ const localGetters = {
 	getByCounter: (state) => (
 		(counter) => state.list.filter((datum) => datum.counter === counter).sort((a, b) => a.value - b.value)
 	),
+	getByCategory: (state) => (
+		(category) => state.list.filter((datum) => datum.category === category).sort((a, b) => (b.count || 0) - (a.count || 0))
+	),
 };
 
 const localActions = {

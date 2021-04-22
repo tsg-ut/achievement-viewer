@@ -3,7 +3,7 @@
 		<progress v-if="isLoading" class="progress is-small is-primary" max="100">15%</progress>
 		<UnauthorizedNotification/>
 		<div class="block">
-			カテゴリ: <span class="category-tag tag is-medium" :style="{backgroundColor: categoryColor}">{{category}}</span>
+			カテゴリ: <nuxt-link :to="`/categories/${category}`" class="category-tag tag is-medium" :style="{backgroundColor: categoryColor}">{{category}}</nuxt-link>
 		</div>
 		<div class="box">
 			<h1 class="title is-size-1">{{title}}<DifficultyBadge :difficulty="difficulty"/></h1>
@@ -18,13 +18,18 @@
 		<div v-if="counter !== null">
 			<h1 class="title is-3">上位/下位実績</h1>
 			<ul class="steps has-content-centered">
-				<li v-for="achievementData in sameCounterAchievements" :key="achievementData.id" class="steps-segment" :class="{'is-active': achievementData.id === $route.params.id}">
+				<li
+					v-for="achievementData in sameCounterAchievements"
+					:key="achievementData.id"
+					class="steps-segment"
+					:class="{'is-active': achievementData.id === $route.params.id}"
+				>
 					<nuxt-link :to="`/achievements/${achievementData.id}`">
-						<span class="steps-marker"></span>
+						<span class="steps-marker"/>
 						<div class="steps-content">
 							<p class="is-size-4">{{achievementData.title}}</p>
 							<p class="is-size-7">{{achievementData.condition}}</p>
-							<DifficultyBadge :difficulty="achievementData.difficulty" />
+							<DifficultyBadge :difficulty="achievementData.difficulty"/>
 						</div>
 					</nuxt-link>
 				</li>
