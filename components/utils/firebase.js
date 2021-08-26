@@ -1,6 +1,4 @@
-const firebase = require('firebase/app');
-
-require('firebase/firestore');
+import firebase from 'firebase/app';
 
 if (firebase.getApps().length === 0) {
 	firebase.initializeApp({
@@ -15,4 +13,4 @@ if (firebase.getApps().length === 0) {
 }
 
 // eslint-disable-next-line prefer-destructuring
-module.exports = firebase.getApps()[0];
+module.exports = firebase.getApp();
