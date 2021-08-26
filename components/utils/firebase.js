@@ -1,8 +1,8 @@
-const {default: firebase} = require('firebase/app');
+const firebase = require('firebase/app');
 
 require('firebase/firestore');
 
-if (firebase.apps.length === 0) {
+if (firebase.getApps().length === 0) {
 	firebase.initializeApp({
 		apiKey: 'AIzaSyAPaAYbtVtoZNrU9GA3jxXNKNptLJDe39g',
 		authDomain: 'hakata-shi.firebaseapp.com',
@@ -14,4 +14,5 @@ if (firebase.apps.length === 0) {
 	});
 }
 
-module.exports = firebase.apps[0];
+// eslint-disable-next-line prefer-destructuring
+module.exports = firebase.getApps()[0];
