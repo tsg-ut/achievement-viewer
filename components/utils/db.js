@@ -1,5 +1,5 @@
-import {getFirestore} from 'firebase/firestore';
-import firebase from './firebase.js';
+const {getFirestore} = require('firebase/firestore');
+const firebase = require('./firebase.js');
 
 const db = getFirestore(firebase);
 

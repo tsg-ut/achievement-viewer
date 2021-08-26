@@ -1,4 +1,4 @@
-import firebase from 'firebase/app';
+const firebase = require('firebase/app');
 
 if (firebase.getApps().length === 0) {
 	firebase.initializeApp({
