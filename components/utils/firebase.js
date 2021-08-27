@@ -1,6 +1,9 @@
-const firebase = require('firebase/app');
+// TODO: Use v9 API
+// https://firebase.google.com/docs/web/modular-upgrade?hl=en
+const {default: firebase} = require('firebase/compat/app');
+require('firebase/compat/firestore');
 
-if (firebase.getApps().length === 0) {
+if (firebase.apps.length === 0) {
 	firebase.initializeApp({
 		apiKey: 'AIzaSyAPaAYbtVtoZNrU9GA3jxXNKNptLJDe39g',
 		authDomain: 'hakata-shi.firebaseapp.com',
@@ -12,5 +15,4 @@ if (firebase.getApps().length === 0) {
 	});
 }
 
-// eslint-disable-next-line prefer-destructuring
-module.exports = firebase.getApp();
+module.exports = firebase.apps[0];

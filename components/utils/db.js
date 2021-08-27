@@ -1,6 +1,5 @@
-const {getFirestore} = require('firebase/firestore');
-const firebase = require('./firebase.js');
+import firebase from './firebase.js';
 
-const db = getFirestore(firebase);
+const db = firebase.firestore();
 
 export default db;
