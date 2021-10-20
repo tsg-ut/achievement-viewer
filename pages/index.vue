@@ -3,7 +3,7 @@
 		<progress v-if="isLoading" class="progress is-small is-primary" max="100">15%</progress>
 		<unauthorized-notification/>
 
-		<h2>最近のアクティビティ</h2>
+		<h1>最近のアクティビティ!</h1>
 		<table class="table">
 			<thead>
 				<tr>
