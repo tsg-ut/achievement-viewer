@@ -26,7 +26,7 @@
   "devDependencies": {
     "@hakatashi/eslint-config": "^1.15.0",
     "eslint": "^8.6.0",
-    "firebase": "^9.6.1",
+    "firebase": "^9.6.2",
     "firebase-admin": "^10.0.1",
     "firebase-tools": "^10.0.1",
     "nodemon": "^2.0.15",
