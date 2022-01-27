@@ -1,7 +1,8 @@
 import * as cors from 'cors';
 import * as express from 'express';
 import {check, validationResult} from 'express-validator';
-import {initializeApp, firestore, auth as firebase_auth} from 'firebase-admin';
+import {firestore, auth as firebase_auth} from 'firebase-admin';
+import {initializeApp} from 'firebase-admin/app';
 import {firestore as functions_firestore, https} from 'firebase-functions';
 
 initializeApp();
