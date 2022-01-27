@@ -18,7 +18,8 @@ export default {
 			isUnauthorized: (state) => state.slackInfos.isUnauthorized,
 		}),
 		loginUrl() {
-			return `https://slackbot-api.tsg.ne.jp/?return_to=${encodeURIComponent(this.url)}`;
+			const returnToPath = `/?return_to=${encodeURIComponent(this.url)}`;
+			return `https://slackbot-api.tsg.ne.jp/oauth2/start?rd=${encodeURIComponent(returnToPath)}`;
 		},
 	},
 	created() {
