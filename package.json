@@ -27,7 +27,7 @@
     "@hakatashi/eslint-config": "^1.19.0",
     "eslint": "^8.17.0",
     "firebase": "^9.8.3",
-    "firebase-admin": "^10.2.0",
+    "firebase-admin": "^10.3.0",
     "firebase-tools": "^11.1.0",
     "nodemon": "^2.0.16",
     "randomcolor": "^0.6.2",
