@@ -5,13 +5,13 @@ require('firebase/compat/firestore');
 
 if (firebase.apps.length === 0) {
 	firebase.initializeApp({
-		apiKey: 'AIzaSyAPaAYbtVtoZNrU9GA3jxXNKNptLJDe39g',
-		authDomain: 'hakata-shi.firebaseapp.com',
-		databaseURL: 'https://hakata-shi.firebaseio.com',
-		projectId: 'hakata-shi',
-		storageBucket: 'hakata-shi.appspot.com',
-		messagingSenderId: '745572740539',
-		appId: '1:745572740539:web:50444e3a76095a31',
+		apiKey: "AIzaSyBiI-MHTxhqNpgJ6FMJaVTN3lcBMmL9cqU",
+		authDomain: "tsg-slackbot.firebaseapp.com",
+		projectId: "tsg-slackbot",
+		storageBucket: "tsg-slackbot.appspot.com",
+		messagingSenderId: "382537830947",
+		appId: "1:382537830947:web:41aa27c8a7261f0fe61796",
+		measurementId: "G-NZD98Q80NG"
 	});
 }
 
