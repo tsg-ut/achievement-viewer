@@ -20,17 +20,3 @@ jobs:
       with:
         github_token: ${{secrets.GITHUB_TOKEN}}
         publish_dir: ./dist
-  firebase:
-    name: Deploy to Firebase
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v2
-      - name: Install dependencies
-        run: npm --prefix functions install
-      - name: Deploy to Firebase
-        uses: w9jds/firebase-action@master
-        with:
-          args: deploy --only functions
-        env:
-          FIREBASE_TOKEN: ${{secrets.FIREBASE_TOKEN}}
