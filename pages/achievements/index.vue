@@ -40,7 +40,7 @@ export default {
 		}),
 		ranking() {
 			const entries = this.achievementData.slice();
-			entries.sort((a, b) => b.count - a.count);
+			entries.sort((a, b) => (b.count || 0) - (a.count || 0));
 			return entries;
 		},
 	},
