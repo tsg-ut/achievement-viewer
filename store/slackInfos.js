@@ -44,7 +44,7 @@ const localActions = {
 			});
 			commit('setUsers', slackUsers);
 		} catch (error) {
-			if (error.response.status === 401) {
+			if (error.message === 'Network Error' || error.response.status === 401) {
 				commit('isUnauthorized');
 			}
 		}
