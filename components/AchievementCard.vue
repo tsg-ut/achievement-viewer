@@ -7,6 +7,7 @@
 			<div class="content">
 				<p class="title">
 					{{achievement.title}}
+					<DifficultyBadge :difficulty="achievement.difficulty"/>
 				</p>
 				<div class="columns">
 					<div class="column achievements-progress">
