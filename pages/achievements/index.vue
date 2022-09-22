@@ -9,15 +9,6 @@
 					:count-max="ranking[0].count"
 				/>
 			</div>
-			<div class="column is-half">
-				<div class="card">
-					<div class="card-content">
-						<div class="content">
-							<p class="title">+{{achievementData.length - ranking.length}}個の未解除の実績</p>
-						</div>
-					</div>
-				</div>
-			</div>
 		</div>
 	</div>
 </template>
@@ -31,6 +22,16 @@ export default {
 			isLoading: true,
 		};
 	},
+	async fetch({store}) {
+		if (!process.browser) {
+			await store.dispatch('achievementsData/bindList');
+		}
+	},
+	head() {
+		return {
+			title: '実績一覧 - achievement-viewer',
+		};
+	},
 	computed: {
 		...mapState({
 			achievementData: (state) => (
@@ -38,15 +39,10 @@ export default {
 			),
 		}),
 		ranking() {
-			const entries = this.achievementData.filter(({count}) => count && count > 0);
+			const entries = this.achievementData.slice();
 			entries.sort((a, b) => b.count - a.count);
 			return entries;
 		},
-	},
-	async fetch({store}) {
-		if (!process.browser) {
-			await store.dispatch('achievementsData/bindList');
-		}
 	},
 	mounted() {
 		Promise.all([
@@ -55,11 +51,6 @@ export default {
 		]).then(() => {
 			this.isLoading = false;
 		});
-	},
-	head() {
-		return {
-			title: '実績一覧 - achievement-viewer',
-		};
 	},
 };
 </script>
