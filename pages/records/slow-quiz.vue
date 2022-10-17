@@ -12,7 +12,7 @@
 
 <script>
 import {mapState} from 'vuex';
-import {getQuestionText} from '../../components/utils/slow-quiz';
+import {getQuestionText} from '@/components/utils/slow-quiz';
 
 export default {
 	data() {

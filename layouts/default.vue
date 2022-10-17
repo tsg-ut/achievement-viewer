@@ -27,6 +27,16 @@
 					<nuxt-link class="navbar-item" to="/achievements">
 						実績一覧
 					</nuxt-link>
+					<div class="navbar-item has-dropdown is-hoverable">
+						<div class="navbar-link">
+							ログページ
+						</div>
+						<div class="navbar-dropdown">
+							<nuxt-link class="navbar-item" to="/records/slow-quiz">
+								1日1文字クイズ
+							</nuxt-link>
+						</div>
+					</div>
 				</div>
 			</div>
 		</nav>
