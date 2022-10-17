@@ -21,25 +21,45 @@
 
 			<ul class="pagination-list">
 				<li v-if="progress >= 3">
-					<a class="pagination-link">1</a>
+					<a
+						class="pagination-link"
+						@click="gotoProgress(1)"
+					>
+						1
+					</a>
 				</li>
 				<li v-if="progress >= 4">
 					<span class="pagination-ellipsis">&hellip;</span>
 				</li>
 				<li v-if="progress >= 2">
-					<a class="pagination-link">{{progress - 1}}</a>
+					<a
+						class="pagination-link"
+						@click="gotoProgress(progress - 1)"
+					>
+						{{progress - 1}}
+					</a>
 				</li>
 				<li>
 					<a class="pagination-link is-current">{{progress}}</a>
 				</li>
 				<li v-if="progress <= maxProgress - 1">
-					<a class="pagination-link">{{progress + 1}}</a>
+					<a
+						class="pagination-link"
+						@click="gotoProgress(progress + 1)"
+					>
+						{{progress + 1}}
+					</a>
 				</li>
 				<li v-if="progress <= maxProgress - 3">
 					<span class="pagination-ellipsis">&hellip;</span>
 				</li>
 				<li v-if="progress <= maxProgress - 2">
-					<a class="pagination-link">{{maxProgress}}</a>
+					<a
+						class="pagination-link"
+						@click="gotoProgress(maxProgress)"
+					>
+						{{maxProgress}}
+					</a>
 				</li>
 			</ul>
 		</nav>
@@ -75,6 +95,9 @@ export default {
 			if (this.progress > 1) {
 				this.progress--;
 			}
+		},
+		gotoProgress(progress) {
+			this.progress = progress;
 		},
 	},
 };
