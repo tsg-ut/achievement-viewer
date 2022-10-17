@@ -4,30 +4,42 @@
 			{{questionText}}
 		</h2>
 		<nav class="pagination" role="navigation" aria-label="pagination">
-			<a class="pagination-previous">1文字減らす</a>
-			<a class="pagination-next">1文字増やす</a>
+			<a
+				class="pagination-previous"
+				:class="{'is-disabled': progress === 1}"
+				@click="decrementProgress"
+			>
+				1文字減らす
+			</a>
+			<a
+				class="pagination-next"
+				:class="{'is-disabled': progress === maxProgress}"
+				@click="incrementProgress"
+			>
+				1文字増やす
+			</a>
 
 			<ul class="pagination-list">
-				<li>
-					<a class="pagination-link" aria-label="1文字目まで表示">1</a>
+				<li v-if="progress >= 3">
+					<a class="pagination-link">1</a>
 				</li>
-				<li>
+				<li v-if="progress >= 4">
 					<span class="pagination-ellipsis">&hellip;</span>
 				</li>
-				<li>
-					<a class="pagination-link" aria-label="45文字目まで表示">45</a>
+				<li v-if="progress >= 2">
+					<a class="pagination-link">{{progress - 1}}</a>
 				</li>
 				<li>
-					<a class="pagination-link is-current" aria-label="Page 46" aria-current="page">46</a>
+					<a class="pagination-link is-current">{{progress}}</a>
 				</li>
-				<li>
-					<a class="pagination-link" aria-label="47文字目まで表示">47</a>
+				<li v-if="progress <= maxProgress - 1">
+					<a class="pagination-link">{{progress + 1}}</a>
 				</li>
-				<li>
+				<li v-if="progress <= maxProgress - 3">
 					<span class="pagination-ellipsis">&hellip;</span>
 				</li>
-				<li>
-					<a class="pagination-link" aria-label="86文字目まで表示">86</a>
+				<li v-if="progress <= maxProgress - 2">
+					<a class="pagination-link">{{maxProgress}}</a>
 				</li>
 			</ul>
 		</nav>
@@ -35,7 +47,7 @@
 </template>
 
 <script>
-import {getQuestionText} from '@/components/utils/slow-quiz';
+import {getQuestionText, getMaxProgress} from '@/components/utils/slow-quiz';
 
 export default {
 	components: true,
@@ -47,7 +59,22 @@ export default {
 	},
 	computed: {
 		questionText() {
-			return getQuestionText(this.game, 1);
+			return getQuestionText(this.game, this.progress);
+		},
+		maxProgress() {
+			return getMaxProgress(this.game);
+		},
+	},
+	methods: {
+		incrementProgress() {
+			if (this.progress < this.maxProgress) {
+				this.progress++;
+			}
+		},
+		decrementProgress() {
+			if (this.progress > 1) {
+				this.progress--;
+			}
 		},
 	},
 };

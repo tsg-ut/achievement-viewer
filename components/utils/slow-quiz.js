@@ -45,8 +45,8 @@ module.exports.getQuestionText = (game, gameProgress) => {
 			Array.from(token).map((char, j, tokenChars) => {
 				if (
 					i === invisibleTokens.length - 1 &&
-          j === tokenChars.length - 1 &&
-          ['。', '？', '?'].includes(char)
+					j === tokenChars.length - 1 &&
+					['。', '？', '?'].includes(char)
 				) {
 					return char;
 				}
@@ -62,7 +62,7 @@ module.exports.getQuestionText = (game, gameProgress) => {
 	const invisibleText = Array(invisibleCharacters).fill('').map((char, i) => {
 		if (
 			i === invisibleCharacters - 1 &&
-      ['。', '？', '?'].includes(lastCharacter)
+			['。', '？', '?'].includes(lastCharacter)
 		) {
 			return lastCharacter;
 		}
@@ -70,4 +70,14 @@ module.exports.getQuestionText = (game, gameProgress) => {
 	}).join('\u200B');
 
 	return `${text}\u200B${invisibleText}`;
+};
+
+module.exports.getMaxProgress = (game) => {
+	if (game.question.split('/').length >= 5) {
+		const tokens = game.question.split('/');
+		return tokens.length;
+	}
+
+	const normalizedQuestion = game.question.replaceAll(/【.*?】/g, '');
+	return Array.from(normalizedQuestion).length;
 };
