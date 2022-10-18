@@ -1,8 +1,5 @@
 <template>
 	<div class="SlowQuizGame box">
-		<h2 class="is-size-3 has-text-weight-bold question-text">
-			{{questionText}}
-		</h2>
 		<nav class="pagination" role="navigation" aria-label="pagination">
 			<a
 				class="pagination-previous"
@@ -63,10 +60,32 @@
 				</li>
 			</ul>
 		</nav>
+		<h2 class="is-size-3 has-text-weight-bold question-text">
+			{{questionText}}
+		</h2>
+		<ol>
+			<li v-for="answer in game.correctAnswers" :key="answer.user">
+				<img
+					class="index-icon"
+					:src="getUserIcon(answer.user)"
+					:srcset="`${getUserIcon(answer.user)} 1x, ${getUserIcon2x(answer.user)} 2x`"
+				>
+				{{getUserName(answer.user)}}
+				({{answer.progress}}文字)
+				<a
+					class="button is-small"
+					@click="gotoProgress(answer.progress)"
+				>
+					ここまで表示
+				</a>
+			</li>
+		</ol>
 	</div>
 </template>
 
 <script>
+import get from 'lodash/get.js';
+import {mapGetters} from 'vuex';
 import {getQuestionText, getMaxProgress} from '@/components/utils/slow-quiz';
 
 export default {
@@ -78,6 +97,7 @@ export default {
 		};
 	},
 	computed: {
+		...mapGetters('slackInfos', ['getUser']),
 		questionText() {
 			return getQuestionText(this.game, this.progress);
 		},
@@ -98,6 +118,19 @@ export default {
 		},
 		gotoProgress(progress) {
 			this.progress = progress;
+		},
+		getUserName(userId) {
+			const user = this.getUser(userId);
+			const name = get(user, ['profile', 'display_name'], false) || get(user, ['real_name'], false) || '匿名ユーザー';
+			return `@${name}`;
+		},
+		getUserIcon(userId) {
+			const user = this.getUser(userId);
+			return get(user, ['profile', 'image_24'], '/images/anonymous-icon_24.png');
+		},
+		getUserIcon2x(userId) {
+			const user = this.getUser(userId);
+			return get(user, ['profile', 'image_48'], '/images/anonymous-icon_48.png');
 		},
 	},
 };
