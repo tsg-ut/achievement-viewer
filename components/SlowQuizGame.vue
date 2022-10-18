@@ -64,17 +64,15 @@
 			{{questionText}}
 		</h2>
 		<p class="has-text-grey has-text-right is-size-6">
-			{{getUserName(game.author)}} の問題
+			{{getUserName(game.author)}} の問題 / {{formattedStartDate}}出題 / ジャンル: {{formattedGenre}}
 		</p>
 		<ol class="correct-answers">
 			<li v-for="answer in game.correctAnswers" :key="answer.user">
-				<span class="icon">
-					<img
-						class="index-icon"
-						:src="getUserIcon(answer.user)"
-						:srcset="`${getUserIcon(answer.user)} 1x, ${getUserIcon2x(answer.user)} 2x`"
-					>
-				</span>
+				<img
+					class="answer-icon"
+					:src="getUserIcon(answer.user)"
+					:srcset="`${getUserIcon(answer.user)} 1x, ${getUserIcon2x(answer.user)} 2x`"
+				>
 				{{getUserName(answer.user)}}
 				({{answer.progress}}文字)
 				<a
@@ -89,6 +87,7 @@
 </template>
 
 <script>
+import dayjs from 'dayjs';
 import first from 'lodash/first.js';
 import get from 'lodash/get.js';
 import last from 'lodash/last.js';
@@ -119,6 +118,21 @@ export default {
 		},
 		maxProgress() {
 			return getMaxProgress(this.game);
+		},
+		formattedStartDate() {
+			return dayjs(this.game.startDate).format('YYYY年M月DD日');
+		},
+		formattedGenre() {
+			if (this.game.genre === 'normal') {
+				return '正統派';
+			}
+			if (this.game.genre === 'strange') {
+				return '変化球';
+			}
+			if (this.game.genre === 'anything') {
+				return 'なんでも';
+			}
+			return '不明';
 		},
 	},
 	watch: {
@@ -181,6 +195,10 @@ export default {
 
 .SlowQuizGame .correct-answers li {
 	margin: 0.5em 0;
+}
+
+.SlowQuizGame .correct-answers .answer-icon {
+	vertical-align: text-bottom;
 }
 </style>
 
