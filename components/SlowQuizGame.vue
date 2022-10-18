@@ -63,13 +63,18 @@
 		<h2 class="is-size-3 has-text-weight-bold question-text">
 			{{questionText}}
 		</h2>
-		<ol>
+		<p class="has-text-grey has-text-right is-size-6">
+			{{getUserName(game.author)}} の問題
+		</p>
+		<ol class="correct-answers">
 			<li v-for="answer in game.correctAnswers" :key="answer.user">
-				<img
-					class="index-icon"
-					:src="getUserIcon(answer.user)"
-					:srcset="`${getUserIcon(answer.user)} 1x, ${getUserIcon2x(answer.user)} 2x`"
-				>
+				<span class="icon">
+					<img
+						class="index-icon"
+						:src="getUserIcon(answer.user)"
+						:srcset="`${getUserIcon(answer.user)} 1x, ${getUserIcon2x(answer.user)} 2x`"
+					>
+				</span>
 				{{getUserName(answer.user)}}
 				({{answer.progress}}文字)
 				<a
@@ -139,6 +144,14 @@ export default {
 <style>
 .SlowQuizGame .question-text {
   word-break: break-all;
+}
+
+.SlowQuizGame .correct-answers {
+	margin: 0 1.5rem;
+}
+
+.SlowQuizGame .correct-answers li {
+	margin: 0.5em 0;
 }
 </style>
 
