@@ -89,13 +89,24 @@
 </template>
 
 <script>
+import first from 'lodash/first.js';
 import get from 'lodash/get.js';
+import last from 'lodash/last.js';
 import {mapGetters} from 'vuex';
 import {getQuestionText, getMaxProgress} from '@/components/utils/slow-quiz';
 
 export default {
 	components: true,
-	props: ['game'],
+	props: {
+		game: {
+			type: Object,
+			required: true,
+		},
+		progressType: {
+			type: String,
+			required: true,
+		},
+	},
 	data() {
 		return {
 			progress: 1,
@@ -108,6 +119,24 @@ export default {
 		},
 		maxProgress() {
 			return getMaxProgress(this.game);
+		},
+	},
+	watch: {
+		progressType(newProgressType) {
+			if (newProgressType === 'first') {
+				this.gotoProgress(1);
+			}
+			if (newProgressType === 'first-answer') {
+				const answer = first(this.game.correctAnswers);
+				this.gotoProgress(answer ? answer.progress : 1);
+			}
+			if (newProgressType === 'last-answer') {
+				const answer = last(this.game.correctAnswers);
+				this.gotoProgress(answer ? answer.progress : 1);
+			}
+			if (newProgressType === 'last') {
+				this.gotoProgress(this.maxProgress);
+			}
 		},
 	},
 	methods: {
