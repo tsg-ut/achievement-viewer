@@ -87,17 +87,18 @@
 			</li>
 		</ol>
 		<div class="card game-answer">
-			<header class="card-header">
+			<header class="card-header" @click="isAnswerPanelShown = !isAnswerPanelShown">
 				<p class="card-header-title">
 					正解を表示する
 				</p>
 				<button type="button" class="card-header-icon">
 					<span class="icon">
-						<arrow-down-icon/>
+						<arrow-up-icon v-if="isAnswerPanelShown"/>
+						<arrow-down-icon v-else/>
 					</span>
 				</button>
 			</header>
-			<div class="card-content">
+			<div v-if="isAnswerPanelShown" class="card-content">
 				<div class="content">
 					<div class="is-size-3 has-text-weight-bold question-text">
 						Q. {{game.question}}
@@ -128,7 +129,7 @@
 								<div class="timeline-content">
 									<p class="heading">{{formatTime(item.date)}}</p>
 									<p :class="{'has-text-info': item.type === 'comment'}">
-										{{item.answer}}
+										<span :class="{'has-text-weight-bold': item.type !== 'comment'}">{{item.answer}}</span>
 										<span v-if="item.type === 'correctAnswer'" class="tag is-danger">正解</span>
 									</p>
 								</div>
@@ -179,6 +180,7 @@ export default {
 	data() {
 		return {
 			progress: 1,
+			isAnswerPanelShown: false,
 		};
 	},
 	computed: {
