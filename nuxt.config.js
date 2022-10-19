@@ -20,14 +20,15 @@ export default {
 	loading: {color: '#fff'},
 
 	css: [
+		'bulma/css/bulma.css',
 		'bulma-o-steps/bulma-steps.css',
+		'bulma-timeline/dist/css/bulma-timeline.min.css',
 	],
 
 	plugins: [
 	],
 
 	modules: [
-		'@nuxtjs/bulma',
 		'@nuxtjs/axios',
 	],
 
