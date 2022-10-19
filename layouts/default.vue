@@ -29,7 +29,7 @@
 					</nuxt-link>
 					<div class="navbar-item has-dropdown is-hoverable">
 						<div class="navbar-link">
-							ログページ
+							各種ログ
 						</div>
 						<div class="navbar-dropdown">
 							<nuxt-link class="navbar-item" to="/records/slow-quiz">
