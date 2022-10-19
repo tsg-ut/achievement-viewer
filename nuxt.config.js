@@ -22,6 +22,7 @@ export default {
 	css: [
 		'bulma/css/bulma.css',
 		'bulma-o-steps/bulma-steps.css',
+		'bulma-timeline/dist/css/bulma-timeline.min.css',
 	],
 
 	plugins: [

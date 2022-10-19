@@ -35,7 +35,7 @@ const localActions = {
 		}
 	},
 	bindList: firestoreAction(async ({bindFirestoreRef, commit}) => {
-		await bindFirestoreRef('list', slowQuizGamesRef.where('status', '==', 'finished').orderBy('finishDate', 'asc'));
+		await bindFirestoreRef('list', slowQuizGamesRef.where('status', '==', 'finished').orderBy('finishDate', 'desc'));
 		commit('initList');
 	}),
 };
