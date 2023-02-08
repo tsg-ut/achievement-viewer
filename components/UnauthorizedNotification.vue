@@ -25,7 +25,6 @@ export default {
 	created() {
 		this.url = location.href;
 	},
-	components: true,
 };
 </script>
 

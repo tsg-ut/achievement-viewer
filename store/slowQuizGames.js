@@ -1,5 +1,5 @@
 import {firestoreAction} from 'vuexfire';
-import db from '~/components/utils/db.js';
+import db from '~/lib/db.js';
 
 const slowQuizGamesRef = db.collection('slow_quiz_games');
 

@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import {getCategoryColor} from '@/components/utils/utils.js';
+import {getCategoryColor} from '@/lib/utils.js';
 
 export default {
 	data() {

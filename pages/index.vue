@@ -67,7 +67,7 @@ import get from 'lodash/get.js';
 import {mapGetters, mapState} from 'vuex';
 
 import UnauthorizedNotification from '../components/UnauthorizedNotification.vue';
-import {getCategoryColor} from '@/components/utils/utils.js';
+import {getCategoryColor} from '@/lib/utils.js';
 
 export default {
 	components: {UnauthorizedNotification},

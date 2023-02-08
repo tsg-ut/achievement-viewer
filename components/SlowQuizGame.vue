@@ -160,7 +160,7 @@ import sortBy from 'lodash/sortBy.js';
 import ArrowDownIcon from 'vue-ionicons/dist/ios-arrow-down.vue';
 import ArrowUpIcon from 'vue-ionicons/dist/ios-arrow-up.vue';
 import {mapGetters} from 'vuex';
-import {getQuestionText, getMaxProgress} from '@/components/utils/slow-quiz';
+import {getQuestionText, getMaxProgress} from '@/lib/slow-quiz';
 
 export default {
 	components: {

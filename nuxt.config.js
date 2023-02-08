@@ -46,5 +46,7 @@ export default {
 		fallback: '404.html',
 	},
 
-	components: ['~/components'],
+	components: [
+		{path: '~/components', extensions: ['vue']},
+	],
 };

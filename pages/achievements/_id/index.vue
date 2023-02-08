@@ -72,7 +72,7 @@
 </template>
 
 <script>
-import {getCategoryColor} from '@/components/utils/utils.js';
+import {getCategoryColor} from '@/lib/utils.js';
 import get from 'lodash/get.js';
 import {mapState} from 'vuex';
 
