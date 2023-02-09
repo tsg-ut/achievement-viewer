@@ -1,6 +1,11 @@
 <template>
 	<div v-if="isUnauthorized" class="notification is-danger">
-		ログインしていないためユーザー名などの情報は表示されません。あなたがTSGerである場合は<a :href="loginUrl">こちら</a>からログインしてください。
+		<span v-if="required">
+			このページの閲覧にはログインが必要です。<a :href="loginUrl">こちら</a>からログインしてください。
+		</span>
+		<span v-else>
+			ログインしていないためユーザー名などの情報は表示されません。あなたがTSGerである場合は<a :href="loginUrl">こちら</a>からログインしてください。
+		</span>
 	</div>
 </template>
 
@@ -8,6 +13,12 @@
 import {mapState} from 'vuex';
 
 export default {
+	props: {
+		required: {
+			type: Boolean,
+			default: false,
+		},
+	},
 	data() {
 		return {
 			url: '',

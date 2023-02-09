@@ -82,11 +82,11 @@
 </template>
 
 <script>
-import {getCategoryColor} from '@/lib/utils.js';
 import get from 'lodash/get.js';
 import sum from 'lodash/sum.js';
 import {mapState} from 'vuex';
 import DifficultyBadge from '../../../components/DifficultyBadge.vue';
+import {getCategoryColor} from '@/lib/utils.js';
 
 export default {
 	data() {
@@ -146,7 +146,7 @@ export default {
 	mounted() {
 		Promise.all([
 			this.$store.dispatch('achievementData/initList'),
-			this.$store.dispatch('slackInfos/init'),
+			this.$store.dispatch('slackInfos/initUsers'),
 			this.$store.dispatch('users/bindById', this.$route.params.id),
 			this.$store.dispatch('users/initList'),
 		]).then(() => {
