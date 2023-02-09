@@ -127,7 +127,7 @@ export default {
 	async fetch({store}) {
 		if (!process.browser) {
 			await store.dispatch('users/bindList');
-			await store.dispatch('slackInfos/init');
+			await store.dispatch('slackInfos/initUsers');
 			await store.dispatch('achievements/bindLatestAchievements');
 			await store.dispatch('achievementsData/bindList');
 			await store.dispatch('achievementStatsByDifficulty/bindList');
@@ -138,7 +138,7 @@ export default {
 	mounted() {
 		Promise.all([
 			this.$store.dispatch('users/initList'),
-			this.$store.dispatch('slackInfos/init'),
+			this.$store.dispatch('slackInfos/initUsers'),
 			this.$store.dispatch('achievements/initLatestAchievements'),
 			this.$store.dispatch('achievementData/initList'),
 			this.$store.dispatch('achievementStatsByDifficulty/initList'),

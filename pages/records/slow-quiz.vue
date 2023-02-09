@@ -61,7 +61,7 @@ export default {
 	async fetch({store}) {
 		if (!process.browser) {
 			await store.dispatch('slowQuizGames/initList');
-			await store.dispatch('slackInfos/init');
+			await store.dispatch('slackInfos/initUsers');
 		}
 	},
 	head() {
@@ -79,7 +79,7 @@ export default {
 	mounted() {
 		Promise.all([
 			this.$store.dispatch('slowQuizGames/initList'),
-			this.$store.dispatch('slackInfos/init'),
+			this.$store.dispatch('slackInfos/initUsers'),
 		]).then(() => {
 			this.isLoading = false;
 		});

@@ -23,6 +23,7 @@ export default {
 		'bulma/css/bulma.css',
 		'bulma-o-steps/bulma-steps.css',
 		'bulma-timeline/dist/css/bulma-timeline.min.css',
+		'remixicon/fonts/remixicon.css',
 	],
 
 	plugins: [

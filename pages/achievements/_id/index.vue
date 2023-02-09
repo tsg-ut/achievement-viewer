@@ -72,9 +72,9 @@
 </template>
 
 <script>
-import {getCategoryColor} from '@/lib/utils.js';
 import get from 'lodash/get.js';
 import {mapState} from 'vuex';
+import {getCategoryColor} from '@/lib/utils.js';
 
 export default {
 	data() {
@@ -146,7 +146,7 @@ export default {
 		Promise.all([
 			this.$store.dispatch('achievementData/initList'),
 			this.$store.dispatch('achievements/fetchByName', this.$route.params.id),
-			this.$store.dispatch('slackInfos/init'),
+			this.$store.dispatch('slackInfos/initUsers'),
 			this.$store.dispatch('users/initList'),
 		]).then(() => {
 			this.isLoading = false;
