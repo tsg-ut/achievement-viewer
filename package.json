@@ -30,7 +30,7 @@
     "@hakatashi/eslint-config": "^1.19.0",
     "eslint": "^8.36.0",
     "firebase": "^9.18.0",
-    "nodemon": "^2.0.21",
+    "nodemon": "^2.0.22",
     "randomcolor": "^0.6.2",
     "vuexfire": "^3.2.5"
   }
