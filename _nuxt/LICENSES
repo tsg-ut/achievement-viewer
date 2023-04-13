@@ -9,6 +9,18 @@
 
 
 /*!
+ * Chart.js v2.9.4
+ * https://www.chartjs.org
+ * (c) 2020 Chart.js Contributors
+ * Released under the MIT License
+ */
+
+//! moment.js
+
+//! moment.js locale configuration
+
+
+/*!
  * Vue.js v2.7.14
  * (c) 2014-2022 Evan You
  * Released under the MIT License.
@@ -19,18 +31,6 @@
  * (c) 2021 Evan You
  * @license MIT
  */
-
-
-/*!
- * Chart.js v2.9.4
- * https://www.chartjs.org
- * (c) 2020 Chart.js Contributors
- * Released under the MIT License
- */
-
-//! moment.js
-
-//! moment.js locale configuration
 
 
 /*!
