@@ -27,7 +27,7 @@
     "vue-ionicons": "^3.0.5"
   },
   "devDependencies": {
-    "@hakatashi/eslint-config": "^1.19.0",
+    "@hakatashi/eslint-config": "^1.20.0",
     "eslint": "^8.40.0",
     "firebase": "^9.22.0",
     "nodemon": "^2.0.22",
