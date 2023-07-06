@@ -1,17 +1,4 @@
 /*!
- * Vue.js v2.7.14
- * (c) 2014-2022 Evan You
- * Released under the MIT License.
- */
-
-/*!
- * vuex v3.6.2
- * (c) 2021 Evan You
- * @license MIT
- */
-
-
-/*!
   * vuexfire v3.2.5
   * (c) 2020 Eduardo San Martin Morote
   * @license MIT
@@ -184,3 +171,16 @@ PERFORMANCE OF THIS SOFTWARE.
 //! moment.js
 
 //! moment.js locale configuration
+
+
+/*!
+ * Vue.js v2.7.14
+ * (c) 2014-2022 Evan You
+ * Released under the MIT License.
+ */
+
+/*!
+ * vuex v3.6.2
+ * (c) 2021 Evan You
+ * @license MIT
+ */
