@@ -19,7 +19,7 @@
     "bulma-timeline": "^3.0.5",
     "chart.js": ">=2.9.4 <4.0.0",
     "core-js": "^3.32.2",
-    "dayjs": "^1.11.9",
+    "dayjs": "^1.11.10",
     "lodash": "^4.17.21",
     "nuxt": "^3",
     "remixicon": "^3.5.0",
