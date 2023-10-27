@@ -29,7 +29,7 @@
   "devDependencies": {
     "@hakatashi/eslint-config": "^1.20.0",
     "eslint": "^8.52.0",
-    "firebase": "^10.5.0",
+    "firebase": "^10.5.2",
     "nodemon": "^3.0.1",
     "randomcolor": "^0.6.2",
     "vuexfire": "^3.2.5"
