@@ -18,7 +18,7 @@
     "bulma-o-steps": "^1.1.0",
     "bulma-timeline": "^3.0.5",
     "chart.js": ">=2.9.4 <4.0.0",
-    "core-js": "^3.33.1",
+    "core-js": "^3.33.2",
     "dayjs": "^1.11.10",
     "lodash": "^4.17.21",
     "nuxt": "^3",
