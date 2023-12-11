@@ -22,7 +22,7 @@
     "dayjs": "^1.11.10",
     "lodash": "^4.17.21",
     "nuxt": "^3",
-    "remixicon": "^3.6.0",
+    "remixicon": "^3.7.0",
     "vue-chartjs": "^3.5.1",
     "vue-ionicons": "^3.0.5"
   },
