@@ -20,7 +20,7 @@ export default {
 	loading: {color: '#fff'},
 
 	css: [
-		'bulma/css/bulma.css',
+		'bulma',
 		'bulma-o-steps/bulma-steps.css',
 		'bulma-timeline/dist/css/bulma-timeline.min.css',
 		'remixicon/fonts/remixicon.css',
@@ -35,10 +35,8 @@ export default {
 
 	build: {
 		postcss: {
-			preset: {
-				features: {
-					customProperties: false,
-				},
+			features: {
+				'custom-properties': false,
 			},
 		},
 	},
