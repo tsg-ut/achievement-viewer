@@ -35,8 +35,12 @@ export default {
 
 	build: {
 		postcss: {
-			features: {
-				'custom-properties': false,
+			plugins: {
+				'postcss-preset-env': {
+					features: {
+						'custom-properties': false,
+					},
+				},
 			},
 		},
 	},
