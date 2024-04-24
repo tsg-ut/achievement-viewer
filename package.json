@@ -10,14 +10,16 @@
     "dev": "nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
-    "generate": "nuxt generate"
+    "generate": "nuxt generate",
+    "serve": "npm run generate && serve dist",
+    "test": "playwright test"
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.13.6",
     "bulma": "^1.0.0",
     "bulma-o-steps": "^1.1.0",
     "bulma-timeline": "^3.0.5",
-    "chart.js": ">=2.9.4 <4.0.0",
+    "chart.js": "^2",
     "core-js": "^3.37.0",
     "dayjs": "^1.11.10",
     "lodash": "^4.17.21",
@@ -30,10 +32,12 @@
   },
   "devDependencies": {
     "@hakatashi/eslint-config": "^1.20.0",
+    "@playwright/test": "^1.43.1",
     "eslint": "^9.1.0",
     "firebase": "^10.11.0",
     "nodemon": "^3.1.0",
     "randomcolor": "^0.6.2",
+    "serve": "^14.2.2",
     "vuexfire": "^3.2.5"
   }
 }
