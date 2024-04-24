@@ -8,6 +8,7 @@ updates:
   ignore:
   - dependency-name: chart.js
   - dependency-name: nuxt
+  - dependency-name: sass-loader
 - package-ecosystem: npm
   directory: "/functions"
   schedule:
