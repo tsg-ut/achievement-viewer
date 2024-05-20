@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.13.6",
-    "bulma": "^1.0.0",
+    "bulma": "^1.0.1",
     "bulma-o-steps": "^1.1.0",
     "bulma-timeline": "^3.0.5",
     "chart.js": "^2",
