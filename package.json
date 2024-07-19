@@ -34,7 +34,7 @@
     "@hakatashi/eslint-config": "^1.20.0",
     "@playwright/test": "^1.45.2",
     "eslint": "^9.7.0",
-    "firebase": "^10.12.3",
+    "firebase": "^10.12.4",
     "nodemon": "^3.1.4",
     "randomcolor": "^0.6.2",
     "serve": "^14.2.3",
