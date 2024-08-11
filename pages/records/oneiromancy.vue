@@ -21,7 +21,10 @@
 			</label>
 		</div>
 
-		<div class="table-container">
+		<div
+			v-if="!isUnauthorized"
+			class="table-container"
+		>
 			<table class="table is-striped is-hoverable oneiromancies">
 				<tbody>
 					<tr>
@@ -97,6 +100,39 @@
 				</tbody>
 			</table>
 		</div>
+
+		<p class="title">採点基準一覧</p>
+
+		<div
+			v-if="!isUnauthorized"
+			class="table-container"
+		>
+			<table class="table is-hoverable is-fullwidth">
+				<tbody>
+					<tr>
+						<th>名前</th>
+						<th>点数</th>
+						<th>リンク</th>
+					</tr>
+					<tr
+						v-for="criteria in filteredOneiromancyCriteria"
+						:key="criteria.name"
+					>
+						<td><strong>{{criteria.name}}</strong></td>
+						<td>{{criteria.point}}点</td>
+						<td>
+							<a
+								:href="'https://slack-log.tsg.ne.jp/C7AAX50QY/' + criteria.ts"
+								target="_blank"
+								rel="noopener nereferrer"
+							>
+								slacklog<span class="icon"><i class="ri-external-link-line"/></span>
+							</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 	</div>
 </template>
 
@@ -118,6 +154,7 @@ export default {
 		if (!process.browser) {
 			await store.dispatch('slackInfos/initUsers');
 			await store.dispatch('oneiromancies/initOneiromancyMessages');
+			await store.dispatch('oneiromancies/initOneiromancyCriteria');
 		}
 	},
 	head() {
@@ -128,7 +165,7 @@ export default {
 	computed: {
 		...mapState({
 			oneiromancyMessages: (state) => state.oneiromancies.oneiromancyMessages,
-			isInitOneiromancyMessages: (state) => state.oneiromancies.isInitOneiromancyMessages,
+			oneiromancyCriteria: (state) => state.oneiromancies.oneiromancyCriteria,
 			isUnauthorized: (state) => state.slackInfos.isUnauthorized,
 		}),
 		...mapGetters('slackInfos', ['getUser']),
@@ -150,11 +187,15 @@ export default {
 			}
 			return this.oneiromancyMessages;
 		},
+		filteredOneiromancyCriteria() {
+			return this.oneiromancyCriteria.filter((criteria) => criteria.name !== '基準点');
+		},
 	},
 	mounted() {
 		Promise.all([
 			this.$store.dispatch('slackInfos/initUsers'),
 			this.$store.dispatch('oneiromancies/initOneiromancyMessages'),
+			this.$store.dispatch('oneiromancies/initOneiromancyCriteria'),
 		]).then(() => {
 			this.isLoading = false;
 		});
@@ -208,7 +249,7 @@ export default {
 <style>
 .oneiromancies.table .oneiromancy {
 	cursor: pointer;
-	border-top: 1px solid #f5f5f5;
+	border-top: 1px solid #808080;
 }
 
 .oneiromancy-detail td {
