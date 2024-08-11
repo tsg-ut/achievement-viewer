@@ -5,13 +5,41 @@
 
 		<p class="title">夢占いログ</p>
 
-		<div
-			v-if="!isUnauthorized"
-			class="table-container"
-		>
-			<table class="table oneiromancies">
+		<div class="control is-spaced">
+			並び替え:
+			<label class="radio">
+				<input type="radio" id="timestamp" value="timestamp" v-model="sortBy">
+				新しい順
+			</label>
+			<label class="radio">
+				<input type="radio" id="username" value="username" v-model="sortBy">
+				ユーザー順
+			</label>
+			<label class="radio">
+				<input type="radio" id="points" value="points" v-model="sortBy">
+				点数順
+			</label>
+		</div>
+
+		<div class="table-container">
+			<table class="table is-striped is-hoverable oneiromancies">
 				<tbody>
-					<tr v-for="{message, summary, originalMessage} in oneiromancyMessages" :key="message.ts">
+					<tr>
+						<th>ユーザー</th>
+						<th>ラッキーアイテム</th>
+						<th>点数</th>
+						<th>日時</th>
+						<th>リンク</th>
+					</tr>
+				</tbody>
+				<tbody
+					v-for="{message, summary, originalMessage} in sortedOneiromancies"
+					:key="message.ts"
+				>
+					<tr
+						@click="toggleOpenedMessage(message.ts)"
+						class="oneiromancy"
+					>
 						<td class="oneiromancy-username">
 							<span
 								v-if="!originalMessage"
@@ -55,6 +83,17 @@
 							</a>
 						</td>
 					</tr>
+					<tr
+						v-if="openedMessages.includes(message.ts)"
+						class="oneiromancy-detail"
+					>
+						<td :colspan="5">
+							<h3>元メッセージ</h3>
+							<div class="oneiromancy-original-text">{{originalMessage?.text?.trim()}}</div>
+							<h3>夢占い</h3>
+							<div class="oneiromancy-text">{{formatSlackText(message.text)}}</div>
+						</td>
+					</tr>
 				</tbody>
 			</table>
 		</div>
@@ -65,12 +104,14 @@
 import get from 'lodash/get';
 import dayjs from 'dayjs';
 import {mapGetters, mapState} from 'vuex';
+import sortBy from 'lodash/sortBy';
 
 export default {
 	data() {
 		return {
 			isLoading: true,
 			sortBy: 'timestamp',
+			openedMessages: [],
 		};
 	},
 	async fetch({store}) {
@@ -91,6 +132,24 @@ export default {
 			isUnauthorized: (state) => state.slackInfos.isUnauthorized,
 		}),
 		...mapGetters('slackInfos', ['getUser']),
+		sortedOneiromancies() {
+			if (this.sortBy === 'timestamp') {
+				return sortBy(this.oneiromancyMessages, ({message}) => message.ts).reverse();
+			}
+			if (this.sortBy === 'username') {
+				return sortBy(this.oneiromancyMessages, [
+					({message}) => this.getUserName(message),
+					({message}) => -parseFloat(message.ts),
+				]);
+			}
+			if (this.sortBy === 'points') {
+				return sortBy(this.oneiromancyMessages, [
+					({summary}) => -(summary.point ?? -Infinity),
+					({message}) => -parseFloat(message.ts),
+				]);
+			}
+			return this.oneiromancyMessages;
+		},
 	},
 	mounted() {
 		Promise.all([
@@ -129,20 +188,44 @@ export default {
 			const timestamp = parseFloat(ts);
 			const date = dayjs(timestamp * 1000);
 			return date.format('YYYY/MM/DD');
-		}
+		},
+		toggleOpenedMessage(ts) {
+			if (this.openedMessages.includes(ts)) {
+				this.openedMessages = this.openedMessages.filter((openedTs) => openedTs !== ts);
+			} else {
+				this.openedMessages.push(ts);
+			}
+		},
+		formatSlackText(originalText) {
+			const text = (originalText ?? '').trim();
+			const lines = text.split('\n');
+			return lines.slice(2).join('\n')
+		},
 	},
 };
 </script>
 
 <style>
-.oneiromancies.table td, .oneiromancies.table th {
-	padding-left: 0.25em;
-	padding-right: 0.25em;
+.oneiromancies.table .oneiromancy {
+	cursor: pointer;
+	border-top: 1px solid #f5f5f5;
 }
 
-.oneiromancy-text {
+.oneiromancy-detail td {
+	padding: 0.5rem;
+}
+
+.oneiromancy-detail h3 {
+	margin-top: 0.5rem;
+	margin-bottom: 0.5rem;
+	font-size: 1.5em;
+	font-weight: bold;
+}
+
+.oneiromancy-original-text, .oneiromancy-text {
 	line-break: anywhere;
 	min-width: 20em;
+	white-space: pre-line;
 }
 
 .oneiromancy-icon {

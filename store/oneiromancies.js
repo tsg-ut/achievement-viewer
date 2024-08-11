@@ -33,7 +33,7 @@ const localActions = {
 		}
 	},
 	bindOneiromancyMessages: firestoreAction(async ({bindFirestoreRef, commit}) => {
-		await bindFirestoreRef('oneiromancyMessages', oneiromancyMessagesRef);
+		await bindFirestoreRef('oneiromancyMessages', oneiromancyMessagesRef.orderBy('message.ts', 'desc'));
 		commit('initOneiromancyMessages');
 	}),
 	async initOneiromancyCriteria({state, dispatch, commit}) {
