@@ -38,6 +38,9 @@
 							<nuxt-link class="navbar-item" to="/records/topic">
 								トピック
 							</nuxt-link>
+							<nuxt-link class="navbar-item" to="/records/oneiromancy">
+								夢占い
+							</nuxt-link>
 						</div>
 					</div>
 				</div>
