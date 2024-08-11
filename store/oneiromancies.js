@@ -43,7 +43,7 @@ const localActions = {
 		}
 	},
 	bindOneiromancyCriteria: firestoreAction(async ({bindFirestoreRef, commit}) => {
-		await bindFirestoreRef('oneiromancyCriteria', oneiromancyCriteriaRef);
+		await bindFirestoreRef('oneiromancyCriteria', oneiromancyCriteriaRef.orderBy('point', 'desc'));
 		commit('initOneiromancyCriteria');
 	}),
 };
