@@ -20,7 +20,7 @@
     "bulma-o-steps": "^1.1.0",
     "bulma-timeline": "^3.0.5",
     "chart.js": "^2",
-    "core-js": "^3.38.0",
+    "core-js": "^3.38.1",
     "dayjs": "^1.11.13",
     "lodash": "^4.17.21",
     "nuxt": "^2.17.3",
