@@ -35,7 +35,7 @@
     "@playwright/test": "^1.47.1",
     "eslint": "^9.10.0",
     "firebase": "^10.13.1",
-    "nodemon": "^3.1.4",
+    "nodemon": "^3.1.5",
     "randomcolor": "^0.6.2",
     "serve": "^14.2.3",
     "vuexfire": "^3.2.5"
