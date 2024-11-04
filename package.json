@@ -33,7 +33,7 @@
   "devDependencies": {
     "@hakatashi/eslint-config": "^1.20.0",
     "@playwright/test": "^1.47.2",
-    "eslint": "^9.10.0",
+    "eslint": "^9.14.0",
     "firebase": "^10.13.2",
     "nodemon": "^3.1.7",
     "randomcolor": "^0.6.2",
