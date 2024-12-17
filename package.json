@@ -24,7 +24,7 @@
     "dayjs": "^1.11.13",
     "lodash": "^4.17.21",
     "nuxt": "^3.13.2",
-    "remixicon": "^4.3.0",
+    "remixicon": "^4.6.0",
     "sass": "^1.79.2",
     "sass-loader": "^10.5.2",
     "vue-chartjs": "^3.5.1",
