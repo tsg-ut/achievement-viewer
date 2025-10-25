@@ -11,19 +11,6 @@
 
 
 /*!
- * Vue.js v2.7.16
- * (c) 2014-2023 Evan You
- * Released under the MIT License.
- */
-
-/*!
- * vuex v3.6.2
- * (c) 2021 Evan You
- * @license MIT
- */
-
-
-/*!
   * vuexfire v3.2.5
   * (c) 2020 Eduardo San Martin Morote
   * @license MIT
@@ -206,6 +193,19 @@ PERFORMANCE OF THIS SOFTWARE.
  Copyright The Closure Library Authors.
  SPDX-License-Identifier: Apache-2.0
 */
+
+
+/*!
+ * Vue.js v2.7.16
+ * (c) 2014-2023 Evan You
+ * Released under the MIT License.
+ */
+
+/*!
+ * vuex v3.6.2
+ * (c) 2021 Evan You
+ * @license MIT
+ */
 
 
 /**
