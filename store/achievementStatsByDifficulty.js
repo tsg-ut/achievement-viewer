@@ -10,7 +10,7 @@ const localState = () => ({
 
 const localMutations = {
 	initList(state) {
-		state.isInitList = process.browser;
+		state.isInitList = process.client;
 	},
 };
 

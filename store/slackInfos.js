@@ -1,5 +1,3 @@
-import Vue from 'vue';
-
 const localState = () => ({
 	isUnauthorized: false,
 	isInitUsers: false,
@@ -24,15 +22,15 @@ const localMutations = {
 	addTopicMessageLike(state, ts) {
 		const message = state.topicMessagesMap.get(ts);
 		if (message) {
-			Vue.set(message, 'isLiked', true);
-			Vue.set(message, 'likes', message.likes.concat([null])); // placeholder
+			message.isLiked = true;
+			message.likes = message.likes.concat([null]); // placeholder
 		}
 	},
 	removeTopicMessageLike(state, ts) {
 		const message = state.topicMessagesMap.get(ts);
 		if (message) {
-			Vue.set(message, 'isLiked', false);
-			Vue.set(message, 'likes', message.likes.slice(1));
+			message.isLiked = false;
+			message.likes = message.likes.slice(1);
 		}
 	},
 	isUnauthorized(state) {

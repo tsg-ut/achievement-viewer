@@ -15,7 +15,6 @@
     "test": "playwright test"
   },
   "dependencies": {
-    "@nuxtjs/axios": "^5.13.6",
     "bulma": "^1.0.2",
     "bulma-o-steps": "^1.1.0",
     "bulma-timeline": "^3.0.5",
@@ -23,10 +22,10 @@
     "core-js": "^3.46.0",
     "dayjs": "^1.11.13",
     "lodash": "^4.17.21",
-    "nuxt": "^2.18.1",
+    "nuxt": "^3.14.0",
     "remixicon": "^4.7.0",
     "sass": "^1.93.2",
-    "sass-loader": "^10.5.2",
+    "vue": "^3.5.22",
     "vue-chartjs": "^3.5.1",
     "vue-ionicons": "^3.0.5"
   },
@@ -38,6 +37,7 @@
     "nodemon": "^3.1.7",
     "randomcolor": "^0.6.2",
     "serve": "^14.2.5",
+    "vuex": "^4.1.0",
     "vuexfire": "^3.2.5"
   }
 }

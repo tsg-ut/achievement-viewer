@@ -13,10 +13,10 @@ const localState = () => ({
 
 const localMutations = {
 	initList(state) {
-		state.isInitList = process.browser;
+		state.isInitList = process.client;
 	},
 	initData(state, id) {
-		state.isInitData[id] = process.browser;
+		state.isInitData[id] = process.client;
 	},
 };
 
@@ -39,7 +39,7 @@ const localGetters = {
 
 const localActions = {
 	async initList({state, dispatch, commit}) {
-		if (state.isInitList !== process.browser) {
+		if (state.isInitList !== process.client) {
 			await dispatch('bindList');
 			commit('initList');
 		}
@@ -50,7 +50,7 @@ const localActions = {
 	}),
 	bindById: firestoreAction(async ({bindFirestoreRef, state, dispatch, getters, commit}, id) => {
 		const localCharacter = getters.getById(id);
-		if (localCharacter !== undefined && state.isInitData[localCharacter.id] === process.browser) {
+		if (localCharacter !== undefined && state.isInitData[localCharacter.id] === process.client) {
 			return;
 		}
 
