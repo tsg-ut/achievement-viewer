@@ -68,15 +68,12 @@ const localActions = {
 		}
 
 		try {
-			const slackUsers = await this.$axios.$get('https://slackbot-api.tsg.ne.jp/slack/users', {
-				withCredentials: true,
-				headers: {
-					'Access-Control-Allow-Origin': '*',
-				},
+			const slackUsers = await $fetch('https://slackbot-api.tsg.ne.jp/slack/users', {
+				credentials: 'include',
 			});
 			commit('setUsers', slackUsers);
 		} catch (error) {
-			if (error?.message === 'Network Error' || error?.response?.status === 401) {
+			if (error?.message === 'Network Error' || error?.statusCode === 401) {
 				commit('isUnauthorized');
 			} else {
 				throw error;
@@ -89,15 +86,12 @@ const localActions = {
 		}
 
 		try {
-			const topicMessages = await this.$axios.$get('https://slackbot-api.tsg.ne.jp/topic/topics', {
-				withCredentials: true,
-				headers: {
-					'Access-Control-Allow-Origin': '*',
-				},
+			const topicMessages = await $fetch('https://slackbot-api.tsg.ne.jp/topic/topics', {
+				credentials: 'include',
 			});
 			commit('setTopicMessages', topicMessages);
 		} catch (error) {
-			if (error?.message === 'Network Error' || error?.response?.status === 401) {
+			if (error?.message === 'Network Error' || error?.statusCode === 401) {
 				commit('isUnauthorized');
 			} else {
 				throw error;
@@ -106,16 +100,17 @@ const localActions = {
 	},
 	async likeTopicMessage({commit}, {ts}) {
 		try {
-			await this.$axios.$put(`https://slackbot-api.tsg.ne.jp/topic/topics/${ts}/like`, '', {
-				withCredentials: true,
+			await $fetch(`https://slackbot-api.tsg.ne.jp/topic/topics/${ts}/like`, {
+				method: 'PUT',
+				body: '',
+				credentials: 'include',
 				headers: {
-					'Access-Control-Allow-Origin': '*',
 					'Content-Type': 'text/plain'
 				},
 			});
 			commit('addTopicMessageLike', ts);
 		} catch (error) {
-			if (error?.message === 'Network Error' || error?.response?.status === 401) {
+			if (error?.message === 'Network Error' || error?.statusCode === 401) {
 				commit('isUnauthorized');
 			} else {
 				throw error;
@@ -124,15 +119,13 @@ const localActions = {
 	},
 	async unlikeTopicMessage({commit}, {ts}) {
 		try {
-			await this.$axios.$delete(`https://slackbot-api.tsg.ne.jp/topic/topics/${ts}/like`, {
-				withCredentials: true,
-				headers: {
-					'Access-Control-Allow-Origin': '*',
-				},
+			await $fetch(`https://slackbot-api.tsg.ne.jp/topic/topics/${ts}/like`, {
+				method: 'DELETE',
+				credentials: 'include',
 			});
 			commit('removeTopicMessageLike', ts);
 		} catch (error) {
-			if (error?.message === 'Network Error' || error?.response?.status === 401) {
+			if (error?.message === 'Network Error' || error?.statusCode === 401) {
 				commit('isUnauthorized');
 			} else {
 				throw error;

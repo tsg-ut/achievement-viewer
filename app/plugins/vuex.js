@@ -18,15 +18,42 @@ export default defineNuxtPlugin((nuxtApp) => {
 			...vuexfireMutations,
 		},
 		modules: {
-			achievements,
-			achievementData,
-			achievementStatsByCategory,
-			achievementStatsByDifficulty,
-			achievementStatsByMonth,
-			slowQuizGames,
-			users,
-			oneiromancies,
-			slackInfos,
+			achievements: {
+				namespaced: true,
+				...achievements,
+			},
+			achievementData: {
+				namespaced: true,
+				...achievementData,
+			},
+			achievementStatsByCategory: {
+				namespaced: true,
+				...achievementStatsByCategory,
+			},
+			achievementStatsByDifficulty: {
+				namespaced: true,
+				...achievementStatsByDifficulty,
+			},
+			achievementStatsByMonth: {
+				namespaced: true,
+				...achievementStatsByMonth,
+			},
+			slowQuizGames: {
+				namespaced: true,
+				...slowQuizGames,
+			},
+			users: {
+				namespaced: true,
+				...users,
+			},
+			oneiromancies: {
+				namespaced: true,
+				...oneiromancies,
+			},
+			slackInfos: {
+				namespaced: true,
+				...slackInfos,
+			},
 		},
 	});
 
