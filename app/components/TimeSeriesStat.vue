@@ -1,19 +1,34 @@
 <script>
-import {Bar, mixins} from 'vue-chartjs';
+import {Bar} from 'vue-chartjs';
+import {Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend} from 'chart.js';
 
-const {reactiveProp} = mixins;
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 export default {
-	extends: Bar,
-	mixins: [reactiveProp],
-	mounted() {
-		this.renderChart(this.chartData, {
-			responsive: true,
-			maintainAspectRatio: false,
-			aspectRatio: 4,
-		});
+	name: 'TimeSeriesStat',
+	components: {
+		Bar,
+	},
+	props: {
+		chartData: {
+			type: Object,
+			required: true,
+		},
+	},
+	computed: {
+		chartOptions() {
+			return {
+				responsive: true,
+				maintainAspectRatio: true,
+				aspectRatio: 4,
+			};
+		},
 	},
 };
 </script>
+
+<template>
+	<Bar :data="chartData" :options="chartOptions" />
+</template>
 
 <style></style>

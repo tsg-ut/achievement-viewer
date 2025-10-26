@@ -1,16 +1,29 @@
 <script>
-import {Doughnut, mixins} from 'vue-chartjs';
+import {Doughnut} from 'vue-chartjs';
+import {Chart as ChartJS, ArcElement, Tooltip, Legend} from 'chart.js';
 
-const {reactiveProp} = mixins;
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default {
-	extends: Doughnut,
-	mixins: [reactiveProp],
-	props: ['options'],
-	mounted() {
-		this.renderChart(this.chartData, this.options);
+	name: 'PieChartStat',
+	components: {
+		Doughnut,
+	},
+	props: {
+		chartData: {
+			type: Object,
+			required: true,
+		},
+		options: {
+			type: Object,
+			default: () => ({}),
+		},
 	},
 };
 </script>
+
+<template>
+	<Doughnut :data="chartData" :options="options" />
+</template>
 
 <style></style>

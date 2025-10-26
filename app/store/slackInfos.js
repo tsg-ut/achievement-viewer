@@ -68,12 +68,22 @@ const localActions = {
 		}
 
 		try {
-			const slackUsers = await $fetch('https://slackbot-api.tsg.ne.jp/slack/users', {
+			const response = await fetch('https://slackbot-api.tsg.ne.jp/slack/users', {
 				credentials: 'include',
 			});
+
+			if (!response.ok) {
+				if (response.status === 401) {
+					commit('isUnauthorized');
+					return;
+				}
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+
+			const slackUsers = await response.json();
 			commit('setUsers', slackUsers);
 		} catch (error) {
-			if (error?.message === 'Network Error' || error?.statusCode === 401) {
+			if (error?.message === 'Network Error' || error?.message?.includes('Failed to fetch')) {
 				commit('isUnauthorized');
 			} else {
 				throw error;
@@ -86,12 +96,22 @@ const localActions = {
 		}
 
 		try {
-			const topicMessages = await $fetch('https://slackbot-api.tsg.ne.jp/topic/topics', {
+			const response = await fetch('https://slackbot-api.tsg.ne.jp/topic/topics', {
 				credentials: 'include',
 			});
+
+			if (!response.ok) {
+				if (response.status === 401) {
+					commit('isUnauthorized');
+					return;
+				}
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+
+			const topicMessages = await response.json();
 			commit('setTopicMessages', topicMessages);
 		} catch (error) {
-			if (error?.message === 'Network Error' || error?.statusCode === 401) {
+			if (error?.message === 'Network Error' || error?.message?.includes('Failed to fetch')) {
 				commit('isUnauthorized');
 			} else {
 				throw error;
@@ -100,7 +120,7 @@ const localActions = {
 	},
 	async likeTopicMessage({commit}, {ts}) {
 		try {
-			await $fetch(`https://slackbot-api.tsg.ne.jp/topic/topics/${ts}/like`, {
+			const response = await fetch(`https://slackbot-api.tsg.ne.jp/topic/topics/${ts}/like`, {
 				method: 'PUT',
 				body: '',
 				credentials: 'include',
@@ -108,9 +128,18 @@ const localActions = {
 					'Content-Type': 'text/plain'
 				},
 			});
+
+			if (!response.ok) {
+				if (response.status === 401) {
+					commit('isUnauthorized');
+					return;
+				}
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+
 			commit('addTopicMessageLike', ts);
 		} catch (error) {
-			if (error?.message === 'Network Error' || error?.statusCode === 401) {
+			if (error?.message === 'Network Error' || error?.message?.includes('Failed to fetch')) {
 				commit('isUnauthorized');
 			} else {
 				throw error;
@@ -119,13 +148,22 @@ const localActions = {
 	},
 	async unlikeTopicMessage({commit}, {ts}) {
 		try {
-			await $fetch(`https://slackbot-api.tsg.ne.jp/topic/topics/${ts}/like`, {
+			const response = await fetch(`https://slackbot-api.tsg.ne.jp/topic/topics/${ts}/like`, {
 				method: 'DELETE',
 				credentials: 'include',
 			});
+
+			if (!response.ok) {
+				if (response.status === 401) {
+					commit('isUnauthorized');
+					return;
+				}
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+
 			commit('removeTopicMessageLike', ts);
 		} catch (error) {
-			if (error?.message === 'Network Error' || error?.statusCode === 401) {
+			if (error?.message === 'Network Error' || error?.message?.includes('Failed to fetch')) {
 				commit('isUnauthorized');
 			} else {
 				throw error;
