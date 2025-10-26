@@ -23,7 +23,7 @@ export default {
 </script>
 
 <template>
-	<Doughnut :data="chartData" :options="options" />
+	<div><Doughnut :data="chartData" :options="options" /></div>
 </template>
 
 <style></style>
