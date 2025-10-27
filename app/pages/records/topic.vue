@@ -5,6 +5,20 @@
 
 		<p class="title">sandboxのトピックログ</p>
 
+		<div class="field">
+			<div class="control has-icons-left">
+				<input
+					v-model="searchQuery"
+					class="input"
+					type="text"
+					placeholder="トピックを検索..."
+				>
+				<span class="icon is-left">
+					<i class="ri-search-line"/>
+				</span>
+			</div>
+		</div>
+
 		<div class="control is-spaced">
 			並び替え:
 			<label class="radio">
@@ -48,16 +62,20 @@
 		<div class="table-container">
 			<table class="table topics">
 				<tbody>
-					<tr v-for="{message, likes, isLiked} in sortedTopics" :key="message.ts">
+					<tr v-for="{message, likes, isLiked} in paginatedTopics" :key="message.ts">
 						<td class="topic-text">
-							<nuxt-link v-if="message.user" :to="`/users/${message.user}`">
+							<nuxt-link
+								v-if="message.user"
+								:to="`/users/${message.user}`"
+								class="topic-user"
+							>
 								<img
 									class="topic-icon"
 									:src="getUserIcon(message)"
 								>
 								{{getUserName(message)}}
 							</nuxt-link>
-							<span v-else>
+							<span v-else class="topic-user">
 								<img
 									class="topic-icon"
 									:src="getUserIcon(message)"
@@ -88,6 +106,43 @@
 				</tbody>
 			</table>
 		</div>
+
+		<nav
+			v-if="totalPages > 1"
+			class="pagination is-centered"
+			role="navigation"
+			aria-label="pagination"
+		>
+			<a
+				class="pagination-previous"
+				:class="{'is-disabled': currentPage === 1}"
+				@click="changePage(currentPage - 1)"
+			>
+				前へ
+			</a>
+			<a
+				class="pagination-next"
+				:class="{'is-disabled': currentPage === totalPages}"
+				@click="changePage(currentPage + 1)"
+			>
+				次へ
+			</a>
+			<ul class="pagination-list">
+				<li v-for="(page, index) in paginationRange" :key="index">
+					<span v-if="page === '...'" class="pagination-ellipsis">&hellip;</span>
+					<a
+						v-else
+						class="pagination-link"
+						:class="{'is-current': page === currentPage}"
+						:aria-label="`ページ ${page}`"
+						:aria-current="page === currentPage ? 'page' : null"
+						@click="() => changePage(page)"
+					>
+						{{page}}
+					</a>
+				</li>
+			</ul>
+		</nav>
 	</div>
 </template>
 
@@ -97,11 +152,15 @@ import get from 'lodash/get';
 import sortBy from 'lodash/sortBy';
 import {mapActions, mapGetters, mapState} from 'vuex';
 
+const ITEMS_PER_PAGE = 100;
+
 export default {
 	data() {
 		return {
 			isLoading: true,
 			sortBy: 'timestamp',
+			currentPage: 1,
+			searchQuery: '',
 		};
 	},
 	async fetch({store}) {
@@ -124,28 +183,79 @@ export default {
 			),
 		}),
 		...mapGetters('slackInfos', ['getUser']),
-		sortedTopics() {
-			if (this.sortBy === 'timestamp') {
-				return sortBy(this.topicMessages, ({message}) => message.ts).reverse();
+		filteredTopics() {
+			if (!this.searchQuery.trim()) {
+				return this.topicMessages;
 			}
-			if (this.sortBy === 'username') {
-				return sortBy(this.topicMessages, [
+			const query = this.searchQuery.toLowerCase().normalize('NFKC');
+			return this.topicMessages.filter(({message}) => {
+				const text = (message.text?.toLowerCase() || '').normalize('NFKC');
+				const username = this.getUserName(message).toLowerCase().normalize('NFKC');
+				return text.includes(query) || username.includes(query);
+			});
+		},
+		sortedTopics() {
+			let sorted;
+			if (this.sortBy === 'timestamp') {
+				sorted = sortBy(this.filteredTopics, ({message}) => message.ts).reverse();
+			} else if (this.sortBy === 'username') {
+				sorted = sortBy(this.filteredTopics, [
 					({message}) => this.getUserName(message),
 					({message}) => -parseFloat(message.ts),
 				]);
-			}
-			if (this.sortBy === 'likes') {
-				return sortBy(this.topicMessages, [
+			} else if (this.sortBy === 'likes') {
+				sorted = sortBy(this.filteredTopics, [
 					({likes}) => -likes.length,
 					({message}) => -parseFloat(message.ts),
 				]);
-			}
-			if (this.sortBy === 'random') {
-				return sortBy(this.topicMessages, [
+			} else if (this.sortBy === 'random') {
+				sorted = sortBy(this.filteredTopics, [
 					({randomSortKey}) => randomSortKey,
 				]);
+			} else {
+				sorted = this.filteredTopics;
 			}
-			return this.topicMessages;
+			return sorted;
+		},
+		totalPages() {
+			return Math.ceil(this.sortedTopics.length / ITEMS_PER_PAGE);
+		},
+		paginatedTopics() {
+			const start = (this.currentPage - 1) * ITEMS_PER_PAGE;
+			const end = start + ITEMS_PER_PAGE;
+			return this.sortedTopics.slice(start, end);
+		},
+		paginationRange() {
+			const range = [];
+			const total = this.totalPages;
+			const current = this.currentPage;
+			const delta = 2;
+
+			for (let i = Math.max(2, current - delta); i <= Math.min(total - 1, current + delta); i++) {
+				range.push(i);
+			}
+
+			if (current - delta > 2) {
+				range.unshift('...');
+			}
+			if (current + delta < total - 1) {
+				range.push('...');
+			}
+
+			range.unshift(1);
+			if (total > 1) {
+				range.push(total);
+			}
+
+			return range;
+		},
+	},
+	watch: {
+		sortBy() {
+			this.currentPage = 1;
+		},
+		searchQuery() {
+			this.currentPage = 1;
 		},
 	},
 	mounted() {
@@ -157,6 +267,12 @@ export default {
 		});
 	},
 	methods: {
+		changePage(page) {
+			if (page >= 1 && page <= this.totalPages) {
+				this.currentPage = page;
+				window.scrollTo({top: 0, behavior: 'smooth'});
+			}
+		},
 		...mapActions({
 			likeTopicMessage: 'slackInfos/likeTopicMessage',
 			unlikeTopicMessage: 'slackInfos/unlikeTopicMessage',
@@ -202,6 +318,12 @@ export default {
 </script>
 
 <style>
+.control {
+	.radio {
+		margin-inline-start: 0.5em;
+	}
+}
+
 .topics.table td, .topics.table th {
 	padding-left: 0.25em;
 	padding-right: 0.25em;
@@ -210,6 +332,10 @@ export default {
 .topic-text {
 	line-break: anywhere;
 	min-width: 20em;
+
+	.topic-user {
+		margin-inline-end: 0.2em;
+	}
 }
 
 .topic-icon {
@@ -237,6 +363,15 @@ export default {
 
 .topic-like .icon {
 	vertical-align: bottom;
+}
+
+.pagination {
+	margin-top: 2rem;
+	margin-bottom: 2rem;
+}
+
+.field {
+	margin-bottom: 1.5rem;
 }
 </style>
 
