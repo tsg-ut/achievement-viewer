@@ -10,6 +10,7 @@ import * as achievements from '~/store/achievements.js';
 import * as oneiromancies from '~/store/oneiromancies.js';
 import * as slackInfos from '~/store/slackInfos.js';
 import * as slowQuizGames from '~/store/slowQuizGames.js';
+import * as twentyQuestionsGames from '~/store/twentyQuestionsGames.js';
 import * as users from '~/store/users.js';
 
 export default defineNuxtPlugin((nuxtApp) => {
@@ -41,6 +42,10 @@ export default defineNuxtPlugin((nuxtApp) => {
 			slowQuizGames: {
 				namespaced: true,
 				...slowQuizGames,
+			},
+			twentyQuestionsGames: {
+				namespaced: true,
+				...twentyQuestionsGames,
 			},
 			users: {
 				namespaced: true,
