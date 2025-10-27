@@ -80,7 +80,7 @@
 				({{answer.progress}}文字)
 				<a
 					class="button is-small"
-					@click="gotoProgress(answer.progress)"
+					@click="() => gotoProgress(answer.progress)"
 				>
 					ここまで表示
 				</a>

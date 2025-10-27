@@ -8,19 +8,39 @@
 		<div class="control is-spaced">
 			並び替え:
 			<label class="radio">
-				<input type="radio" id="timestamp" value="timestamp" v-model="sortBy">
+				<input
+					id="timestamp"
+					v-model="sortBy"
+					type="radio"
+					value="timestamp"
+				>
 				新しい順
 			</label>
 			<label class="radio">
-				<input type="radio" id="username" value="username" v-model="sortBy">
+				<input
+					id="username"
+					v-model="sortBy"
+					type="radio"
+					value="username"
+				>
 				ユーザー順
 			</label>
 			<label class="radio">
-				<input type="radio" id="likes" value="likes" v-model="sortBy">
+				<input
+					id="likes"
+					v-model="sortBy"
+					type="radio"
+					value="likes"
+				>
 				お気に入り順
 			</label>
 			<label class="radio">
-				<input type="radio" id="random" value="random" v-model="sortBy">
+				<input
+					id="random"
+					v-model="sortBy"
+					type="radio"
+					value="random"
+				>
 				ランダム
 			</label>
 		</div>
@@ -47,7 +67,7 @@
 							<strong>{{message.text}}</strong>
 						</td>
 						<td class="topic-like">
-							<span class="icon" @click="toggleTopicMessageLike(message, isLiked)">
+							<span class="icon" @click="() => toggleTopicMessageLike(message, isLiked)">
 								<i v-if="isLiked" class="ri-heart-fill"/>
 								<i v-else class="ri-heart-line"/>
 							</span>{{likes.length}}
@@ -57,9 +77,9 @@
 						</td>
 						<td class="topic-slacklog">
 							<a
-								:href="'https://slack-log.tsg.ne.jp/C7AAX50QY/' + message.ts"
+								:href="`https://slack-log.tsg.ne.jp/C7AAX50QY/${message.ts}`"
 								target="_blank"
-								rel="noopener nereferrer"
+								rel="noopener noreferrer"
 							>
 								slacklog<span class="icon"><i class="ri-external-link-line"/></span>
 							</a>
@@ -72,10 +92,10 @@
 </template>
 
 <script>
-import get from 'lodash/get';
 import dayjs from 'dayjs';
-import {mapActions, mapGetters, mapState} from 'vuex';
+import get from 'lodash/get';
 import sortBy from 'lodash/sortBy';
+import {mapActions, mapGetters, mapState} from 'vuex';
 
 export default {
 	data() {
@@ -98,7 +118,7 @@ export default {
 	computed: {
 		...mapState({
 			topicMessages: (state) => (
-				state.slackInfos.topicMessages.filter(({message}) => ( 
+				state.slackInfos.topicMessages.filter(({message}) => (
 					message?.reactions?.some(({name, count}) => name === 'koresuki' && count >= 3)
 				))
 			),
@@ -176,7 +196,7 @@ export default {
 			const timestamp = parseFloat(ts);
 			const date = dayjs(timestamp * 1000);
 			return date.format('YYYY/MM/DD');
-		}
+		},
 	},
 };
 </script>

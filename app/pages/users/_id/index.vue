@@ -94,6 +94,16 @@ export default {
 			isLoading: true,
 		};
 	},
+	async fetch({store}) {
+		if (!process.browser) {
+			await store.dispatch('achievements/bindList');
+		}
+	},
+	head() {
+		return {
+			title: `${this.name}の解除した実績一覧 - achievement-viewer`,
+		};
+	},
 	computed: {
 		...mapState({
 			achievementData: (state) => (
@@ -138,11 +148,6 @@ export default {
 			return get(this.slackUser, ['profile', 'image_192'], '/images/anonymous-icon_192.png');
 		},
 	},
-	async fetch({store}) {
-		if (!process.browser) {
-			await store.dispatch('achievements/bindList');
-		}
-	},
 	mounted() {
 		Promise.all([
 			this.$store.dispatch('achievementData/initList'),
@@ -168,11 +173,6 @@ export default {
 			const d = new Date(date.seconds * 1000);
 			return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
 		},
-	},
-	head() {
-		return {
-			title: `${this.name}の解除した実績一覧 - achievement-viewer`,
-		};
 	},
 };
 </script>

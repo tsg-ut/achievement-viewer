@@ -78,6 +78,22 @@ export default {
 			datacollection: null,
 		};
 	},
+	async fetch({store}) {
+		if (!process.browser) {
+			await store.dispatch('users/bindList');
+			await store.dispatch('slackInfos/initUsers');
+			await store.dispatch('achievements/bindLatestAchievements');
+			await store.dispatch('achievementsData/bindList');
+			await store.dispatch('achievementStatsByDifficulty/bindList');
+			await store.dispatch('achievementStatsByCategory/bindList');
+			await store.dispatch('achievementStatsByMonth/bindList');
+		}
+	},
+	head() {
+		return {
+			title: 'achievement-viewer',
+		};
+	},
 	computed: {
 		...mapState({
 			users: (state) => state.users.list,
@@ -93,7 +109,7 @@ export default {
 			return {
 				datasets: [{
 					data: labels.map((label) => {
-						const stat = this.achievementStatsByDifficulty.find((stat) => stat.id === label);
+						const stat = this.achievementStatsByDifficulty.find((s) => s.id === label);
 						if (stat) {
 							return stat.count;
 						}
@@ -123,17 +139,6 @@ export default {
 				labels: this.achievementStatsByMonth.map((stat) => stat.id),
 			};
 		},
-	},
-	async fetch({store}) {
-		if (!process.browser) {
-			await store.dispatch('users/bindList');
-			await store.dispatch('slackInfos/initUsers');
-			await store.dispatch('achievements/bindLatestAchievements');
-			await store.dispatch('achievementsData/bindList');
-			await store.dispatch('achievementStatsByDifficulty/bindList');
-			await store.dispatch('achievementStatsByCategory/bindList');
-			await store.dispatch('achievementStatsByMonth/bindList');
-		}
 	},
 	mounted() {
 		Promise.all([
@@ -171,11 +176,6 @@ export default {
 			const m = d.getMinutes().toString().padStart(2, '0');
 			return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日 ${h}:${m}`;
 		},
-	},
-	head() {
-		return {
-			title: 'achievement-viewer',
-		};
 	},
 };
 </script>

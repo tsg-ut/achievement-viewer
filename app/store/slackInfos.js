@@ -125,7 +125,7 @@ const localActions = {
 				body: '',
 				credentials: 'include',
 				headers: {
-					'Content-Type': 'text/plain'
+					'Content-Type': 'text/plain',
 				},
 			});
 

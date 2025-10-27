@@ -1,6 +1,10 @@
+<template>
+	<bar :data="chartData" :options="chartOptions"/>
+</template>
+
 <script>
-import {Bar} from 'vue-chartjs';
 import {Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend} from 'chart.js';
+import {Bar} from 'vue-chartjs';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -26,9 +30,5 @@ export default {
 	},
 };
 </script>
-
-<template>
-	<Bar :data="chartData" :options="chartOptions" />
-</template>
 
 <style></style>
