@@ -7,10 +7,6 @@ updates:
   open-pull-requests-limit: 10
   ignore:
   - dependency-name: chart.js
-  - dependency-name: nuxt
-    versions:
-      - '>=3'
-  - dependency-name: sass-loader
 - package-ecosystem: npm
   directory: "/functions"
   schedule:

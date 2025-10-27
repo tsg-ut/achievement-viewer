@@ -32,7 +32,7 @@
 		<h2>統計情報</h2>
 		<div class="columns is-multiline block">
 			<div class="column is-half">
-				<PieChartStat :chart-data="statsByDifficulty"/>
+				<PieChartStat id="doughnut-chart" :chart-data="statsByDifficulty"/>
 			</div>
 			<div class="column is-half">
 				<PieChartStat :chart-data="statsByCategory"/>

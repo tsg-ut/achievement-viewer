@@ -1,7 +1,7 @@
 import {firestoreAction} from 'vuexfire';
 import db from '~/lib/db.js';
 
-const achievementDataRef = db.collection('achievement_data');
+const achievementStatsByMonthRef = db.collection('achievement_stats_by_month');
 
 const localState = () => ({
 	isInitList: null,
@@ -10,7 +10,7 @@ const localState = () => ({
 
 const localMutations = {
 	initList(state) {
-		state.isInitList = process.browser;
+		state.isInitList = process.client;
 	},
 };
 
@@ -18,18 +18,12 @@ const localGetters = {
 	list: (state) => state.list,
 	getById: (state) => (
 		(id) => {
-			const achievementDatum = state.list.find((datum) => datum.id === id);
-			if (achievementDatum === undefined) {
+			const achievementStatByMonth = state.list.find((datum) => datum.id === id);
+			if (achievementStatByMonth === undefined) {
 				return {id};
 			}
-			return achievementDatum;
+			return achievementStatByMonth;
 		}
-	),
-	getByCounter: (state) => (
-		(counter) => state.list.filter((datum) => datum.counter === counter).sort((a, b) => a.value - b.value)
-	),
-	getByCategory: (state) => (
-		(category) => state.list.filter((datum) => datum.category === category).sort((a, b) => (b.count || 0) - (a.count || 0))
 	),
 };
 
@@ -41,7 +35,7 @@ const localActions = {
 		}
 	},
 	bindList: firestoreAction(async ({bindFirestoreRef}) => {
-		await bindFirestoreRef('list', achievementDataRef);
+		await bindFirestoreRef('list', achievementStatsByMonthRef);
 	}),
 };
 

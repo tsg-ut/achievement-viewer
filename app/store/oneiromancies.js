@@ -13,10 +13,10 @@ const localState = () => ({
 
 const localMutations = {
 	initOneiromancyMessages(state) {
-		state.isInitOneiromancyMessages = process.browser;
+		state.isInitOneiromancyMessages = process.client;
 	},
 	initOneiromancyCriteria(state) {
-		state.isInitOneiromancyCriteria = process.browser;
+		state.isInitOneiromancyCriteria = process.client;
 	},
 };
 
@@ -27,7 +27,7 @@ const localGetters = {
 
 const localActions = {
 	async initOneiromancyMessages({state, dispatch, commit}) {
-		if (state.isInitOneiromancyMessages !== process.browser) {
+		if (state.isInitOneiromancyMessages !== process.client) {
 			await dispatch('bindOneiromancyMessages');
 			commit('initOneiromancyMessages');
 		}
@@ -37,7 +37,7 @@ const localActions = {
 		commit('initOneiromancyMessages');
 	}),
 	async initOneiromancyCriteria({state, dispatch, commit}) {
-		if (state.isInitOneiromancyCriteria !== process.browser) {
+		if (state.isInitOneiromancyCriteria !== process.client) {
 			await dispatch('bindOneiromancyCriteria');
 			commit('initOneiromancyCriteria');
 		}

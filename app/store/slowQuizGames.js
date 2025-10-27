@@ -10,7 +10,7 @@ const localState = () => ({
 
 const localMutations = {
 	initList(state) {
-		state.isInitList = process.browser;
+		state.isInitList = process.client;
 	},
 };
 
@@ -29,7 +29,7 @@ const localGetters = {
 
 const localActions = {
 	async initList({state, dispatch, commit}) {
-		if (state.isInitList !== process.browser) {
+		if (state.isInitList !== process.client) {
 			await dispatch('bindList');
 			commit('initList');
 		}

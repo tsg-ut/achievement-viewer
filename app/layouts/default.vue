@@ -46,7 +46,7 @@
 				</div>
 			</div>
 		</nav>
-		<nuxt/>
+		<slot />
 		<footer class="footer">
 			<div class="content has-text-centered">
 				<p>

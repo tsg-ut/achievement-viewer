@@ -1,5 +1,3 @@
-import Vue from 'vue';
-
 const localState = () => ({
 	isUnauthorized: false,
 	isInitUsers: false,
@@ -24,15 +22,15 @@ const localMutations = {
 	addTopicMessageLike(state, ts) {
 		const message = state.topicMessagesMap.get(ts);
 		if (message) {
-			Vue.set(message, 'isLiked', true);
-			Vue.set(message, 'likes', message.likes.concat([null])); // placeholder
+			message.isLiked = true;
+			message.likes = message.likes.concat([null]); // placeholder
 		}
 	},
 	removeTopicMessageLike(state, ts) {
 		const message = state.topicMessagesMap.get(ts);
 		if (message) {
-			Vue.set(message, 'isLiked', false);
-			Vue.set(message, 'likes', message.likes.slice(1));
+			message.isLiked = false;
+			message.likes = message.likes.slice(1);
 		}
 	},
 	isUnauthorized(state) {
@@ -70,15 +68,22 @@ const localActions = {
 		}
 
 		try {
-			const slackUsers = await this.$axios.$get('https://slackbot-api.tsg.ne.jp/slack/users', {
-				withCredentials: true,
-				headers: {
-					'Access-Control-Allow-Origin': '*',
-				},
+			const response = await fetch('https://slackbot-api.tsg.ne.jp/slack/users', {
+				credentials: 'include',
 			});
+
+			if (!response.ok) {
+				if (response.status === 401) {
+					commit('isUnauthorized');
+					return;
+				}
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+
+			const slackUsers = await response.json();
 			commit('setUsers', slackUsers);
 		} catch (error) {
-			if (error?.message === 'Network Error' || error?.response?.status === 401) {
+			if (error?.message === 'Network Error' || error?.message?.includes('Failed to fetch')) {
 				commit('isUnauthorized');
 			} else {
 				throw error;
@@ -91,15 +96,22 @@ const localActions = {
 		}
 
 		try {
-			const topicMessages = await this.$axios.$get('https://slackbot-api.tsg.ne.jp/topic/topics', {
-				withCredentials: true,
-				headers: {
-					'Access-Control-Allow-Origin': '*',
-				},
+			const response = await fetch('https://slackbot-api.tsg.ne.jp/topic/topics', {
+				credentials: 'include',
 			});
+
+			if (!response.ok) {
+				if (response.status === 401) {
+					commit('isUnauthorized');
+					return;
+				}
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+
+			const topicMessages = await response.json();
 			commit('setTopicMessages', topicMessages);
 		} catch (error) {
-			if (error?.message === 'Network Error' || error?.response?.status === 401) {
+			if (error?.message === 'Network Error' || error?.message?.includes('Failed to fetch')) {
 				commit('isUnauthorized');
 			} else {
 				throw error;
@@ -108,16 +120,26 @@ const localActions = {
 	},
 	async likeTopicMessage({commit}, {ts}) {
 		try {
-			await this.$axios.$put(`https://slackbot-api.tsg.ne.jp/topic/topics/${ts}/like`, '', {
-				withCredentials: true,
+			const response = await fetch(`https://slackbot-api.tsg.ne.jp/topic/topics/${ts}/like`, {
+				method: 'PUT',
+				body: '',
+				credentials: 'include',
 				headers: {
-					'Access-Control-Allow-Origin': '*',
 					'Content-Type': 'text/plain'
 				},
 			});
+
+			if (!response.ok) {
+				if (response.status === 401) {
+					commit('isUnauthorized');
+					return;
+				}
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+
 			commit('addTopicMessageLike', ts);
 		} catch (error) {
-			if (error?.message === 'Network Error' || error?.response?.status === 401) {
+			if (error?.message === 'Network Error' || error?.message?.includes('Failed to fetch')) {
 				commit('isUnauthorized');
 			} else {
 				throw error;
@@ -126,15 +148,22 @@ const localActions = {
 	},
 	async unlikeTopicMessage({commit}, {ts}) {
 		try {
-			await this.$axios.$delete(`https://slackbot-api.tsg.ne.jp/topic/topics/${ts}/like`, {
-				withCredentials: true,
-				headers: {
-					'Access-Control-Allow-Origin': '*',
-				},
+			const response = await fetch(`https://slackbot-api.tsg.ne.jp/topic/topics/${ts}/like`, {
+				method: 'DELETE',
+				credentials: 'include',
 			});
+
+			if (!response.ok) {
+				if (response.status === 401) {
+					commit('isUnauthorized');
+					return;
+				}
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+
 			commit('removeTopicMessageLike', ts);
 		} catch (error) {
-			if (error?.message === 'Network Error' || error?.response?.status === 401) {
+			if (error?.message === 'Network Error' || error?.message?.includes('Failed to fetch')) {
 				commit('isUnauthorized');
 			} else {
 				throw error;

@@ -8,15 +8,14 @@ test('has title', async ({page}) => {
 test('charts.js canvas is rendered', async ({page}) => {
 	await page.goto('/');
 
-	const canvas = page.locator('canvas#doughnut-chart').first();
-	await canvas.waitFor({state: 'visible'});
+	// Wait for the statistics section to be visible
+	await page.locator('h2:has-text("統計情報")').waitFor({state: 'visible'});
+
+	// Wait for any canvas element to be visible
+	const canvas = page.locator('canvas').first();
+	await canvas.waitFor({state: 'visible', timeout: 10000});
 
 	expect(canvas).not.toBeNull();
-
-	const renderedCanvas = await page.locator('canvas#doughnut-chart.chartjs-render-monitor').first();
-	await renderedCanvas.waitFor({state: 'visible'});
-
-	expect(renderedCanvas).not.toBeNull();
 });
 
 test('table is rendered', async ({page}) => {

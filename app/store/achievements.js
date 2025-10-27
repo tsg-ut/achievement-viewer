@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import {firestoreAction} from 'vuexfire';
 import db from '~/lib/db.js';
 
@@ -16,21 +15,21 @@ const localState = () => ({
 
 const localMutations = {
 	initList(state) {
-		state.isInitList = process.browser;
+		state.isInitList = process.client;
 	},
 	initLatestAchievements(state) {
-		state.isInitLatestAchievemnts = process.browser;
+		state.isInitLatestAchievemnts = process.client;
 	},
 	initData(state, id) {
-		Vue.set(state.isInitData, id, process.browser);
+		state.isInitData[id] = process.client;
 	},
 	setUser(state, {id, achievements}) {
-		Vue.set(state.isInitUsers, id, process.browser);
-		Vue.set(state, `user_${id}`, achievements);
+		state.isInitUsers[id] = process.client;
+		state[`user_${id}`] = achievements;
 	},
 	setName(state, {name, achievements}) {
-		Vue.set(state.isInitNames, name, process.browser);
-		Vue.set(state, `name_${name}`, achievements);
+		state.isInitNames[name] = process.client;
+		state[`name_${name}`] = achievements;
 	},
 };
 
@@ -80,7 +79,7 @@ const localActions = {
 		await bindFirestoreRef('latestAchievements', achievementsRef.orderBy('date', 'desc').limit(15));
 	}),
 	bind: firestoreAction(async ({bindFirestoreRef, state, commit}, id) => {
-		if (state.isInitData[id] === process.browser || state.isInitList === process.browser) {
+		if (state.isInitData[id] === process.client || state.isInitList === process.client) {
 			return;
 		}
 
@@ -89,7 +88,7 @@ const localActions = {
 		commit('initData', id);
 	}),
 	fetchByUser: async ({state, commit}, id) => {
-		if (state.isInitUsers[id] === process.browser || state.isInitList === process.browser) {
+		if (state.isInitUsers[id] === process.client || state.isInitList === process.client) {
 			return;
 		}
 
@@ -101,7 +100,7 @@ const localActions = {
 		});
 	},
 	fetchByName: async ({state, commit}, name) => {
-		if (state.isInitNames[name] === process.browser || state.isInitList === process.browser) {
+		if (state.isInitNames[name] === process.client || state.isInitList === process.client) {
 			return;
 		}
 
