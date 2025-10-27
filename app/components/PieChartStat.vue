@@ -1,6 +1,10 @@
+<template>
+	<div><doughnut :data="chartData" :options="options"/></div>
+</template>
+
 <script>
-import {Doughnut} from 'vue-chartjs';
 import {Chart as ChartJS, ArcElement, Tooltip, Legend} from 'chart.js';
+import {Doughnut} from 'vue-chartjs';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -21,9 +25,5 @@ export default {
 	},
 };
 </script>
-
-<template>
-	<div><Doughnut :data="chartData" :options="options" /></div>
-</template>
 
 <style></style>

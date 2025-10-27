@@ -82,6 +82,16 @@ export default {
 			isLoading: true,
 		};
 	},
+	async fetch({store}) {
+		if (!process.browser) {
+			await store.dispatch('achievements/bindList');
+		}
+	},
+	head() {
+		return {
+			title: `実績「${this.title}」 - achievement-viewer`,
+		};
+	},
 	computed: {
 		...mapState({
 			userList: (state) => state.users.list,
@@ -137,11 +147,6 @@ export default {
 			return getCategoryColor(this.category);
 		},
 	},
-	async fetch({store}) {
-		if (!process.browser) {
-			await store.dispatch('achievements/bindList');
-		}
-	},
 	mounted() {
 		Promise.all([
 			this.$store.dispatch('achievementData/initList'),
@@ -166,11 +171,6 @@ export default {
 		getUserIcon3x(user) {
 			return get(user, ['profile', 'image_72'], '/images/anonymous-icon_72.png');
 		},
-	},
-	head() {
-		return {
-			title: `実績「${this.title}」 - achievement-viewer`,
-		};
 	},
 };
 </script>

@@ -8,15 +8,30 @@
 		<div class="control is-spaced">
 			並び替え:
 			<label class="radio">
-				<input type="radio" id="timestamp" value="timestamp" v-model="sortBy">
+				<input
+					id="timestamp"
+					v-model="sortBy"
+					type="radio"
+					value="timestamp"
+				>
 				新しい順
 			</label>
 			<label class="radio">
-				<input type="radio" id="username" value="username" v-model="sortBy">
+				<input
+					id="username"
+					v-model="sortBy"
+					type="radio"
+					value="username"
+				>
 				ユーザー順
 			</label>
 			<label class="radio">
-				<input type="radio" id="points" value="points" v-model="sortBy">
+				<input
+					id="points"
+					v-model="sortBy"
+					type="radio"
+					value="points"
+				>
 				点数順
 			</label>
 		</div>
@@ -40,8 +55,8 @@
 					:key="message.ts"
 				>
 					<tr
-						@click="toggleOpenedMessage(message.ts)"
 						class="oneiromancy"
+						@click="() => toggleOpenedMessage(message.ts)"
 					>
 						<td class="oneiromancy-username">
 							<span
@@ -78,9 +93,9 @@
 						</td>
 						<td class="oneiromancy-slacklog">
 							<a
-								:href="'https://slack-log.tsg.ne.jp/C7AAX50QY/' + message.ts"
+								:href="`https://slack-log.tsg.ne.jp/C7AAX50QY/${message.ts}`"
 								target="_blank"
-								rel="noopener nereferrer"
+								rel="noopener noreferrer"
 							>
 								slacklog<span class="icon"><i class="ri-external-link-line"/></span>
 							</a>
@@ -122,9 +137,9 @@
 						<td>{{criteria.point}}点</td>
 						<td>
 							<a
-								:href="'https://slack-log.tsg.ne.jp/C7AAX50QY/' + criteria.ts"
+								:href="`https://slack-log.tsg.ne.jp/C7AAX50QY/${criteria.ts}`"
 								target="_blank"
-								rel="noopener nereferrer"
+								rel="noopener noreferrer"
 							>
 								slacklog<span class="icon"><i class="ri-external-link-line"/></span>
 							</a>
@@ -137,10 +152,10 @@
 </template>
 
 <script>
-import get from 'lodash/get';
 import dayjs from 'dayjs';
-import {mapGetters, mapState} from 'vuex';
+import get from 'lodash/get';
 import sortBy from 'lodash/sortBy';
+import {mapGetters, mapState} from 'vuex';
 
 export default {
 	data() {
@@ -240,7 +255,7 @@ export default {
 		formatSlackText(originalText) {
 			const text = (originalText ?? '').trim();
 			const lines = text.split('\n');
-			return lines.slice(2).join('\n')
+			return lines.slice(2).join('\n');
 		},
 	},
 };

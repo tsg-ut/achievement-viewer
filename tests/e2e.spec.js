@@ -29,12 +29,12 @@ test('table is rendered', async ({page}) => {
 	expect(h2).not.toBeNull();
 
 	const tr = page.locator('h2 + table tr').first();
-	await tr.waitFor({state: 'visible'})
+	await tr.waitFor({state: 'visible'});
 
-	const trCount = await h2.evaluateHandle((el) => ( 
+	const trCount = await h2.evaluateHandle((el) => (
 		Array.from(
 			el.nextElementSibling
-			.querySelectorAll('tr')
+				.querySelectorAll('tr'),
 		).length
 	));
 

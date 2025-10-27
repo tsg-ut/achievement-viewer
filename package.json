@@ -5,7 +5,7 @@
   "author": "Koki Takahashi",
   "private": true,
   "scripts": {
-    "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
+    "lint": "eslint .",
     "precommit": "npm run lint",
     "dev": "nuxt dev",
     "build": "nuxt build",

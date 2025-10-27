@@ -46,7 +46,7 @@
 				</div>
 			</div>
 		</nav>
-		<slot />
+		<slot/>
 		<footer class="footer">
 			<div class="content has-text-centered">
 				<p>

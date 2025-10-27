@@ -1,4 +1,4 @@
-import {last} from 'lodash';
+// Removed lodash dependency - using native JS instead
 
 const getVisibleQuestionText = (game, gameProgress) => {
 	if (game.question.split('/').length >= 5) {
@@ -57,7 +57,8 @@ export const getQuestionText = (game, gameProgress) => {
 		return `${visibleText}\u200B${invisibleText}`;
 	}
 
-	const lastCharacter = last(Array.from(game.question));
+	const characters = Array.from(game.question);
+	const lastCharacter = characters[characters.length - 1];
 	const {text, invisibleCharacters} = getVisibleQuestionText(game, gameProgress);
 	const invisibleText = Array(invisibleCharacters).fill('').map((char, i) => {
 		if (
