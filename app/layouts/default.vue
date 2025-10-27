@@ -35,6 +35,9 @@
 							<nuxt-link class="navbar-item" to="/records/slow-quiz">
 								1日1文字クイズ
 							</nuxt-link>
+							<nuxt-link class="navbar-item" to="/records/twenty-questions">
+								20の扉
+							</nuxt-link>
 							<nuxt-link class="navbar-item" to="/records/topic">
 								トピック
 							</nuxt-link>
