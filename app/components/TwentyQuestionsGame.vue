@@ -13,7 +13,7 @@
 				参加者 ({{game.players.length}}人)
 			</h3>
 			<div class="table-container">
-				<table class="table is-fullwidth is-striped">
+				<table class="table is-fullwidth is-striped players-table">
 					<thead>
 						<tr>
 							<th>順位</th>
@@ -46,8 +46,12 @@
 									<span v-if="player.score !== null" class="tag is-success">
 										正解 ({{player.score}}問)
 									</span>
-									<span v-else-if="player.questionCount > 0" class="tag is-danger">
-										不正解
+									<span v-else-if="player.questionCount > 0">
+										<span class="tag is-danger">不正解</span>
+										<span v-if="getLastAnswer(player)" class="last-answer">
+											<close-circle-icon class="last-answer-icon" w="20" h="20"/>
+											{{getLastAnswer(player)}}
+										</span>
 									</span>
 									<span v-else class="tag is-light not-answered">
 										未参加
@@ -126,12 +130,14 @@ import dayjs from 'dayjs';
 import get from 'lodash/get.js';
 import ArrowDownIcon from 'vue-ionicons/dist/ios-arrow-down.vue';
 import ArrowUpIcon from 'vue-ionicons/dist/ios-arrow-up.vue';
+import CloseCircleIcon from 'vue-ionicons/dist/ios-close.vue';
 import {mapGetters} from 'vuex';
 
 export default {
 	components: {
 		ArrowDownIcon,
 		ArrowUpIcon,
+		CloseCircleIcon,
 	},
 	props: {
 		game: {
@@ -199,6 +205,21 @@ export default {
 			const correctPlayers = this.sortedPlayers.filter((p) => p.score !== null);
 			return correctPlayers.findIndex((p) => p.userId === player.userId) + 1;
 		},
+		getLastAnswer(player) {
+			if (!player.questions || player.questions.length === 0) {
+				return '';
+			}
+			// isAnswerAttemptがtrueのものだけを抽出
+			const answerAttempts = player.questions.filter((q) => q.isAnswerAttempt);
+			if (answerAttempts.length === 0) {
+				return '';
+			}
+			// 最後の回答を取得
+			const lastAnswer = answerAttempts[answerAttempts.length - 1];
+			const question = lastAnswer.question || '';
+			// 先頭の「答え: 」を除去
+			return question.replace(/^答え:\s*/, '');
+		},
 		getAnswerTagStyle(answer) {
 			// Map different answers to custom colors
 			const answerColorMap = {
@@ -226,6 +247,26 @@ export default {
 
 .TwentyQuestionsGame .players-section {
 	margin-top: 1.5rem;
+}
+
+.TwentyQuestionsGame .players-table {
+	min-width: 40rem;
+}
+
+.TwentyQuestionsGame .players-table tr td:nth-child(1) {
+	width: 8%;
+}
+
+.TwentyQuestionsGame .players-table tr td:nth-child(2) {
+	width: 35%;
+}
+
+.TwentyQuestionsGame .players-table tr td:nth-child(3) {
+	width: 10%;
+}
+
+.TwentyQuestionsGame .players-table tr td:nth-child(4) {
+	width: 30%;
 }
 
 .TwentyQuestionsGame .game-details .card-header {
@@ -292,5 +333,25 @@ export default {
 
 .TwentyQuestionsGame .not-answered {
 	color: #333;
+}
+
+.TwentyQuestionsGame .last-answer {
+	margin-left: 0.5rem;
+	font-size: 0.875rem;
+	font-weight: 600;
+	opacity: 0.8;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.25rem;
+	vertical-align: middle;
+}
+
+.TwentyQuestionsGame .last-answer-icon {
+	flex-shrink: 0;
+}
+
+.TwentyQuestionsGame .last-answer-icon :deep(svg) {
+	display: block;
+	fill: #ff3860;
 }
 </style>
