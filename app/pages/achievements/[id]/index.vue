@@ -65,7 +65,7 @@
 								/>
 							</td>
 							<td :style="{whiteSpace: 'nowrap'}">
-								{{user.count || 0}} / {{scaleToMaxUser ? maxCount : value}}
+								{{user.count || 0}} / {{value}}
 							</td>
 						</tr>
 					</tbody>
