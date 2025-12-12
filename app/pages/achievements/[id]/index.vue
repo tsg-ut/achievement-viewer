@@ -16,7 +16,9 @@
 			</nuxt-link>
 		</div>
 		<div v-if="counter !== null">
-			<h1 class="title is-3">上位/下位実績</h1>
+			<div class="is-flex is-align-items-center mb-3">
+				<h1 class="title is-3 mb-0 mr-3">上位/下位実績</h1>
+			</div>
 			<ul class="steps has-content-centered">
 				<li
 					v-for="achievementData in sameCounterAchievements"
@@ -34,7 +36,20 @@
 					</nuxt-link>
 				</li>
 			</ul>
-			<h1 class="title is-3">実績の達成状況</h1>
+			<div class="is-flex is-align-items-center mb-3">
+				<h1 class="title is-3 mb-0 mr-3">実績の達成状況</h1>
+				<button
+					type="button"
+					class="button is-small"
+					:class="isRelativeScale ? 'is-primary' : 'is-light'"
+					title="相対スケールに切り替え"
+					@click="toggleScale"
+				>
+					<span class="icon is-small">
+						<i class="ri-scales-3-line"/>
+					</span>
+				</button>
+			</div>
 			<div class="table-container">
 				<table class="table">
 					<thead>
@@ -57,11 +72,11 @@
 									class="progress is-success"
 									:class="(user.count || 0) >= value ? 'is-success' : 'is-warning'"
 									:value="user.count || 0"
-									:max="value"
+									:max="progressMax"
 								/>
 							</td>
 							<td :style="{whiteSpace: 'nowrap'}">
-								{{user.count || 0}} / {{value}}
+								{{user.count || 0}} / {{progressMax}}
 							</td>
 						</tr>
 					</tbody>
@@ -80,6 +95,7 @@ export default {
 	data() {
 		return {
 			isLoading: true,
+			isRelativeScale: false,
 		};
 	},
 	async fetch({store}) {
@@ -146,6 +162,15 @@ export default {
 		categoryColor() {
 			return getCategoryColor(this.category);
 		},
+		maxUserCount() {
+			if (this.sortedUserList.length === 0) {
+				return 0;
+			}
+			return Math.max(...this.sortedUserList.map((user) => user.count || 0));
+		},
+		progressMax() {
+			return this.isRelativeScale ? this.maxUserCount : this.value;
+		},
 	},
 	mounted() {
 		Promise.all([
@@ -170,6 +195,9 @@ export default {
 		},
 		getUserIcon3x(user) {
 			return get(user, ['profile', 'image_72'], '/images/anonymous-icon_72.png');
+		},
+		toggleScale() {
+			this.isRelativeScale = !this.isRelativeScale;
 		},
 	},
 };
