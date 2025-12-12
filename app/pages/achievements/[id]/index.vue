@@ -42,7 +42,7 @@
 					type="button"
 					class="button is-small"
 					:class="isRelativeScale ? 'is-primary' : 'is-light'"
-					title="相対スケールに切り替え"
+					:title="isRelativeScale ? '絶対スケールに切り替え' : '相対スケールに切り替え'"
 					@click="toggleScale"
 				>
 					<span class="icon is-small">
@@ -70,7 +70,7 @@
 							<td :style="{minWidth: '15rem'}">
 								<progress
 									class="progress is-success"
-									:class="(user.count || 0) >= value ? 'is-success' : 'is-warning'"
+									:class="(user.count || 0) >= progressMax ? 'is-success' : 'is-warning'"
 									:value="user.count || 0"
 									:max="progressMax"
 								/>
@@ -163,10 +163,7 @@ export default {
 			return getCategoryColor(this.category);
 		},
 		maxUserCount() {
-			if (this.sortedUserList.length === 0) {
-				return 0;
-			}
-			return Math.max(...this.sortedUserList.map((user) => user.count || 0));
+			return this.sortedUserList[0]?.count || 0;
 		},
 		progressMax() {
 			return this.isRelativeScale ? this.maxUserCount : this.value;
