@@ -35,6 +35,10 @@
 				</li>
 			</ul>
 			<h1 class="title is-3">実績の達成状況</h1>
+			<div class="field">
+				<input id="scaleSwitch" v-model="scaleToMaxUser" type="checkbox" name="scaleSwitch" class="switch">
+				<label for="scaleSwitch">最大ユーザを基準にする</label>
+			</div>
 			<div class="table-container">
 				<table class="table">
 					<thead>
@@ -57,11 +61,11 @@
 									class="progress is-success"
 									:class="(user.count || 0) >= value ? 'is-success' : 'is-warning'"
 									:value="user.count || 0"
-									:max="value"
+									:max="scaleToMaxUser ? maxCount : value"
 								/>
 							</td>
 							<td :style="{whiteSpace: 'nowrap'}">
-								{{user.count || 0}} / {{value}}
+								{{user.count || 0}} / {{scaleToMaxUser ? maxCount : value}}
 							</td>
 						</tr>
 					</tbody>
@@ -80,6 +84,7 @@ export default {
 	data() {
 		return {
 			isLoading: true,
+			scaleToMaxUser: false,
 		};
 	},
 	async fetch({store}) {
@@ -136,6 +141,9 @@ export default {
 					count: user[this.counter],
 					id: user.id,
 				}));
+		},
+		maxCount() {
+			return Math.max(...this.sortedUserList.map((user) => user.count));
 		},
 		sameCounterAchievements() {
 			if (this.counter === null) {
