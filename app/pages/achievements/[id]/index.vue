@@ -70,7 +70,7 @@
 							<td :style="{minWidth: '15rem'}">
 								<progress
 									class="progress is-success"
-									:class="(user.count || 0) >= progressMax ? 'is-success' : 'is-warning'"
+									:class="(user.count || 0) >= value ? 'is-success' : 'is-warning'"
 									:value="user.count || 0"
 									:max="progressMax"
 								/>
@@ -166,7 +166,10 @@ export default {
 			return this.sortedUserList[0]?.count || 0;
 		},
 		progressMax() {
-			return this.isRelativeScale ? this.maxUserCount : this.value;
+			if (this.isRelativeScale && this.maxUserCount > 0) {
+				return this.maxUserCount;
+			}
+			return this.value;
 		},
 	},
 	mounted() {
