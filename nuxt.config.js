@@ -24,6 +24,7 @@ export default defineNuxtConfig({
 		'bulma-o-steps/bulma-steps.css',
 		'bulma-timeline/dist/css/bulma-timeline.min.css',
 		'remixicon/fonts/remixicon.css',
+		'bulma-switch-control/css/main.css',
 	],
 
 	postcss: {
