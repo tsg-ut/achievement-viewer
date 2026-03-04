@@ -37,7 +37,7 @@
     "firebase": "^12.10.0",
     "nodemon": "^3.1.14",
     "randomcolor": "^0.6.2",
-    "serve": "^14.2.5",
+    "serve": "^14.2.6",
     "vuex": "^4.1.0",
     "vuexfire": "^3.2.5"
   }
