@@ -47,6 +47,16 @@
 						</div>
 					</div>
 				</div>
+				<div class="navbar-item has-dropdown is-hoverable">
+					<div class="navbar-link">
+						ガイド
+					</div>
+					<div class="navbar-dropdown">
+						<nuxt-link class="navbar-item" to="/guides/bookstore-zine">
+							本屋・zine
+						</nuxt-link>
+					</div>
+				</div>
 			</div>
 		</nav>
 		<slot/>
