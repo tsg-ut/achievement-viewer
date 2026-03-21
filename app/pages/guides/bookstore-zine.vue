@@ -6,6 +6,140 @@
 		<div class="content">
 			<section class="section-block">
 				<h2 class="title is-4">
+					<span class="icon"><i class="ri-map-pin-line"/></span>
+					まず、どこを見に行くか
+				</h2>
+				<p>本屋だけを見ていても視野は広がりません。本と空間が交差する場所を横断的に歩くことが大事です。</p>
+
+				<div class="box">
+					<h3 class="title is-5">本屋の種類を意識して回る</h3>
+					<p>同じ「本屋」でも空間の思想がまったく違います。以下を最低1軒ずつ訪れると比較の軸ができます。</p>
+					<ul>
+						<li><strong>大型チェーン書店</strong>（丸善、紀伊國屋、ジュンク堂） — 網羅性の空間。棚分類の体系、サイン計画、大量の本をどう整理しているかを見る</li>
+						<li><strong>独立系小規模書店</strong>（Title、本屋lighthouse、twililight） — 店主の選書=編集行為。1棚ごとに意図が詰まっている</li>
+						<li><strong>古書店</strong>（神保町界隈、各地の古書店） — 時間の堆積した空間。棚の密度、背表紙の色褪せ、値付けの論理</li>
+						<li><strong>新古書店・セレクト型</strong>（BOOK AND SONS、百年） — 新刊と古書の混在。本の「年齢」が同じ棚に並ぶ面白さ</li>
+						<li><strong>zine専門店・リトルプレスの棚</strong>（MOUNT ZINE、タコシェ、模索舎） — 自主制作物の流通の最前線。zineの判型・紙・製本を実物で確認できる</li>
+					</ul>
+				</div>
+
+				<div class="box">
+					<h3 class="title is-5">本屋以外に見るべき場所</h3>
+					<p>建築と文学の接点は本屋の外にもたくさんあります。</p>
+					<ul>
+						<li><strong>図書館</strong> — 公共空間としての本の見せ方。武蔵野プレイス、金沢海みらい図書館など建築として評価の高い図書館を体験する</li>
+						<li><strong>印刷・製本工房</strong>（レトロ印刷JAM、Hand Saw Press、美篶堂） — 紙の選び方、印刷の版ズレの味、製本の手触りを知る。zine制作に直結</li>
+						<li><strong>ギャラリー・展示空間</strong> — 空間の中にものをどう配置するか。本屋の棚構成と展示のキュレーションは近い技術</li>
+						<li><strong>文学フリマ・ZINE即売会</strong> — 他の人がどんなzineを作っているか。判型・テーマ・価格帯の相場感を掴む</li>
+						<li><strong>喫茶店・読書できる場所</strong> — 本が読まれる空間。照明、椅子の高さ、テーブルの広さが読書体験をどう変えるか</li>
+					</ul>
+				</div>
+
+				<div class="box">
+					<h3 class="title is-5">街ごとの本屋の風土</h3>
+					<p>本屋はその街の文化を映します。街ごとに歩くと見え方が変わります。</p>
+					<table class="table is-fullwidth is-striped">
+						<thead>
+							<tr>
+								<th>エリア</th>
+								<th>特色</th>
+								<th>見るポイント</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>神保町</td>
+								<td>古書店街。専門分化の極致</td>
+								<td>店ごとの専門ジャンル、均一棚の価格設定、街全体が一つの巨大書店</td>
+							</tr>
+							<tr>
+								<td>下北沢・三軒茶屋</td>
+								<td>独立系書店の集積地</td>
+								<td>小空間での工夫、カフェ併設の在り方、若い客層向けの選書</td>
+							</tr>
+							<tr>
+								<td>荻窪・西荻窪</td>
+								<td>住宅街の中の個人書店</td>
+								<td>地域との関係、イベントの頻度、生活圏の中の本屋の役割</td>
+							</tr>
+							<tr>
+								<td>京都</td>
+								<td>町家改装型が多い</td>
+								<td>建築の転用、奥行きのある空間、恵文社一乗寺店の棚構成</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</section>
+
+			<hr>
+
+			<section class="section-block">
+				<h2 class="title is-4">
+					<span class="icon"><i class="ri-eye-line"/></span>
+					何を、どう見るか
+				</h2>
+				<p>ただ歩くだけでは記憶に残りません。観察の視点を持つと、同じ場所が全く違って見えます。</p>
+
+				<div class="box">
+					<h3 class="title is-5">建築を見る3つのスケール</h3>
+					<table class="table is-fullwidth is-striped">
+						<thead>
+							<tr>
+								<th>スケール</th>
+								<th>見るもの</th>
+								<th>問いかけ</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><strong>街との関係</strong>（遠景）</td>
+								<td>外観、看板、ファサード、入口の敷居の高さ</td>
+								<td>通りからどう見えるか？入りやすいか？街の中でどんな存在感か？</td>
+							</tr>
+							<tr>
+								<td><strong>空間の構成</strong>（中景）</td>
+								<td>間取り、動線、棚配置、天井高、照明</td>
+								<td>足はどこに向かうか？どこで立ち止まるか？奥に行きたくなるか？</td>
+							</tr>
+							<tr>
+								<td><strong>手の届く距離</strong>（近景）</td>
+								<td>棚板の厚み、本の並べ方、POP、什器のディテール</td>
+								<td>本を手に取りたくなるか？どの本が「呼んでいる」か？</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<div class="box">
+					<h3 class="title is-5">文学的に見るための問い</h3>
+					<p>本屋を「読む」ための問いをいくつか持って入ると、観察が深くなります。</p>
+					<ul>
+						<li><strong>この店の「一文目」は何か？</strong> — 入口に最初に見える本やディスプレイ。店の自己紹介</li>
+						<li><strong>棚と棚の「接続詞」は何か？</strong> — 文芸の隣が哲学なら「つまり」、料理の隣が旅なら「そして」。棚の並びに論理を探す</li>
+						<li><strong>この店にいる「語り手」は誰か？</strong> — 店主の声が強い店、出版社の声が強い店、客の声が強い店。誰が語っている空間か</li>
+						<li><strong>「余白」はどこにあるか？</strong> — 本が置かれていないスペース、通路の広さ、壁の空き。詰め込まない判断にも意志がある</li>
+						<li><strong>時間はどう流れているか？</strong> — 新刊の回転率、棚の入れ替え頻度、古い本がどこまで残っているか</li>
+					</ul>
+				</div>
+
+				<div class="box">
+					<h3 class="title is-5">観察の記録方法</h3>
+					<p>見たものをzineの素材にするための記録テクニック。</p>
+					<ul>
+						<li><strong>スケッチ</strong> — 間取り図や棚の立面図を手描きで。正確さより「何に注目したか」が残る</li>
+						<li><strong>写真</strong> — 全景・棚・ディテールの3段階で撮る。許可を得てから（撮影NGの店も多い）</li>
+						<li><strong>メモ</strong> — その場の空気、匂い、温度、聞こえた会話。五感の記録は後から再現できない</li>
+						<li><strong>レシート・フライヤー</strong> — 買った本のレシート、店のカード、イベントのチラシ。物質的な記録として貼り込む</li>
+						<li><strong>比較ノート</strong> — 同じ本が別の店でどの棚にあったか、同じジャンルの棚が店によってどう違うかを並べて書く</li>
+					</ul>
+				</div>
+			</section>
+
+			<hr>
+
+			<section class="section-block">
+				<h2 class="title is-4">
 					<span class="icon"><i class="ri-store-2-line"/></span>
 					本屋の建築を観察する
 				</h2>
