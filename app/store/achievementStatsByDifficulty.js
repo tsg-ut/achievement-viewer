@@ -35,7 +35,7 @@ const localActions = {
 		}
 	},
 	bindList: firestoreAction(async ({bindFirestoreRef}) => {
-		await bindFirestoreRef('list', achievementStatsByDifficultyRef);
+		await bindFirestoreRef('list', achievementStatsByDifficultyRef, {wait: true});
 	}),
 };
 
