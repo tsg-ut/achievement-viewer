@@ -83,7 +83,7 @@ const localActions = {
 			const slackUsers = await response.json();
 			commit('setUsers', slackUsers);
 		} catch (error) {
-			if (error?.message === 'Network Error' || error?.message?.includes('Failed to fetch')) {
+			if (error?.message === 'Network Error' || error?.message?.includes('Failed to fetch') || error?.message?.includes('NetworkError')) {
 				commit('isUnauthorized');
 			} else {
 				throw error;
@@ -111,7 +111,7 @@ const localActions = {
 			const topicMessages = await response.json();
 			commit('setTopicMessages', topicMessages);
 		} catch (error) {
-			if (error?.message === 'Network Error' || error?.message?.includes('Failed to fetch')) {
+			if (error?.message === 'Network Error' || error?.message?.includes('Failed to fetch') || error?.message?.includes('NetworkError')) {
 				commit('isUnauthorized');
 			} else {
 				throw error;
@@ -139,7 +139,7 @@ const localActions = {
 
 			commit('addTopicMessageLike', ts);
 		} catch (error) {
-			if (error?.message === 'Network Error' || error?.message?.includes('Failed to fetch')) {
+			if (error?.message === 'Network Error' || error?.message?.includes('Failed to fetch') || error?.message?.includes('NetworkError')) {
 				commit('isUnauthorized');
 			} else {
 				throw error;
@@ -163,7 +163,7 @@ const localActions = {
 
 			commit('removeTopicMessageLike', ts);
 		} catch (error) {
-			if (error?.message === 'Network Error' || error?.message?.includes('Failed to fetch')) {
+			if (error?.message === 'Network Error' || error?.message?.includes('Failed to fetch') || error?.message?.includes('NetworkError')) {
 				commit('isUnauthorized');
 			} else {
 				throw error;
