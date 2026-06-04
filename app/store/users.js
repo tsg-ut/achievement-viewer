@@ -45,7 +45,7 @@ const localActions = {
 		}
 	},
 	bindList: firestoreAction(async ({bindFirestoreRef, commit}) => {
-		await bindFirestoreRef('list', usersRef);
+		await bindFirestoreRef('list', usersRef, {wait: true});
 		commit('initList');
 	}),
 	bindById: firestoreAction(async ({bindFirestoreRef, state, dispatch, getters, commit}, id) => {

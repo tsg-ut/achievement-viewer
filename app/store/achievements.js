@@ -67,7 +67,7 @@ const localActions = {
 		}
 	},
 	bindList: firestoreAction(async ({bindFirestoreRef}) => {
-		await bindFirestoreRef('list', achievementsRef);
+		await bindFirestoreRef('list', achievementsRef, {wait: true});
 	}),
 	async initLatestAchievements({state, dispatch, commit}) {
 		if (!state.isInitLatestAchievemnts) {
@@ -76,7 +76,7 @@ const localActions = {
 		}
 	},
 	bindLatestAchievements: firestoreAction(async ({bindFirestoreRef}) => {
-		await bindFirestoreRef('latestAchievements', achievementsRef.orderBy('date', 'desc').limit(15));
+		await bindFirestoreRef('latestAchievements', achievementsRef.orderBy('date', 'desc').limit(15), {wait: true});
 	}),
 	bind: firestoreAction(async ({bindFirestoreRef, state, commit}, id) => {
 		if (state.isInitData[id] === process.client || state.isInitList === process.client) {

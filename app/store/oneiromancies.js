@@ -33,7 +33,7 @@ const localActions = {
 		}
 	},
 	bindOneiromancyMessages: firestoreAction(async ({bindFirestoreRef, commit}) => {
-		await bindFirestoreRef('oneiromancyMessages', oneiromancyMessagesRef.orderBy('message.ts', 'desc'));
+		await bindFirestoreRef('oneiromancyMessages', oneiromancyMessagesRef.orderBy('message.ts', 'desc'), {wait: true});
 		commit('initOneiromancyMessages');
 	}),
 	async initOneiromancyCriteria({state, dispatch, commit}) {
@@ -43,7 +43,7 @@ const localActions = {
 		}
 	},
 	bindOneiromancyCriteria: firestoreAction(async ({bindFirestoreRef, commit}) => {
-		await bindFirestoreRef('oneiromancyCriteria', oneiromancyCriteriaRef.orderBy('point', 'desc'));
+		await bindFirestoreRef('oneiromancyCriteria', oneiromancyCriteriaRef.orderBy('point', 'desc'), {wait: true});
 		commit('initOneiromancyCriteria');
 	}),
 };
