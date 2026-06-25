@@ -1,0 +1,36 @@
+{
+	"extends": "./.nuxt/tsconfig.json",
+	"compilerOptions": {
+		"strict": true,
+		"noUncheckedIndexedAccess": false,
+		"skipLibCheck": true,
+		"moduleResolution": "node10",
+		"ignoreDeprecations": "6.0",
+		"paths": {
+			"vuex": ["./node_modules/vuex/types/index.d.ts"],
+			"vue-ionicons/dist/ios-arrow-down.vue": [
+				"./node_modules/vue-ionicons/dist/ios-arrow-down.d.vue.ts"
+			],
+			"vue-ionicons/dist/ios-arrow-up.vue": [
+				"./node_modules/vue-ionicons/dist/ios-arrow-up.d.vue.ts"
+			],
+			"vue-ionicons/dist/ios-close.vue": [
+				"./node_modules/vue-ionicons/dist/ios-close.d.vue.ts"
+			],
+			"~": ["./app"],
+			"~/*": ["./app/*"],
+			"@": ["./app"],
+			"@/*": ["./app/*"],
+			"~~": ["./"],
+			"~~/*": ["./*"],
+			"@@": ["./"],
+			"@@/*": ["./*"],
+			"#app": ["./node_modules/nuxt/dist/app"],
+			"#app/*": ["./node_modules/nuxt/dist/app/*"],
+			"#imports": ["./.nuxt/imports.d.ts"],
+			"#build": ["./.nuxt"],
+			"#build/*": ["./.nuxt/*"]
+		}
+	},
+	"files": ["tests/e2e.spec.ts", "playwright.config.ts"]
+}

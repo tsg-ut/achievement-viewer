@@ -1,44 +1,59 @@
 <template>
 	<div class="container">
-		<progress v-if="isLoading" class="progress is-small is-primary" max="100">15%</progress>
-		<UnauthorizedNotification/>
+		<progress v-if="isLoading" class="progress is-small is-primary" max="100">
+			15%
+		</progress>
+		<UnauthorizedNotification />
 		<div class="columns has-text-centered">
 			<div class="column is-narrow">
 				<img :src="icon" :srcset="`${icon} 1x, ${icon2x} 2x`">
 			</div>
 			<div class="column">
-				<p class="title user-title">{{name}}の<wbr>解除した<wbr>実績一覧</p>
+				<p class="title user-title">{{ name }}の<wbr>解除した<wbr>実績一覧</p>
 			</div>
 		</div>
 		<div class="columns is-multiline">
-			<div v-for="{datum, name: id, date} in achievements" :key="id" class="column is-one-third">
-				<nuxt-link class="card" :to="`/achievements/${id}`" :style="{display: 'block'}">
+			<div
+				v-for="{ datum, name: achievementName, date } in achievements"
+				:key="achievementName"
+				class="column is-one-third"
+			>
+				<nuxt-link
+					class="card"
+					:to="`/achievements/${achievementName}`"
+					:style="{display: 'block'}"
+				>
 					<div class="card-image">
-						<div class="image achievements-color" :style="{backgroundColor: getCategoryColor(datum.category)}"/>
+						<div
+							class="image achievements-color"
+							:style="{backgroundColor: getCategoryColor(datum.category)}"
+						/>
 					</div>
 					<div class="card-content">
 						<div class="content">
 							<p class="title">
-								{{datum.title}}
-								<DifficultyBadge :difficulty="datum.difficulty"/>
+								{{ datum.title }}
+								<DifficultyBadge :difficulty="datum.difficulty" />
 							</p>
 							<div v-if="datum.counter" class="columns">
 								<div class="column achievements-progress">
 									<progress
 										class="progress is-success"
-										:value="user[datum.counter] || 0"
+										:value="(user as Record<string, unknown>)[datum.counter] as number ?? 0"
 										:max="datum.value"
 									/>
 								</div>
 								<div class="column is-narrow">
 									<p class="subtitle is-6 achievements-count">
-										{{datum.value}}/{{datum.value}}
+										{{ datum.value }}/{{ datum.value }}
 									</p>
 								</div>
 							</div>
-							<p>{{datum.condition}}</p>
+							<p>{{ datum.condition }}</p>
 							<p class="has-text-right is-size-7">
-								<time :datetime="getDateString(date)">{{getDateStringJa(date)}}</time>
+								<time :datetime="getDateString(date)"
+									>{{ getDateStringJa(date) }}</time
+								>
 							</p>
 						</div>
 					</div>
@@ -47,32 +62,43 @@
 		</div>
 		<p class="title">未解除の実績一覧</p>
 		<div class="columns is-multiline">
-			<div v-for="datum in lockedAchievements" :key="datum.id" class="column is-one-third">
-				<nuxt-link class="card" :to="`/achievements/${datum.id}`" :style="{display: 'block'}">
+			<div
+				v-for="datum in lockedAchievements"
+				:key="datum.id"
+				class="column is-one-third"
+			>
+				<nuxt-link
+					class="card"
+					:to="`/achievements/${datum.id}`"
+					:style="{display: 'block'}"
+				>
 					<div class="card-image">
-						<div class="image achievements-color" :style="{backgroundColor: getCategoryColor(datum.category)}"/>
+						<div
+							class="image achievements-color"
+							:style="{backgroundColor: getCategoryColor(datum.category)}"
+						/>
 					</div>
 					<div class="card-content">
 						<div class="content">
 							<p class="title">
 								??????
-								<DifficultyBadge :difficulty="datum.difficulty"/>
+								<DifficultyBadge :difficulty="datum.difficulty" />
 							</p>
 							<div v-if="datum.counter" class="columns">
 								<div class="column achievements-progress">
 									<progress
 										class="progress is-gray"
-										:value="user[datum.counter] || 0"
+										:value="(user as Record<string, unknown>)[datum.counter] as number ?? 0"
 										:max="datum.value"
 									/>
 								</div>
 								<div class="column is-narrow">
 									<p class="subtitle is-6 achievements-count">
-										{{user[datum.counter] || 0}}/{{datum.value}}
+										{{ (user as Record<string, unknown>)[datum.counter] as number ?? 0 }}/{{ datum.value }}
 									</p>
 								</div>
 							</div>
-							<p>{{datum.condition}}</p>
+							<p>{{ datum.condition }}</p>
 						</div>
 					</div>
 				</nuxt-link>
@@ -81,100 +107,124 @@
 	</div>
 </template>
 
-<script>
+<script setup lang="ts">
 import get from 'lodash/get.js';
-import sum from 'lodash/sum.js';
-import {mapState} from 'vuex';
-import DifficultyBadge from '../../../components/DifficultyBadge.vue';
+import {computed, onMounted, ref} from 'vue';
+import {useRoute} from 'vue-router';
+import {useStore} from 'vuex';
 import {getCategoryColor} from '@/lib/utils.js';
+import type {AchievementData, SlackUser} from '@/types/store.js';
 
-export default {
-	data() {
-		return {
-			isLoading: true,
-		};
-	},
-	async fetch({store}) {
-		if (!process.browser) {
-			await store.dispatch('achievements/bindList');
-		}
-	},
-	head() {
-		return {
-			title: `${this.name}の解除した実績一覧 - achievement-viewer`,
-		};
-	},
-	computed: {
-		...mapState({
-			achievementData: (state) => (
-				state.achievementData.list
-			),
-		}),
-		user() {
-			return this.$store.getters['users/getById'](this.$route.params.id);
-		},
-		slackUser() {
-			return this.$store.getters['slackInfos/getUser'](this.$route.params.id);
-		},
-		achievementCount() {
-			return sum(Object.values(this.user.counts || {}));
-		},
-		name() {
-			const name = get(this.slackUser, ['profile', 'display_name'], false) || get(this.slackUser, ['real_name'], false) || '匿名ユーザー';
-			return `@${name}`;
-		},
-		achievements() {
-			return this.$store.getters['achievements/getByUser'](this.$route.params.id).map(({name, date}) => ({
-				name,
-				date,
-				datum: this.$store.getters['achievementData/getById'](name),
-			})).sort((a, b) => {
-				if (a.datum.difficulty && b.datum.difficulty) {
-					return this.getDifficultyRank(b.datum.difficulty) - this.getDifficultyRank(a.datum.difficulty);
-				}
-				return 0;
-			});
-		},
-		lockedAchievements() {
-			const unlockedAchievements = new Set(this.$store.getters['achievements/getByUser'](this.$route.params.id).map(({name}) => name));
-			return this.achievementData
-				.filter(({id}) => !unlockedAchievements.has(id))
-				.sort((a, b) => (a.category && b.category) ? a.category.localeCompare(b.category) : 0);
-		},
-		icon() {
-			return get(this.slackUser, ['profile', 'image_72'], '/images/anonymous-icon_72.png');
-		},
-		icon2x() {
-			return get(this.slackUser, ['profile', 'image_192'], '/images/anonymous-icon_192.png');
-		},
-	},
-	mounted() {
-		Promise.all([
-			this.$store.dispatch('achievementData/initList'),
-			this.$store.dispatch('slackInfos/initUsers'),
-			this.$store.dispatch('users/bindById', this.$route.params.id),
-			this.$store.dispatch('users/initList'),
-		]).then(() => {
-			this.isLoading = false;
-		});
-	},
-	methods: {
-		getCategoryColor(category) {
-			return getCategoryColor(category);
-		},
-		getDifficultyRank(difficulty) {
-			return {baby: 1, easy: 2, medium: 3, hard: 4, professional: 5}[difficulty] || 0;
-		},
-		getDateString(date) {
-			const d = new Date(date.seconds * 1000);
-			return d.toISOString().split('T')[0];
-		},
-		getDateStringJa(date) {
-			const d = new Date(date.seconds * 1000);
-			return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
-		},
-	},
+const route = useRoute();
+const store = useStore();
+const isLoading = ref(true);
+
+const userId = computed(() => route.params['id'] as string);
+
+const user = computed(
+	() =>
+		store.getters['users/getById'](userId.value) as SlackUser &
+			Record<string, unknown>,
+);
+const slackUser = computed(
+	() =>
+		store.getters['slackInfos/getUser'](userId.value) as SlackUser | undefined,
+);
+const achievementData = computed(
+	() => store.state.achievementData.list as AchievementData[],
+);
+
+const name = computed(() => {
+	const displayName = get(slackUser.value, ['profile', 'display_name'], false);
+	const realName = get(slackUser.value, ['real_name'], false);
+	return `@${displayName || realName || '匿名ユーザー'}`;
+});
+
+useHead(() => ({
+	title: `${name.value}の解除した実績一覧 - achievement-viewer`,
+}));
+
+const icon = computed(() =>
+	get(
+		slackUser.value,
+		['profile', 'image_72'],
+		'/images/anonymous-icon_72.png',
+	),
+);
+const icon2x = computed(() =>
+	get(
+		slackUser.value,
+		['profile', 'image_192'],
+		'/images/anonymous-icon_192.png',
+	),
+);
+
+const difficultyRank: Record<string, number> = {
+	baby: 1,
+	easy: 2,
+	medium: 3,
+	hard: 4,
+	professional: 5,
 };
+
+const achievements = computed(() =>
+	(
+		store.getters['achievements/getByUser'](userId.value) as Array<{
+			name: string;
+			date: {seconds: number};
+			user: string;
+		}>
+	)
+		.map(({name: aName, date}) => ({
+			name: aName,
+			date,
+			datum: store.getters['achievementData/getById'](aName) as AchievementData,
+		}))
+		.sort((a, b) => {
+			if (a.datum.difficulty && b.datum.difficulty) {
+				return (
+					(difficultyRank[b.datum.difficulty] ?? 0) -
+					(difficultyRank[a.datum.difficulty] ?? 0)
+				);
+			}
+			return 0;
+		}),
+);
+
+const lockedAchievements = computed(() => {
+	const unlockedAchievements = new Set(
+		(
+			store.getters['achievements/getByUser'](userId.value) as Array<{
+				name: string;
+			}>
+		).map(({name: n}) => n),
+	);
+	return achievementData.value
+		.filter(({id}) => !unlockedAchievements.has(id))
+		.sort((a, b) =>
+			a.category && b.category ? a.category.localeCompare(b.category) : 0,
+		);
+});
+
+function getDateString(date: {seconds: number}) {
+	const d = new Date(date.seconds * 1000);
+	return d.toISOString().split('T')[0] ?? '';
+}
+
+function getDateStringJa(date: {seconds: number}) {
+	const d = new Date(date.seconds * 1000);
+	return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
+}
+
+onMounted(async () => {
+	await Promise.all([
+		store.dispatch('achievementData/initList'),
+		store.dispatch('slackInfos/initUsers'),
+		store.dispatch('users/bindById', userId.value),
+		store.dispatch('users/initList'),
+	]);
+	isLoading.value = false;
+});
 </script>
 
 <style>

@@ -1,7 +1,5 @@
 import {createStore} from 'vuex';
-import {vuexfireMutations} from 'vuexfire';
 
-// Import all store modules
 import * as achievementData from '~/store/achievementData.js';
 import * as achievementStatsByCategory from '~/store/achievementStatsByCategory.js';
 import * as achievementStatsByDifficulty from '~/store/achievementStatsByDifficulty.js';
@@ -15,9 +13,6 @@ import * as users from '~/store/users.js';
 
 export default defineNuxtPlugin((nuxtApp) => {
 	const store = createStore({
-		mutations: {
-			...vuexfireMutations,
-		},
 		modules: {
 			achievements: {
 				namespaced: true,

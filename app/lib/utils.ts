@@ -1,6 +1,6 @@
 import randomcolor from 'randomcolor';
 
-const categoryColors = new Map([
+const categoryColors = new Map<string, string>([
 	['basic', '#BDBDBD'],
 	['reactions', '#FF8F00'],
 	['sushi-bot', '#D32F2F'],
@@ -20,13 +20,13 @@ const categoryColors = new Map([
 	['anime', '#004D40'],
 ]);
 
-export const getCategoryColor = (category) => {
+export const getCategoryColor = (category: string): string => {
 	if (categoryColors.has(category)) {
-		return categoryColors.get(category);
+		return categoryColors.get(category)!;
 	}
 
 	return randomcolor({
 		luminosity: 'bright',
 		seed: category,
-	});
+	}) as string;
 };

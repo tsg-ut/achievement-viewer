@@ -1,29 +1,23 @@
 <template>
-	<div><doughnut :data="chartData" :options="options"/></div>
+	<div><doughnut :data="chartData" :options="options" /></div>
 </template>
 
-<script>
-import {Chart as ChartJS, ArcElement, Tooltip, Legend} from 'chart.js';
+<script setup lang="ts">
+import type {ChartData, ChartOptions} from 'chart.js';
+import {ArcElement, Chart as ChartJS, Legend, Tooltip} from 'chart.js';
 import {Doughnut} from 'vue-chartjs';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-export default {
-	name: 'PieChartStat',
-	components: {
-		Doughnut,
+withDefaults(
+	defineProps<{
+		chartData: ChartData<'doughnut'>;
+		options?: ChartOptions<'doughnut'>;
+	}>(),
+	{
+		options: () => ({}),
 	},
-	props: {
-		chartData: {
-			type: Object,
-			required: true,
-		},
-		options: {
-			type: Object,
-			default: () => ({}),
-		},
-	},
-};
+);
 </script>
 
 <style></style>

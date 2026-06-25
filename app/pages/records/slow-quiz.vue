@@ -1,7 +1,7 @@
 <template>
 	<div class="container is-max-desktop">
-		<progress v-if="isLoading" class="progress is-small is-primary" max="100"/>
-		<unauthorized-notification/>
+		<progress v-if="isLoading" class="progress is-small is-primary" max="100" />
+		<unauthorized-notification />
 
 		<p class="title">1日1文字クイズログ</p>
 
@@ -48,48 +48,33 @@
 	</div>
 </template>
 
-<script>
-import {mapState} from 'vuex';
+<script setup lang="ts">
+import {computed, onMounted, ref} from 'vue';
+import {useStore} from 'vuex';
+import type {SlowQuizGame} from '@/lib/slow-quiz.js';
 
-export default {
-	data() {
-		return {
-			isLoading: true,
-			progressType: 'none',
-		};
-	},
-	async fetch({store}) {
-		if (!process.browser) {
-			await store.dispatch('slowQuizGames/initList');
-			await store.dispatch('slackInfos/initUsers');
-		}
-	},
-	head() {
-		return {
-			title: '1日1文字クイズログ - achievement-viewer',
-		};
-	},
-	computed: {
-		...mapState({
-			games: (state) => (
-				state.slowQuizGames.list
-			),
-		}),
-	},
-	mounted() {
-		Promise.all([
-			this.$store.dispatch('slowQuizGames/initList'),
-			this.$store.dispatch('slackInfos/initUsers'),
-		]).then(() => {
-			this.isLoading = false;
-		});
-	},
-};
+useHead({title: '1日1文字クイズログ - achievement-viewer'});
+
+const store = useStore();
+const isLoading = ref(true);
+const progressType = ref('none');
+
+const games = computed(
+	() => store.state.slowQuizGames.list as Array<SlowQuizGame & {id: string}>,
+);
+
+onMounted(async () => {
+	await Promise.all([
+		store.dispatch('slowQuizGames/initList'),
+		store.dispatch('slackInfos/initUsers'),
+	]);
+	isLoading.value = false;
+});
 </script>
 
 <style>
 .question-text {
-  word-break: break-all;
+	word-break: break-all;
 }
 
 .control {
