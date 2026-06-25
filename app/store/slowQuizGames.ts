@@ -31,10 +31,6 @@ const localMutations = {
 
 const localGetters = {
 	list: (state: SlowQuizGamesState) => state.list,
-	getById: (state: SlowQuizGamesState) => (id: string) => {
-		const game = state.list.find((datum) => datum.id === id);
-		return game ?? ({id} as SlowQuizGame & {id: string});
-	},
 };
 
 const localActions = {

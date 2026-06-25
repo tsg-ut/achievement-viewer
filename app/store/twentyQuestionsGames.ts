@@ -30,10 +30,6 @@ const localMutations = {
 
 const localGetters = {
 	list: (state: TwentyQuestionsGamesState) => state.list,
-	getById: (state: TwentyQuestionsGamesState) => (id: string) => {
-		const game = state.list.find((datum) => datum.id === id);
-		return game ?? ({id} as TwentyQuestionsGame);
-	},
 };
 
 const localActions = {

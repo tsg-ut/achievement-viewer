@@ -24,10 +24,8 @@ const localMutations = {
 
 const localGetters = {
 	list: (state: AchievementDataState) => state.list,
-	getById: (state: AchievementDataState) => (id: string) => {
-		const datum = state.list.find((d) => d.id === id);
-		return datum ?? ({id} as AchievementData);
-	},
+	getById: (state: AchievementDataState) => (id: string) =>
+		state.list.find((d) => d.id === id),
 	getByCounter: (state: AchievementDataState) => (counter: string) =>
 		state.list
 			.filter((datum) => datum.counter === counter)

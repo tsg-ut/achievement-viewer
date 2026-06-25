@@ -26,20 +26,23 @@
 					<div class="card-image">
 						<div
 							class="image achievements-color"
-							:style="{backgroundColor: getCategoryColor(datum.category)}"
+							:style="{backgroundColor: datum ? getCategoryColor(datum.category) : undefined}"
 						/>
 					</div>
 					<div class="card-content">
 						<div class="content">
 							<p class="title">
-								{{ datum.title }}
-								<DifficultyBadge :difficulty="datum.difficulty" />
+								{{ datum?.title }}
+								<DifficultyBadge
+									v-if="datum?.difficulty"
+									:difficulty="datum.difficulty"
+								/>
 							</p>
-							<div v-if="datum.counter" class="columns">
+							<div v-if="datum?.counter" class="columns">
 								<div class="column achievements-progress">
 									<progress
 										class="progress is-success"
-										:value="(user as Record<string, unknown>)[datum.counter] as number ?? 0"
+										:value="getCounterValue(user, datum.counter)"
 										:max="datum.value"
 									/>
 								</div>
@@ -49,7 +52,7 @@
 									</p>
 								</div>
 							</div>
-							<p>{{ datum.condition }}</p>
+							<p>{{ datum?.condition }}</p>
 							<p class="has-text-right is-size-7">
 								<time :datetime="getDateString(date)"
 									>{{ getDateStringJa(date) }}</time
@@ -88,13 +91,13 @@
 								<div class="column achievements-progress">
 									<progress
 										class="progress is-gray"
-										:value="(user as Record<string, unknown>)[datum.counter] as number ?? 0"
+										:value="getCounterValue(user, datum.counter)"
 										:max="datum.value"
 									/>
 								</div>
 								<div class="column is-narrow">
 									<p class="subtitle is-6 achievements-count">
-										{{ (user as Record<string, unknown>)[datum.counter] as number ?? 0 }}/{{ datum.value }}
+										{{ getCounterValue(user, datum.counter) }}/{{ datum.value }}
 									</p>
 								</div>
 							</div>
@@ -108,32 +111,29 @@
 </template>
 
 <script setup lang="ts">
-import get from 'lodash/get.js';
 import {computed, onMounted, ref} from 'vue';
 import {useRoute} from 'vue-router';
 import {getCategoryColor} from '@/lib/utils.js';
-import type {SlackUser} from '@/types/store.js';
 import {useStore} from '~/plugins/vuex.js';
+import type {SlackUser} from '~/types/store.js';
 
 const route = useRoute();
 const store = useStore();
 const isLoading = ref(true);
 
-const userId = computed(() => route.params['id'] as string);
-
-const user = computed(
-	() =>
-		store.getters['users/getById'](userId.value) as SlackUser &
-			Record<string, unknown>,
+const userId = computed(() =>
+	Array.isArray(route.params.id) ? route.params.id[0] : route.params.id,
 );
+
+const user = computed(() => store.getters['users/getById'](userId.value));
 const slackUser = computed(() =>
 	store.getters['slackInfos/getUser'](userId.value),
 );
 const achievementData = computed(() => store.state.achievementData.list);
 
 const name = computed(() => {
-	const displayName = get(slackUser.value, ['profile', 'display_name'], false);
-	const realName = get(slackUser.value, ['real_name'], false);
+	const displayName = slackUser.value?.profile?.display_name;
+	const realName = slackUser.value?.real_name;
 	return `@${displayName || realName || '匿名ユーザー'}`;
 });
 
@@ -141,19 +141,11 @@ useHead(() => ({
 	title: `${name.value}の解除した実績一覧 - achievement-viewer`,
 }));
 
-const icon = computed(() =>
-	get(
-		slackUser.value,
-		['profile', 'image_72'],
-		'/images/anonymous-icon_72.png',
-	),
+const icon = computed(
+	() => slackUser.value?.profile?.image_72 ?? '/images/anonymous-icon_72.png',
 );
-const icon2x = computed(() =>
-	get(
-		slackUser.value,
-		['profile', 'image_192'],
-		'/images/anonymous-icon_192.png',
-	),
+const icon2x = computed(
+	() => slackUser.value?.profile?.image_192 ?? '/images/anonymous-icon_192.png',
 );
 
 const difficultyRank: Record<string, number> = {
@@ -172,7 +164,7 @@ const achievements = computed(() =>
 			datum: store.getters['achievementData/getById'](aName),
 		}))
 		.sort((a, b) => {
-			if (a.datum.difficulty && b.datum.difficulty) {
+			if (a.datum?.difficulty && b.datum?.difficulty) {
 				return (
 					(difficultyRank[b.datum.difficulty] ?? 0) -
 					(difficultyRank[a.datum.difficulty] ?? 0)
@@ -192,6 +184,11 @@ const lockedAchievements = computed(() => {
 			a.category && b.category ? a.category.localeCompare(b.category) : 0,
 		);
 });
+
+function getCounterValue(slackUser: SlackUser, counter: string): number {
+	const val = slackUser[counter];
+	return typeof val === 'number' ? val : 0;
+}
 
 function getDateString(date: {seconds: number}) {
 	const d = new Date(date.seconds * 1000);

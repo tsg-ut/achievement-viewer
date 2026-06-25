@@ -37,7 +37,7 @@ export interface RootState {
 }
 
 export interface StoreGetters {
-	'achievementData/getById': (id: string) => AchievementData;
+	'achievementData/getById': (id: string) => AchievementData | undefined;
 	'achievementData/getByCategory': (category: string) => AchievementData[];
 	'achievementData/getByCounter': (counter: string) => AchievementData[];
 	'achievements/getByUser': (user: string) => Achievement[];
@@ -53,7 +53,7 @@ type TypedStore = Omit<Store<RootState>, 'getters'> & {
 export const storeKey: InjectionKey<TypedStore> = Symbol();
 
 export function useStore(): TypedStore {
-	return baseUseStore(storeKey) as TypedStore;
+	return baseUseStore(storeKey);
 }
 
 export default defineNuxtPlugin((nuxtApp) => {

@@ -6,7 +6,7 @@
 			<span
 				class="category-tag tag is-large"
 				:style="{backgroundColor: categoryColor}"
-				>{{ route.params['id'] }}</span
+				>{{ route.params.id }}</span
 			>
 			の実績一覧
 		</p>
@@ -35,7 +35,9 @@ const route = useRoute();
 const store = useStore();
 const isLoading = ref(true);
 
-const categoryId = computed(() => route.params['id'] as string);
+const categoryId = computed(() =>
+	Array.isArray(route.params.id) ? route.params.id[0] : route.params.id,
+);
 
 useHead(() => ({
 	title: `実績カテゴリ「${categoryId.value}」 - achievement-viewer`,

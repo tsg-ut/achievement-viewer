@@ -124,17 +124,15 @@
 					</tr>
 					<tr
 						v-for="criteria in filteredOneiromancyCriteria"
-						:key="(criteria as Record<string, unknown>)['name'] as string"
+						:key="criteria.name"
 					>
 						<td>
-							<strong
-								>{{ (criteria as Record<string, unknown>)['name'] }}</strong
-							>
+							<strong>{{ criteria.name }}</strong>
 						</td>
-						<td>{{ (criteria as Record<string, unknown>)['point'] }}点</td>
+						<td>{{ criteria.point }}点</td>
 						<td>
 							<a
-								:href="`https://slack-log.tsg.ne.jp/C7AAX50QY/${(criteria as Record<string, unknown>)['ts'] as string}`"
+								:href="`https://slack-log.tsg.ne.jp/C7AAX50QY/${criteria.ts}`"
 								target="_blank"
 								rel="noopener noreferrer"
 							>
@@ -152,7 +150,6 @@
 
 <script setup lang="ts">
 import dayjs from 'dayjs';
-import get from 'lodash/get.js';
 import sortBy from 'lodash/sortBy.js';
 import {computed, onMounted, ref} from 'vue';
 import {useStore} from '~/plugins/vuex.js';
@@ -167,21 +164,14 @@ const openedMessages = ref<string[]>([]);
 const getUser = computed(() => store.getters['slackInfos/getUser']);
 const isUnauthorized = computed(() => store.state.slackInfos.isUnauthorized);
 const oneiromancyMessages = computed(
-	() => store.state.oneiromancies.oneiromancyMessages as unknown[],
+	() => store.state.oneiromancies.oneiromancyMessages,
 );
 const oneiromancyCriteria = computed(
 	() => store.state.oneiromancies.oneiromancyCriteria,
 );
 
-type SortableOneiromancy = {
-	message: {ts: string; text?: string};
-	summary: Record<string, unknown>;
-	originalMessage?: {user?: string; text?: string; icons?: {image_48?: string}};
-};
-
 const sortedOneiromancies = computed(() => {
-	const messages =
-		oneiromancyMessages.value as unknown as SortableOneiromancy[];
+	const messages = oneiromancyMessages.value;
 	if (sortByValue.value === 'timestamp') {
 		return sortBy(messages, ({message}) => message.ts).reverse();
 	}
@@ -193,8 +183,7 @@ const sortedOneiromancies = computed(() => {
 	}
 	if (sortByValue.value === 'points') {
 		return sortBy(messages, [
-			({summary}) =>
-				-((summary['point'] as number) ?? Number.NEGATIVE_INFINITY),
+			({summary}) => -(summary.point ?? Number.NEGATIVE_INFINITY),
 			({message}) => -Number.parseFloat(message.ts),
 		]);
 	}
@@ -202,9 +191,7 @@ const sortedOneiromancies = computed(() => {
 });
 
 const filteredOneiromancyCriteria = computed(() =>
-	oneiromancyCriteria.value.filter(
-		(criteria) => (criteria as Record<string, unknown>)['name'] !== '基準点',
-	),
+	oneiromancyCriteria.value.filter((criteria) => criteria.name !== '基準点'),
 );
 
 function getUserName(
@@ -215,15 +202,13 @@ function getUserName(
 	if (!message) {
 		return '@匿名ユーザー';
 	}
-	if (message['username']) {
-		return message['username'] as string;
+	if (typeof message.username === 'string') {
+		return message.username;
 	}
-	if (typeof message['user'] === 'string' && message['user'].startsWith('U')) {
-		const user = getUser.value(message['user']);
+	if (typeof message.user === 'string' && message.user.startsWith('U')) {
+		const user = getUser.value(message.user);
 		const name =
-			get(user, ['profile', 'display_name'], false) ||
-			get(user, ['real_name'], false) ||
-			'匿名ユーザー';
+			user?.profile?.display_name || user?.real_name || '匿名ユーザー';
 		return `@${name}`;
 	}
 	return '@匿名ユーザー';
@@ -239,7 +224,7 @@ function getUserIcon(
 	}
 	if (typeof message?.user === 'string' && message.user.startsWith('U')) {
 		const user = getUser.value(message.user);
-		return get(user, ['profile', 'image_24'], '/images/anonymous-icon_24.png');
+		return user?.profile?.image_24 ?? '/images/anonymous-icon_24.png';
 	}
 	return '/images/anonymous-icon_24.png';
 }

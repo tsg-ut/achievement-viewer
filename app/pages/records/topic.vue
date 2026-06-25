@@ -129,7 +129,7 @@
 						:class="{'is-current': page === currentPage}"
 						:aria-label="`ページ ${page}`"
 						:aria-current="page === currentPage ? 'page' : undefined"
-						@click="() => changePage(page as number)"
+						@click="() => changePage(page)"
 					>
 						{{ page }}
 					</a>
@@ -141,7 +141,6 @@
 
 <script setup lang="ts">
 import dayjs from 'dayjs';
-import get from 'lodash/get.js';
 import sortBy from 'lodash/sortBy.js';
 import {computed, onMounted, ref, watch} from 'vue';
 import type {TopicMessage} from '@/types/store.js';
@@ -272,9 +271,7 @@ function getUserName(message: TopicMessage['message']) {
 	if (message.user?.startsWith('U')) {
 		const user = getUser.value(message.user);
 		const name =
-			get(user, ['profile', 'display_name'], false) ||
-			get(user, ['real_name'], false) ||
-			'匿名ユーザー';
+			user?.profile?.display_name || user?.real_name || '匿名ユーザー';
 		return `@${name}`;
 	}
 	return '@匿名ユーザー';
@@ -286,7 +283,7 @@ function getUserIcon(message: TopicMessage['message']) {
 	}
 	if (message.user?.startsWith('U')) {
 		const user = getUser.value(message.user);
-		return get(user, ['profile', 'image_24'], '/images/anonymous-icon_24.png');
+		return user?.profile?.image_24 ?? '/images/anonymous-icon_24.png';
 	}
 	return '/images/anonymous-icon_24.png';
 }

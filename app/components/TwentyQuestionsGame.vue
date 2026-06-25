@@ -147,7 +147,6 @@
 
 <script setup lang="ts">
 import dayjs from 'dayjs';
-import get from 'lodash/get.js';
 import {computed, ref} from 'vue';
 import ArrowDownIcon from 'vue-ionicons/dist/ios-arrow-down.vue';
 import ArrowUpIcon from 'vue-ionicons/dist/ios-arrow-up.vue';
@@ -192,21 +191,18 @@ const sortedPlayers = computed(() =>
 
 function getUserName(userId: string) {
 	const user = getUser.value(userId);
-	const name =
-		get(user, ['profile', 'display_name'], false) ||
-		get(user, ['real_name'], false) ||
-		'匿名ユーザー';
+	const name = user?.profile?.display_name || user?.real_name || '匿名ユーザー';
 	return `@${name}`;
 }
 
 function getUserIcon(userId: string) {
 	const user = getUser.value(userId);
-	return get(user, ['profile', 'image_24'], '/images/anonymous-icon_24.png');
+	return user?.profile?.image_24 ?? '/images/anonymous-icon_24.png';
 }
 
 function getUserIcon2x(userId: string) {
 	const user = getUser.value(userId);
-	return get(user, ['profile', 'image_48'], '/images/anonymous-icon_48.png');
+	return user?.profile?.image_48 ?? '/images/anonymous-icon_48.png';
 }
 
 function formatTime(timestamp: number) {

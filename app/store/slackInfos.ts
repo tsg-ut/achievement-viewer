@@ -68,13 +68,6 @@ const localGetters = {
 		return user;
 	},
 	topicMessages: (state: SlackInfosState) => state.topicMessages,
-	getTopicMessage: (state: SlackInfosState) => (ts: string) => {
-		const message = state.topicMessagesMap.get(ts);
-		if (message === undefined) {
-			return {ts} as unknown as TopicMessage;
-		}
-		return message;
-	},
 };
 
 const isNetworkError = (error: unknown): boolean => {

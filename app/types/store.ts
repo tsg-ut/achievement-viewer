@@ -31,6 +31,7 @@ export interface SlackUser {
 		image_72?: string;
 		image_192?: string;
 	};
+	[counterName: string]: unknown;
 }
 
 export interface TopicMessage {
@@ -49,14 +50,33 @@ export interface TopicMessage {
 
 export interface OneiromancyMessage {
 	id: string;
-	message: {ts: string; [key: string]: unknown};
-	[key: string]: unknown;
+	message: {
+		ts: string;
+		text?: string;
+		[key: string]: unknown;
+	};
+	originalMessage: {
+		username?: string;
+		user?: string;
+		text?: string;
+		[key: string]: unknown;
+	};
+	summary: {
+		criteria: Array<{
+			name: string;
+			point: number;
+		}>;
+		luckyItem: string | null;
+		messageTs: string;
+		point: number | null;
+	};
 }
 
 export interface OneiromancyCriterion {
 	id: string;
+	name: string;
 	point: number;
-	[key: string]: unknown;
+	ts: string;
 }
 
 export interface TwentyQuestionsPlayer {

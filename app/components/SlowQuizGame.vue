@@ -154,7 +154,6 @@
 <script setup lang="ts">
 import dayjs from 'dayjs';
 import first from 'lodash/first.js';
-import get from 'lodash/get.js';
 import groupBy from 'lodash/groupBy.js';
 import last from 'lodash/last.js';
 import sortBy from 'lodash/sortBy.js';
@@ -238,7 +237,7 @@ const timelineChunks = computed(() => {
 		items.sort((a, b) => (a.date ?? 0) - (b.date ?? 0));
 	}
 
-	return chunks as [string, TimelineItem[]][];
+	return chunks;
 });
 
 watch(
@@ -279,21 +278,18 @@ function gotoProgress(p: number) {
 
 function getUserName(userId: string) {
 	const user = getUser.value(userId);
-	const name =
-		get(user, ['profile', 'display_name'], false) ||
-		get(user, ['real_name'], false) ||
-		'匿名ユーザー';
+	const name = user?.profile?.display_name || user?.real_name || '匿名ユーザー';
 	return `@${name}`;
 }
 
 function getUserIcon(userId: string) {
 	const user = getUser.value(userId);
-	return get(user, ['profile', 'image_24'], '/images/anonymous-icon_24.png');
+	return user?.profile?.image_24 ?? '/images/anonymous-icon_24.png';
 }
 
 function getUserIcon2x(userId: string) {
 	const user = getUser.value(userId);
-	return get(user, ['profile', 'image_48'], '/images/anonymous-icon_48.png');
+	return user?.profile?.image_48 ?? '/images/anonymous-icon_48.png';
 }
 
 function formatTime(time: number | undefined) {

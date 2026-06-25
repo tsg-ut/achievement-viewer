@@ -36,7 +36,7 @@
 					v-for="achievementDatum in sameCounterAchievements"
 					:key="achievementDatum.id"
 					class="steps-segment"
-					:class="{'is-active': achievementDatum.id === route.params['id']}"
+					:class="{'is-active': achievementDatum.id === route.params.id}"
 				>
 					<nuxt-link :to="`/achievements/${achievementDatum.id}`">
 						<span class="steps-marker" />
@@ -103,7 +103,6 @@
 </template>
 
 <script setup lang="ts">
-import get from 'lodash/get.js';
 import {computed, onMounted, ref} from 'vue';
 import {useRoute} from 'vue-router';
 import {getCategoryColor} from '@/lib/utils.js';
@@ -115,45 +114,26 @@ const store = useStore();
 const isLoading = ref(true);
 const scaleToMaxUser = ref(false);
 
-const achievementId = computed(() => route.params['id'] as string);
+const achievementId = computed(() =>
+	Array.isArray(route.params.id) ? route.params.id[0] : route.params.id,
+);
 
 const achievementDatum = computed(() =>
 	store.getters['achievementData/getById'](achievementId.value),
 );
 
-const title = computed(
-	() => get(achievementDatum.value, ['title'], '') as string,
-);
-const condition = computed(
-	() => get(achievementDatum.value, ['condition'], '') as string,
-);
-const count = computed(
-	() => get(achievementDatum.value, ['count'], 0) as number,
-);
-const counter = computed(
-	() => get(achievementDatum.value, ['counter'], null) as string | null,
-);
-const value = computed(
-	() => get(achievementDatum.value, ['value'], 0) as number,
-);
-const difficulty = computed(
-	() =>
-		get(
-			achievementDatum.value,
-			['difficulty'],
-			'baby',
-		) as AchievementData['difficulty'],
-);
-const category = computed(
-	() => get(achievementDatum.value, ['category'], '') as string,
-);
+const title = computed(() => achievementDatum.value?.title ?? '');
+const condition = computed(() => achievementDatum.value?.condition ?? '');
+const count = computed(() => achievementDatum.value?.count ?? 0);
+const counter = computed(() => achievementDatum.value?.counter ?? null);
+const value = computed(() => achievementDatum.value?.value ?? 0);
+const difficulty = computed(() => achievementDatum.value?.difficulty ?? 'baby');
+const category = computed(() => achievementDatum.value?.category ?? '');
 const categoryColor = computed(() => getCategoryColor(category.value));
 
 useHead(() => ({title: `実績「${title.value}」 - achievement-viewer`}));
 
-const userList = computed(
-	() => store.state.users.list as Array<SlackUser & {[key: string]: unknown}>,
-);
+const userList = computed(() => store.state.users.list);
 
 const achievedUsers = computed(() =>
 	store.getters['achievements/getByName'](achievementId.value)
@@ -166,20 +146,27 @@ const achievedUsers = computed(() =>
 		.map(({user}) => user),
 );
 
-const sortedUserList = computed(() =>
-	userList.value
+const sortedUserList = computed(() => {
+	const key = counter.value ?? '';
+	return userList.value
 		.slice()
-		.sort(
-			(a, b) =>
-				((b[counter.value ?? ''] as number | undefined) ?? 0) -
-				((a[counter.value ?? ''] as number | undefined) ?? 0),
-		)
-		.map((user) => ({
-			info: store.getters['slackInfos/getUser'](user.id),
-			count: (user[counter.value ?? ''] as number | undefined) ?? null,
-			id: user.id,
-		})),
-);
+		.sort((a, b) => {
+			const aVal = a[key];
+			const bVal = b[key];
+			return (
+				(typeof bVal === 'number' ? bVal : 0) -
+				(typeof aVal === 'number' ? aVal : 0)
+			);
+		})
+		.map((user) => {
+			const val = user[key];
+			return {
+				info: store.getters['slackInfos/getUser'](user.id),
+				count: typeof val === 'number' ? val : null,
+				id: user.id,
+			};
+		});
+});
 
 const maxCount = computed(() =>
 	Math.max(...sortedUserList.value.map((user) => user.count ?? 0)),
@@ -193,23 +180,20 @@ const sameCounterAchievements = computed(() => {
 });
 
 function getUserName(user: SlackUser | undefined) {
-	const name =
-		get(user, ['profile', 'display_name'], false) ||
-		get(user, ['real_name'], false) ||
-		'匿名ユーザー';
+	const name = user?.profile?.display_name || user?.real_name || '匿名ユーザー';
 	return `@${name}`;
 }
 
 function getUserIcon(user: SlackUser | undefined) {
-	return get(user, ['profile', 'image_24'], '/images/anonymous-icon_24.png');
+	return user?.profile?.image_24 ?? '/images/anonymous-icon_24.png';
 }
 
 function getUserIcon2x(user: SlackUser | undefined) {
-	return get(user, ['profile', 'image_48'], '/images/anonymous-icon_48.png');
+	return user?.profile?.image_48 ?? '/images/anonymous-icon_48.png';
 }
 
 function getUserIcon3x(user: SlackUser | undefined) {
-	return get(user, ['profile', 'image_72'], '/images/anonymous-icon_72.png');
+	return user?.profile?.image_72 ?? '/images/anonymous-icon_72.png';
 }
 
 onMounted(async () => {

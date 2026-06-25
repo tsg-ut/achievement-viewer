@@ -78,7 +78,6 @@
 </template>
 
 <script setup lang="ts">
-import get from 'lodash/get.js';
 import {computed, onMounted, ref} from 'vue';
 import {getCategoryColor} from '@/lib/utils.js';
 import type {AchievementData, SlackUser} from '@/types/store.js';
@@ -153,19 +152,16 @@ const statsByMonth = computed(() => ({
 }));
 
 function getUserName(user: SlackUser | undefined) {
-	const name =
-		get(user, ['profile', 'display_name'], false) ||
-		get(user, ['real_name'], false) ||
-		'匿名ユーザー';
+	const name = user?.profile?.display_name || user?.real_name || '匿名ユーザー';
 	return `@${name}`;
 }
 
 function getUserIcon(user: SlackUser | undefined) {
-	return get(user, ['profile', 'image_24'], '/images/anonymous-icon_24.png');
+	return user?.profile?.image_24 ?? '/images/anonymous-icon_24.png';
 }
 
 function getUserIcon2x(user: SlackUser | undefined) {
-	return get(user, ['profile', 'image_48'], '/images/anonymous-icon_48.png');
+	return user?.profile?.image_48 ?? '/images/anonymous-icon_48.png';
 }
 
 function getAchievement(id: string): AchievementData {
