@@ -79,7 +79,12 @@
 
 <script setup lang="ts">
 import {computed, onMounted, ref} from 'vue';
-import {getCategoryColor} from '@/lib/utils.js';
+import {
+	getCategoryColor,
+	getUserIcon,
+	getUserIcon2x,
+	getUserName,
+} from '@/lib/utils.js';
 import type {AchievementData, SlackUser} from '@/types/store.js';
 import {useStore} from '~/plugins/vuex.js';
 
@@ -150,19 +155,6 @@ const statsByMonth = computed(() => ({
 	],
 	labels: achievementStatsByMonth.value.map((stat) => stat.id),
 }));
-
-function getUserName(user: SlackUser | undefined) {
-	const name = user?.profile?.display_name || user?.real_name || '匿名ユーザー';
-	return `@${name}`;
-}
-
-function getUserIcon(user: SlackUser | undefined) {
-	return user?.profile?.image_24 ?? '/images/anonymous-icon_24.png';
-}
-
-function getUserIcon2x(user: SlackUser | undefined) {
-	return user?.profile?.image_48 ?? '/images/anonymous-icon_48.png';
-}
 
 function getAchievement(id: string): AchievementData {
 	return (

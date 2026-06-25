@@ -47,6 +47,7 @@
 									/>
 								</div>
 								<div class="column is-narrow">
+									<!-- 解除済みの場合はデータ上カウンタが閾値未満でも常にMAXを表示する（過去のマイグレーション等でズレが生じることがあるため） -->
 									<p class="subtitle is-6 achievements-count">
 										{{ datum.value }}/{{ datum.value }}
 									</p>

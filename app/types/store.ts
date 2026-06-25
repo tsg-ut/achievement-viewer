@@ -55,7 +55,7 @@ export interface OneiromancyMessage {
 		text?: string;
 		[key: string]: unknown;
 	};
-	originalMessage: {
+	originalMessage?: {
 		username?: string;
 		user?: string;
 		text?: string;

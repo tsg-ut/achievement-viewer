@@ -36,7 +36,7 @@
 					v-for="achievementDatum in sameCounterAchievements"
 					:key="achievementDatum.id"
 					class="steps-segment"
-					:class="{'is-active': achievementDatum.id === route.params.id}"
+					:class="{'is-active': achievementDatum.id === achievementId}"
 				>
 					<nuxt-link :to="`/achievements/${achievementDatum.id}`">
 						<span class="steps-marker" />
@@ -105,7 +105,13 @@
 <script setup lang="ts">
 import {computed, onMounted, ref} from 'vue';
 import {useRoute} from 'vue-router';
-import {getCategoryColor} from '@/lib/utils.js';
+import {
+	getCategoryColor,
+	getUserIcon,
+	getUserIcon2x,
+	getUserIcon3x,
+	getUserName,
+} from '@/lib/utils.js';
 import type {AchievementData, SlackUser} from '@/types/store.js';
 import {useStore} from '~/plugins/vuex.js';
 
@@ -178,23 +184,6 @@ const sameCounterAchievements = computed(() => {
 	}
 	return store.getters['achievementData/getByCounter'](counter.value);
 });
-
-function getUserName(user: SlackUser | undefined) {
-	const name = user?.profile?.display_name || user?.real_name || '匿名ユーザー';
-	return `@${name}`;
-}
-
-function getUserIcon(user: SlackUser | undefined) {
-	return user?.profile?.image_24 ?? '/images/anonymous-icon_24.png';
-}
-
-function getUserIcon2x(user: SlackUser | undefined) {
-	return user?.profile?.image_48 ?? '/images/anonymous-icon_48.png';
-}
-
-function getUserIcon3x(user: SlackUser | undefined) {
-	return user?.profile?.image_72 ?? '/images/anonymous-icon_72.png';
-}
 
 onMounted(async () => {
 	await Promise.all([

@@ -162,6 +162,11 @@ import ArrowDownIcon from 'vue-ionicons/dist/ios-arrow-down.vue';
 import ArrowUpIcon from 'vue-ionicons/dist/ios-arrow-up.vue';
 import type {SlowQuizGame} from '@/lib/slow-quiz.js';
 import {getMaxProgress, getQuestionText} from '@/lib/slow-quiz.js';
+import {
+	getUserIcon2x as getUserIcon2xByUser,
+	getUserIcon as getUserIconByUser,
+	getUserName as getUserNameByUser,
+} from '@/lib/utils.js';
 import {useStore} from '~/plugins/vuex.js';
 
 const props = defineProps<{
@@ -277,19 +282,15 @@ function gotoProgress(p: number) {
 }
 
 function getUserName(userId: string) {
-	const user = getUser.value(userId);
-	const name = user?.profile?.display_name || user?.real_name || '匿名ユーザー';
-	return `@${name}`;
+	return getUserNameByUser(getUser.value(userId));
 }
 
 function getUserIcon(userId: string) {
-	const user = getUser.value(userId);
-	return user?.profile?.image_24 ?? '/images/anonymous-icon_24.png';
+	return getUserIconByUser(getUser.value(userId));
 }
 
 function getUserIcon2x(userId: string) {
-	const user = getUser.value(userId);
-	return user?.profile?.image_48 ?? '/images/anonymous-icon_48.png';
+	return getUserIcon2xByUser(getUser.value(userId));
 }
 
 function formatTime(time: number | undefined) {
