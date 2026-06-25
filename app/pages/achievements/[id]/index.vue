@@ -112,7 +112,7 @@ import {
 	getUserIcon3x,
 	getUserName,
 } from '@/lib/utils.js';
-import type {AchievementData, SlackUser} from '@/types/store.js';
+import type {AchievementData} from '@/types/store.js';
 import {useStore} from '~/plugins/vuex.js';
 
 const route = useRoute();
