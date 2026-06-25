@@ -19,17 +19,14 @@
 
 <script setup lang="ts">
 import {computed, onMounted, ref} from 'vue';
-import {useStore} from 'vuex';
-import type {AchievementData} from '@/types/store.js';
+import {useStore} from '~/plugins/vuex.js';
 
 useHead({title: '実績一覧 - achievement-viewer'});
 
 const store = useStore();
 const isLoading = ref(true);
 
-const achievementData = computed(
-	() => store.state.achievementData.list as AchievementData[],
-);
+const achievementData = computed(() => store.state.achievementData.list);
 
 const ranking = computed(() => {
 	const entries = achievementData.value.slice();

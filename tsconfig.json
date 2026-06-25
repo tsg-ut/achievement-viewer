@@ -4,8 +4,6 @@
 		"strict": true,
 		"noUncheckedIndexedAccess": false,
 		"skipLibCheck": true,
-		"moduleResolution": "node10",
-		"ignoreDeprecations": "6.0",
 		"paths": {
 			"vuex": ["./node_modules/vuex/types/index.d.ts"],
 			"vue-ionicons/dist/ios-arrow-down.vue": [
@@ -20,16 +18,7 @@
 			"~": ["./app"],
 			"~/*": ["./app/*"],
 			"@": ["./app"],
-			"@/*": ["./app/*"],
-			"~~": ["./"],
-			"~~/*": ["./*"],
-			"@@": ["./"],
-			"@@/*": ["./*"],
-			"#app": ["./node_modules/nuxt/dist/app"],
-			"#app/*": ["./node_modules/nuxt/dist/app/*"],
-			"#imports": ["./.nuxt/imports.d.ts"],
-			"#build": ["./.nuxt"],
-			"#build/*": ["./.nuxt/*"]
+			"@/*": ["./app/*"]
 		}
 	},
 	"files": ["tests/e2e.spec.ts", "playwright.config.ts"]

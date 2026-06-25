@@ -11,17 +11,14 @@
 
 <script setup lang="ts">
 import {computed, onMounted, ref} from 'vue';
-import {useStore} from 'vuex';
-import type {TwentyQuestionsGame} from '@/types/store.js';
+import {useStore} from '~/plugins/vuex.js';
 
 useHead({title: '20の扉ログ - achievement-viewer'});
 
 const store = useStore();
 const isLoading = ref(true);
 
-const games = computed(
-	() => store.state.twentyQuestionsGames.list as TwentyQuestionsGame[],
-);
+const games = computed(() => store.state.twentyQuestionsGames.list);
 
 onMounted(async () => {
 	await Promise.all([

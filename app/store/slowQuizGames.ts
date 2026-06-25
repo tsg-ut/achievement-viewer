@@ -12,33 +12,39 @@ import type {SlowQuizGame} from '~/lib/slow-quiz.js';
 const slowQuizGamesRef = collection(db, 'slow_quiz_games');
 let unsubscribeList: Unsubscribe | null = null;
 
-interface State {
+export interface SlowQuizGamesState {
 	isInitList: boolean | null;
 	list: Array<SlowQuizGame & {id: string}>;
 }
 
-const localState = (): State => ({
+const localState = (): SlowQuizGamesState => ({
 	isInitList: null,
 	list: [],
 });
 
 const localMutations = {
-	setList(state: State, list: Array<SlowQuizGame & {id: string}>) {
+	setList(state: SlowQuizGamesState, list: Array<SlowQuizGame & {id: string}>) {
 		state.list = list;
 		state.isInitList = import.meta.client;
 	},
 };
 
 const localGetters = {
-	list: (state: State) => state.list,
-	getById: (state: State) => (id: string) => {
+	list: (state: SlowQuizGamesState) => state.list,
+	getById: (state: SlowQuizGamesState) => (id: string) => {
 		const game = state.list.find((datum) => datum.id === id);
 		return game ?? ({id} as SlowQuizGame & {id: string});
 	},
 };
 
 const localActions = {
-	async initList({state, commit}: {state: State; commit: Function}) {
+	async initList({
+		state,
+		commit,
+	}: {
+		state: SlowQuizGamesState;
+		commit: Function;
+	}) {
 		if (state.isInitList) return;
 		await new Promise<void>((resolve, reject) => {
 			unsubscribeList?.();

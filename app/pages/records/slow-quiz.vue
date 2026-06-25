@@ -50,8 +50,7 @@
 
 <script setup lang="ts">
 import {computed, onMounted, ref} from 'vue';
-import {useStore} from 'vuex';
-import type {SlowQuizGame} from '@/lib/slow-quiz.js';
+import {useStore} from '~/plugins/vuex.js';
 
 useHead({title: '1日1文字クイズログ - achievement-viewer'});
 
@@ -59,9 +58,7 @@ const store = useStore();
 const isLoading = ref(true);
 const progressType = ref('none');
 
-const games = computed(
-	() => store.state.slowQuizGames.list as Array<SlowQuizGame & {id: string}>,
-);
+const games = computed(() => store.state.slowQuizGames.list);
 
 onMounted(async () => {
 	await Promise.all([

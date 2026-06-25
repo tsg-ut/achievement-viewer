@@ -11,10 +11,13 @@ const usersRef = collection(db, 'users');
 let unsubscribeList: Unsubscribe | null = null;
 const dataUnsubscribes = new Map<string, Unsubscribe>();
 
-interface State {
+export interface UsersState {
 	isInitList: boolean | null;
 	list: SlackUser[];
 	isInitData: Record<string, boolean>;
+}
+
+interface State extends UsersState {
 	[key: string]: unknown;
 }
 

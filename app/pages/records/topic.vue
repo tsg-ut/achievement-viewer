@@ -144,8 +144,8 @@ import dayjs from 'dayjs';
 import get from 'lodash/get.js';
 import sortBy from 'lodash/sortBy.js';
 import {computed, onMounted, ref, watch} from 'vue';
-import {useStore} from 'vuex';
-import type {SlackUser, TopicMessage} from '@/types/store.js';
+import type {TopicMessage} from '@/types/store.js';
+import {useStore} from '~/plugins/vuex.js';
 
 useHead({title: 'sandboxのトピックログ - achievement-viewer'});
 
@@ -157,15 +157,10 @@ const sortByValue = ref('timestamp');
 const currentPage = ref(1);
 const searchQuery = ref('');
 
-const getUser = computed(
-	() =>
-		store.getters['slackInfos/getUser'] as (
-			id: string,
-		) => SlackUser | undefined,
-);
+const getUser = computed(() => store.getters['slackInfos/getUser']);
 
 const topicMessages = computed(() =>
-	(store.state.slackInfos.topicMessages as TopicMessage[]).filter(({message}) =>
+	store.state.slackInfos.topicMessages.filter(({message}) =>
 		message?.reactions?.some(
 			({name, count}) => name === 'koresuki' && count >= 3,
 		),

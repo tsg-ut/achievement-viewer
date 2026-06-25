@@ -13,14 +13,14 @@ const oneiromancyCriteriaRef = collection(db, 'oneiromancy_criteria');
 let unsubscribeMessages: Unsubscribe | null = null;
 let unsubscribeCriteria: Unsubscribe | null = null;
 
-interface State {
+export interface OneiromanciesState {
 	isInitOneiromancyMessages: boolean | null;
 	oneiromancyMessages: OneiromancyMessage[];
 	isInitOneiromancyCriteria: boolean | null;
 	oneiromancyCriteria: OneiromancyCriterion[];
 }
 
-const localState = (): State => ({
+const localState = (): OneiromanciesState => ({
 	isInitOneiromancyMessages: null,
 	oneiromancyMessages: [],
 	isInitOneiromancyCriteria: null,
@@ -28,19 +28,25 @@ const localState = (): State => ({
 });
 
 const localMutations = {
-	setOneiromancyMessages(state: State, list: OneiromancyMessage[]) {
+	setOneiromancyMessages(
+		state: OneiromanciesState,
+		list: OneiromancyMessage[],
+	) {
 		state.oneiromancyMessages = list;
 		state.isInitOneiromancyMessages = import.meta.client;
 	},
-	setOneiromancyCriteria(state: State, list: OneiromancyCriterion[]) {
+	setOneiromancyCriteria(
+		state: OneiromanciesState,
+		list: OneiromancyCriterion[],
+	) {
 		state.oneiromancyCriteria = list;
 		state.isInitOneiromancyCriteria = import.meta.client;
 	},
 };
 
 const localGetters = {
-	oneiromancyMessages: (state: State) => state.oneiromancyMessages,
-	oneiromancyCriteria: (state: State) => state.oneiromancyCriteria,
+	oneiromancyMessages: (state: OneiromanciesState) => state.oneiromancyMessages,
+	oneiromancyCriteria: (state: OneiromanciesState) => state.oneiromancyCriteria,
 };
 
 const localActions = {
@@ -48,7 +54,7 @@ const localActions = {
 		state,
 		commit,
 	}: {
-		state: State;
+		state: OneiromanciesState;
 		commit: Function;
 	}) {
 		if (state.isInitOneiromancyMessages) return;
@@ -83,7 +89,7 @@ const localActions = {
 		state,
 		commit,
 	}: {
-		state: State;
+		state: OneiromanciesState;
 		commit: Function;
 	}) {
 		if (state.isInitOneiromancyCriteria) return;

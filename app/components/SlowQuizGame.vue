@@ -161,10 +161,9 @@ import sortBy from 'lodash/sortBy.js';
 import {computed, ref, watch} from 'vue';
 import ArrowDownIcon from 'vue-ionicons/dist/ios-arrow-down.vue';
 import ArrowUpIcon from 'vue-ionicons/dist/ios-arrow-up.vue';
-import {useStore} from 'vuex';
 import type {SlowQuizGame} from '@/lib/slow-quiz.js';
 import {getMaxProgress, getQuestionText} from '@/lib/slow-quiz.js';
-import type {SlackUser} from '@/types/store.js';
+import {useStore} from '~/plugins/vuex.js';
 
 const props = defineProps<{
 	game: SlowQuizGame & {id: string};
@@ -175,12 +174,7 @@ const store = useStore();
 const progress = ref(1);
 const isAnswerPanelShown = ref(false);
 
-const getUser = computed(
-	() =>
-		store.getters['slackInfos/getUser'] as (
-			id: string,
-		) => SlackUser | undefined,
-);
+const getUser = computed(() => store.getters['slackInfos/getUser']);
 
 const questionText = computed(() =>
 	getQuestionText(props.game, progress.value),

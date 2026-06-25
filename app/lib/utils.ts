@@ -28,5 +28,5 @@ export const getCategoryColor = (category: string): string => {
 	return randomcolor({
 		luminosity: 'bright',
 		seed: category,
-	}) as string;
+	});
 };

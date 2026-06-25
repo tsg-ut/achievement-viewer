@@ -17,7 +17,7 @@ let unsubscribeList: Unsubscribe | null = null;
 let unsubscribeLatest: Unsubscribe | null = null;
 const dataUnsubscribes = new Map<string, Unsubscribe>();
 
-interface State {
+export interface AchievementsState {
 	isInitList: boolean | null;
 	list: Achievement[];
 	isInitLatestAchievemnts: boolean | null;
@@ -25,6 +25,9 @@ interface State {
 	isInitUsers: Record<string, boolean>;
 	isInitNames: Record<string, boolean>;
 	isInitData: Record<string, boolean>;
+}
+
+interface State extends AchievementsState {
 	[key: string]: unknown;
 }
 
@@ -73,17 +76,13 @@ const localGetters = {
 	data: (state: State) => state.data,
 	getByUser: (state: State) => (user: string) => {
 		if (state.isInitList) {
-			return (state.list as Achievement[]).filter(
-				(datum) => datum.user === user,
-			);
+			return state.list.filter((datum) => datum.user === user);
 		}
 		return (state[`user_${user}`] as Achievement[]) || [];
 	},
 	getByName: (state: State) => (name: string) => {
 		if (state.isInitList) {
-			return (state.list as Achievement[]).filter(
-				(datum) => datum.name === name,
-			);
+			return state.list.filter((datum) => datum.name === name);
 		}
 		return (state[`name_${name}`] as Achievement[]) || [];
 	},

@@ -28,9 +28,8 @@
 <script setup lang="ts">
 import {computed, onMounted, ref} from 'vue';
 import {useRoute} from 'vue-router';
-import {useStore} from 'vuex';
 import {getCategoryColor} from '@/lib/utils.js';
-import type {AchievementData} from '@/types/store.js';
+import {useStore} from '~/plugins/vuex.js';
 
 const route = useRoute();
 const store = useStore();
@@ -42,11 +41,8 @@ useHead(() => ({
 	title: `実績カテゴリ「${categoryId.value}」 - achievement-viewer`,
 }));
 
-const achievements = computed(
-	() =>
-		store.getters['achievementData/getByCategory'](
-			categoryId.value,
-		) as AchievementData[],
+const achievements = computed(() =>
+	store.getters['achievementData/getByCategory'](categoryId.value),
 );
 
 const categoryColor = computed(() => getCategoryColor(categoryId.value));

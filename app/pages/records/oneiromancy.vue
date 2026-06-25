@@ -155,8 +155,7 @@ import dayjs from 'dayjs';
 import get from 'lodash/get.js';
 import sortBy from 'lodash/sortBy.js';
 import {computed, onMounted, ref} from 'vue';
-import {useStore} from 'vuex';
-import type {OneiromancyCriterion, SlackUser} from '@/types/store.js';
+import {useStore} from '~/plugins/vuex.js';
 
 useHead({title: '夢占いログ - achievement-viewer'});
 
@@ -165,20 +164,13 @@ const isLoading = ref(true);
 const sortByValue = ref('timestamp');
 const openedMessages = ref<string[]>([]);
 
-const getUser = computed(
-	() =>
-		store.getters['slackInfos/getUser'] as (
-			id: string,
-		) => SlackUser | undefined,
-);
-const isUnauthorized = computed(
-	() => store.state.slackInfos.isUnauthorized as boolean,
-);
+const getUser = computed(() => store.getters['slackInfos/getUser']);
+const isUnauthorized = computed(() => store.state.slackInfos.isUnauthorized);
 const oneiromancyMessages = computed(
 	() => store.state.oneiromancies.oneiromancyMessages as unknown[],
 );
 const oneiromancyCriteria = computed(
-	() => store.state.oneiromancies.oneiromancyCriteria as OneiromancyCriterion[],
+	() => store.state.oneiromancies.oneiromancyCriteria,
 );
 
 type SortableOneiromancy = {

@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import {computed, ref} from 'vue';
-import {useStore} from 'vuex';
+import {useStore} from '~/plugins/vuex.js';
 
 withDefaults(
 	defineProps<{
@@ -30,9 +30,7 @@ withDefaults(
 const store = useStore();
 const url = ref('');
 
-const isUnauthorized = computed(
-	() => store.state.slackInfos.isUnauthorized as boolean,
-);
+const isUnauthorized = computed(() => store.state.slackInfos.isUnauthorized);
 const loginUrl = computed(() => {
 	const returnToPath = `/?return_to=${encodeURIComponent(url.value)}`;
 	return `https://slackbot-api.tsg.ne.jp/oauth2/start?rd=${encodeURIComponent(returnToPath)}`;

@@ -152,12 +152,11 @@ import {computed, ref} from 'vue';
 import ArrowDownIcon from 'vue-ionicons/dist/ios-arrow-down.vue';
 import ArrowUpIcon from 'vue-ionicons/dist/ios-arrow-up.vue';
 import CloseCircleIcon from 'vue-ionicons/dist/ios-close.vue';
-import {useStore} from 'vuex';
 import type {
-	SlackUser,
 	TwentyQuestionsGame,
 	TwentyQuestionsPlayer,
 } from '@/types/store.js';
+import {useStore} from '~/plugins/vuex.js';
 
 const props = defineProps<{
 	game: TwentyQuestionsGame;
@@ -167,12 +166,7 @@ const store = useStore();
 const expandedPlayers = ref(new Set<string>());
 const isDetailsPanelShown = ref(false);
 
-const getUser = computed(
-	() =>
-		store.getters['slackInfos/getUser'] as (
-			id: string,
-		) => SlackUser | undefined,
-);
+const getUser = computed(() => store.getters['slackInfos/getUser']);
 
 const formattedStartDate = computed(() =>
 	dayjs(props.game.startedAt.toDate()).format('YYYY年M月D日 HH:mm'),

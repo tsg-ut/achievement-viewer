@@ -106,9 +106,9 @@
 import get from 'lodash/get.js';
 import {computed, onMounted, ref} from 'vue';
 import {useRoute} from 'vue-router';
-import {useStore} from 'vuex';
 import {getCategoryColor} from '@/lib/utils.js';
 import type {AchievementData, SlackUser} from '@/types/store.js';
+import {useStore} from '~/plugins/vuex.js';
 
 const route = useRoute();
 const store = useStore();
@@ -117,11 +117,8 @@ const scaleToMaxUser = ref(false);
 
 const achievementId = computed(() => route.params['id'] as string);
 
-const achievementDatum = computed(
-	() =>
-		store.getters['achievementData/getById'](
-			achievementId.value,
-		) as AchievementData,
+const achievementDatum = computed(() =>
+	store.getters['achievementData/getById'](achievementId.value),
 );
 
 const title = computed(
@@ -159,17 +156,11 @@ const userList = computed(
 );
 
 const achievedUsers = computed(() =>
-	(
-		store.getters['achievements/getByName'](achievementId.value) as Array<{
-			name: string;
-			date: {seconds: number};
-			user: string;
-		}>
-	)
+	store.getters['achievements/getByName'](achievementId.value)
 		.map(({name, date, user}) => ({
 			name,
 			date,
-			user: store.getters['slackInfos/getUser'](user) as SlackUser,
+			user: store.getters['slackInfos/getUser'](user),
 		}))
 		.sort((a, b) => a.date.seconds - b.date.seconds)
 		.map(({user}) => user),
@@ -184,9 +175,9 @@ const sortedUserList = computed(() =>
 				((a[counter.value ?? ''] as number | undefined) ?? 0),
 		)
 		.map((user) => ({
-			info: store.getters['slackInfos/getUser'](user.id) as SlackUser,
+			info: store.getters['slackInfos/getUser'](user.id),
 			count: (user[counter.value ?? ''] as number | undefined) ?? null,
-			id: user.id as string,
+			id: user.id,
 		})),
 );
 
@@ -198,9 +189,7 @@ const sameCounterAchievements = computed(() => {
 	if (counter.value === null) {
 		return [] as AchievementData[];
 	}
-	return store.getters['achievementData/getByCounter'](
-		counter.value,
-	) as AchievementData[];
+	return store.getters['achievementData/getByCounter'](counter.value);
 });
 
 function getUserName(user: SlackUser | undefined) {

@@ -11,33 +11,39 @@ import type {TwentyQuestionsGame} from '~/types/store.js';
 const twentyQuestionsGamesRef = collection(db, 'twenty_questions_games');
 let unsubscribeList: Unsubscribe | null = null;
 
-interface State {
+export interface TwentyQuestionsGamesState {
 	isInitList: boolean | null;
 	list: TwentyQuestionsGame[];
 }
 
-const localState = (): State => ({
+const localState = (): TwentyQuestionsGamesState => ({
 	isInitList: null,
 	list: [],
 });
 
 const localMutations = {
-	setList(state: State, list: TwentyQuestionsGame[]) {
+	setList(state: TwentyQuestionsGamesState, list: TwentyQuestionsGame[]) {
 		state.list = list;
 		state.isInitList = import.meta.client;
 	},
 };
 
 const localGetters = {
-	list: (state: State) => state.list,
-	getById: (state: State) => (id: string) => {
+	list: (state: TwentyQuestionsGamesState) => state.list,
+	getById: (state: TwentyQuestionsGamesState) => (id: string) => {
 		const game = state.list.find((datum) => datum.id === id);
 		return game ?? ({id} as TwentyQuestionsGame);
 	},
 };
 
 const localActions = {
-	async initList({state, commit}: {state: State; commit: Function}) {
+	async initList({
+		state,
+		commit,
+	}: {
+		state: TwentyQuestionsGamesState;
+		commit: Function;
+	}) {
 		if (state.isInitList) return;
 		await new Promise<void>((resolve, reject) => {
 			unsubscribeList?.();

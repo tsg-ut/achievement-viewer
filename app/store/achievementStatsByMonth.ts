@@ -5,33 +5,39 @@ import type {AchievementStat} from '~/types/store.js';
 const achievementStatsByMonthRef = collection(db, 'achievement_stats_by_month');
 let unsubscribeList: Unsubscribe | null = null;
 
-interface State {
+export interface AchievementStatsByMonthState {
 	isInitList: boolean | null;
 	list: AchievementStat[];
 }
 
-const localState = (): State => ({
+const localState = (): AchievementStatsByMonthState => ({
 	isInitList: null,
 	list: [],
 });
 
 const localMutations = {
-	setList(state: State, list: AchievementStat[]) {
+	setList(state: AchievementStatsByMonthState, list: AchievementStat[]) {
 		state.list = list;
 		state.isInitList = import.meta.client;
 	},
 };
 
 const localGetters = {
-	list: (state: State) => state.list,
-	getById: (state: State) => (id: string) => {
+	list: (state: AchievementStatsByMonthState) => state.list,
+	getById: (state: AchievementStatsByMonthState) => (id: string) => {
 		const datum = state.list.find((d) => d.id === id);
 		return datum ?? ({id} as AchievementStat);
 	},
 };
 
 const localActions = {
-	async initList({state, commit}: {state: State; commit: Function}) {
+	async initList({
+		state,
+		commit,
+	}: {
+		state: AchievementStatsByMonthState;
+		commit: Function;
+	}) {
 		if (state.isInitList) return;
 		await new Promise<void>((resolve, reject) => {
 			unsubscribeList?.();

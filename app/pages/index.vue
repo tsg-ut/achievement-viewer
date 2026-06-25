@@ -80,42 +80,30 @@
 <script setup lang="ts">
 import get from 'lodash/get.js';
 import {computed, onMounted, ref} from 'vue';
-import {useStore} from 'vuex';
 import {getCategoryColor} from '@/lib/utils.js';
-import type {
-	Achievement,
-	AchievementData,
-	AchievementStat,
-	SlackUser,
-} from '@/types/store.js';
+import type {AchievementData, SlackUser} from '@/types/store.js';
+import {useStore} from '~/plugins/vuex.js';
 
 useHead({title: 'achievement-viewer'});
 
 const store = useStore();
 const isLoading = ref(true);
 
-const users = computed(() => store.state.users.list as SlackUser[]);
-const achievementData = computed(
-	() => store.state.achievementData.list as AchievementData[],
-);
+const users = computed(() => store.state.users.list);
+const achievementData = computed(() => store.state.achievementData.list);
 const achievementStatsByDifficulty = computed(
-	() => store.state.achievementStatsByDifficulty.list as AchievementStat[],
+	() => store.state.achievementStatsByDifficulty.list,
 );
 const achievementStatsByCategory = computed(
-	() => store.state.achievementStatsByCategory.list as AchievementStat[],
+	() => store.state.achievementStatsByCategory.list,
 );
 const achievementStatsByMonth = computed(
-	() => store.state.achievementStatsByMonth.list as AchievementStat[],
+	() => store.state.achievementStatsByMonth.list,
 );
 const latestAchievements = computed(
-	() => store.state.achievements.latestAchievements as Achievement[],
+	() => store.state.achievements.latestAchievements,
 );
-const getUser = computed(
-	() =>
-		store.getters['slackInfos/getUser'] as (
-			id: string,
-		) => SlackUser | undefined,
-);
+const getUser = computed(() => store.getters['slackInfos/getUser']);
 
 const statsByDifficulty = computed(() => {
 	const labels = ['baby', 'easy', 'medium', 'hard', 'professional'];

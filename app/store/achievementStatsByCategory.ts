@@ -8,33 +8,39 @@ const achievementStatsByCategoryRef = collection(
 );
 let unsubscribeList: Unsubscribe | null = null;
 
-interface State {
+export interface AchievementStatsByCategoryState {
 	isInitList: boolean | null;
 	list: AchievementStat[];
 }
 
-const localState = (): State => ({
+const localState = (): AchievementStatsByCategoryState => ({
 	isInitList: null,
 	list: [],
 });
 
 const localMutations = {
-	setList(state: State, list: AchievementStat[]) {
+	setList(state: AchievementStatsByCategoryState, list: AchievementStat[]) {
 		state.list = list;
 		state.isInitList = import.meta.client;
 	},
 };
 
 const localGetters = {
-	list: (state: State) => state.list,
-	getById: (state: State) => (id: string) => {
+	list: (state: AchievementStatsByCategoryState) => state.list,
+	getById: (state: AchievementStatsByCategoryState) => (id: string) => {
 		const datum = state.list.find((d) => d.id === id);
 		return datum ?? ({id} as AchievementStat);
 	},
 };
 
 const localActions = {
-	async initList({state, commit}: {state: State; commit: Function}) {
+	async initList({
+		state,
+		commit,
+	}: {
+		state: AchievementStatsByCategoryState;
+		commit: Function;
+	}) {
 		if (state.isInitList) return;
 		await new Promise<void>((resolve, reject) => {
 			unsubscribeList?.();

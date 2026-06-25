@@ -1,6 +1,6 @@
 import type {SlackUser, TopicMessage} from '~/types/store.js';
 
-interface State {
+export interface SlackInfosState {
 	isUnauthorized: boolean;
 	isInitUsers: boolean;
 	isInitTopicMessages: boolean;
@@ -10,7 +10,7 @@ interface State {
 	topicMessagesMap: Map<string, TopicMessage>;
 }
 
-const localState = (): State => ({
+const localState = (): SlackInfosState => ({
 	isUnauthorized: false,
 	isInitUsers: false,
 	isInitTopicMessages: false,
@@ -21,12 +21,12 @@ const localState = (): State => ({
 });
 
 const localMutations = {
-	setUsers(state: State, users: SlackUser[]) {
+	setUsers(state: SlackInfosState, users: SlackUser[]) {
 		state.isInitUsers = true;
 		state.users = users;
 		state.userMap = new Map(users.map((user) => [user.id, user]));
 	},
-	setTopicMessages(state: State, topicMessages: TopicMessage[]) {
+	setTopicMessages(state: SlackInfosState, topicMessages: TopicMessage[]) {
 		state.isInitTopicMessages = true;
 		state.topicMessages = topicMessages.map((topic) => ({
 			...topic,
@@ -39,36 +39,36 @@ const localMutations = {
 			]),
 		);
 	},
-	addTopicMessageLike(state: State, ts: string) {
+	addTopicMessageLike(state: SlackInfosState, ts: string) {
 		const message = state.topicMessagesMap.get(ts);
 		if (message) {
 			message.isLiked = true;
 			message.likes = message.likes.concat([null]);
 		}
 	},
-	removeTopicMessageLike(state: State, ts: string) {
+	removeTopicMessageLike(state: SlackInfosState, ts: string) {
 		const message = state.topicMessagesMap.get(ts);
 		if (message) {
 			message.isLiked = false;
 			message.likes = message.likes.slice(1);
 		}
 	},
-	isUnauthorized(state: State) {
+	isUnauthorized(state: SlackInfosState) {
 		state.isUnauthorized = true;
 	},
 };
 
 const localGetters = {
-	users: (state: State) => state.users,
-	getUser: (state: State) => (id: string) => {
+	users: (state: SlackInfosState) => state.users,
+	getUser: (state: SlackInfosState) => (id: string) => {
 		const user = state.userMap.get(id);
 		if (user === undefined) {
 			return {id} as SlackUser;
 		}
 		return user;
 	},
-	topicMessages: (state: State) => state.topicMessages,
-	getTopicMessage: (state: State) => (ts: string) => {
+	topicMessages: (state: SlackInfosState) => state.topicMessages,
+	getTopicMessage: (state: SlackInfosState) => (ts: string) => {
 		const message = state.topicMessagesMap.get(ts);
 		if (message === undefined) {
 			return {ts} as unknown as TopicMessage;
@@ -89,7 +89,7 @@ const isNetworkError = (error: unknown): boolean => {
 };
 
 const localActions = {
-	async initUsers({state, commit}: {state: State; commit: Function}) {
+	async initUsers({state, commit}: {state: SlackInfosState; commit: Function}) {
 		if (state.isInitUsers) {
 			return;
 		}
@@ -120,7 +120,13 @@ const localActions = {
 			}
 		}
 	},
-	async initTopicMessages({state, commit}: {state: State; commit: Function}) {
+	async initTopicMessages({
+		state,
+		commit,
+	}: {
+		state: SlackInfosState;
+		commit: Function;
+	}) {
 		if (state.isInitTopicMessages) {
 			return;
 		}

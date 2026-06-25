@@ -111,9 +111,9 @@
 import get from 'lodash/get.js';
 import {computed, onMounted, ref} from 'vue';
 import {useRoute} from 'vue-router';
-import {useStore} from 'vuex';
 import {getCategoryColor} from '@/lib/utils.js';
-import type {AchievementData, SlackUser} from '@/types/store.js';
+import type {SlackUser} from '@/types/store.js';
+import {useStore} from '~/plugins/vuex.js';
 
 const route = useRoute();
 const store = useStore();
@@ -126,13 +126,10 @@ const user = computed(
 		store.getters['users/getById'](userId.value) as SlackUser &
 			Record<string, unknown>,
 );
-const slackUser = computed(
-	() =>
-		store.getters['slackInfos/getUser'](userId.value) as SlackUser | undefined,
+const slackUser = computed(() =>
+	store.getters['slackInfos/getUser'](userId.value),
 );
-const achievementData = computed(
-	() => store.state.achievementData.list as AchievementData[],
-);
+const achievementData = computed(() => store.state.achievementData.list);
 
 const name = computed(() => {
 	const displayName = get(slackUser.value, ['profile', 'display_name'], false);
@@ -168,17 +165,11 @@ const difficultyRank: Record<string, number> = {
 };
 
 const achievements = computed(() =>
-	(
-		store.getters['achievements/getByUser'](userId.value) as Array<{
-			name: string;
-			date: {seconds: number};
-			user: string;
-		}>
-	)
+	store.getters['achievements/getByUser'](userId.value)
 		.map(({name: aName, date}) => ({
 			name: aName,
 			date,
-			datum: store.getters['achievementData/getById'](aName) as AchievementData,
+			datum: store.getters['achievementData/getById'](aName),
 		}))
 		.sort((a, b) => {
 			if (a.datum.difficulty && b.datum.difficulty) {
@@ -193,11 +184,7 @@ const achievements = computed(() =>
 
 const lockedAchievements = computed(() => {
 	const unlockedAchievements = new Set(
-		(
-			store.getters['achievements/getByUser'](userId.value) as Array<{
-				name: string;
-			}>
-		).map(({name: n}) => n),
+		store.getters['achievements/getByUser'](userId.value).map(({name: n}) => n),
 	);
 	return achievementData.value
 		.filter(({id}) => !unlockedAchievements.has(id))
