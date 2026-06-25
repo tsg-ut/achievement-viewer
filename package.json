@@ -38,6 +38,7 @@
 		"@biomejs/biome": "^2.5.1",
 		"@playwright/test": "^1.61.1",
 		"@types/lodash": "^4.17.24",
+		"@types/node": "^26.0.1",
 		"@types/randomcolor": "^0.5.9",
 		"firebase": "^12.15.0",
 		"nodemon": "^3.1.14",

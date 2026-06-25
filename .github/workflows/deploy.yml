@@ -26,6 +26,9 @@ jobs:
       - name: Run Biome lint
         run: npm run lint
 
+      - name: Nuxt prepare
+        run: npx nuxt prepare
+
       - name: Run type check
         run: npm run typecheck
 
