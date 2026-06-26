@@ -1,10 +1,8 @@
 <template>
 	<div>
-		<nav class="navbar is-black" role="navigation" aria-label="main navigation">
+		<nav class="navbar is-black" aria-label="main navigation">
 			<div class="navbar-brand">
-				<nuxt-link class="navbar-item" to="/">
-					achievement-viewer
-				</nuxt-link>
+				<nuxt-link class="navbar-item" to="/"> achievement-viewer </nuxt-link>
 
 				<a
 					role="button"
@@ -13,24 +11,20 @@
 					aria-expanded="false"
 					@click="isActive = !isActive"
 				>
-					<span aria-hidden="true"/>
-					<span aria-hidden="true"/>
-					<span aria-hidden="true"/>
+					<span aria-hidden="true" />
+					<span aria-hidden="true" />
+					<span aria-hidden="true" />
 				</a>
 			</div>
 
 			<div class="navbar-menu" :class="{'is-active': isActive}">
 				<div class="navbar-start">
-					<nuxt-link class="navbar-item" to="/">
-						ホーム
-					</nuxt-link>
+					<nuxt-link class="navbar-item" to="/"> ホーム </nuxt-link>
 					<nuxt-link class="navbar-item" to="/achievements">
 						実績一覧
 					</nuxt-link>
 					<div class="navbar-item has-dropdown is-hoverable">
-						<div class="navbar-link">
-							各種ログ
-						</div>
+						<div class="navbar-link">各種ログ</div>
 						<div class="navbar-dropdown">
 							<nuxt-link class="navbar-item" to="/records/slow-quiz">
 								1日1文字クイズ
@@ -49,12 +43,13 @@
 				</div>
 			</div>
 		</nav>
-		<slot/>
+		<slot />
 		<footer class="footer">
 			<div class="content has-text-centered">
 				<p>
-					Achievement Viewer ●
-					by <a href="https://github.com/hakatashi">@hakatashi</a> ●
+					Achievement Viewer ● by
+					<a href="https://github.com/hakatashi">@hakatashi</a>
+					●
 					<a href="https://github.com/tsg-ut/achievement-viewer">GitHub</a>
 				</p>
 			</div>
@@ -62,20 +57,17 @@
 	</div>
 </template>
 
-<script>
-export default {
-	data() {
-		return {
-			isActive: false,
-		};
-	},
-};
+<script setup lang="ts">
+import {ref} from 'vue';
+
+const isActive = ref(false);
 </script>
 
 <style>
 html {
-	font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI',
-		Roboto, 'Helvetica Neue', Arial, sans-serif;
+	font-family:
+		'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+		'Helvetica Neue', Arial, sans-serif;
 	font-size: 16px;
 	word-spacing: 1px;
 	-ms-text-size-adjust: 100%;

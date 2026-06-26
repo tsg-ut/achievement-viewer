@@ -1,7 +1,7 @@
 <template>
 	<div class="container is-max-desktop">
-		<progress v-if="isLoading" class="progress is-small is-primary" max="100"/>
-		<unauthorized-notification required/>
+		<progress v-if="isLoading" class="progress is-small is-primary" max="100" />
+		<unauthorized-notification required />
 
 		<p class="title">sandboxのトピックログ</p>
 
@@ -14,7 +14,7 @@
 					placeholder="トピックを検索..."
 				>
 				<span class="icon is-left">
-					<i class="ri-search-line"/>
+					<i class="ri-search-line" />
 				</span>
 			</div>
 		</div>
@@ -24,7 +24,7 @@
 			<label class="radio">
 				<input
 					id="timestamp"
-					v-model="sortBy"
+					v-model="sortByValue"
 					type="radio"
 					value="timestamp"
 				>
@@ -33,28 +33,18 @@
 			<label class="radio">
 				<input
 					id="username"
-					v-model="sortBy"
+					v-model="sortByValue"
 					type="radio"
 					value="username"
 				>
 				ユーザー順
 			</label>
 			<label class="radio">
-				<input
-					id="likes"
-					v-model="sortBy"
-					type="radio"
-					value="likes"
-				>
+				<input id="likes" v-model="sortByValue" type="radio" value="likes">
 				お気に入り順
 			</label>
 			<label class="radio">
-				<input
-					id="random"
-					v-model="sortBy"
-					type="radio"
-					value="random"
-				>
+				<input id="random" v-model="sortByValue" type="radio" value="random">
 				ランダム
 			</label>
 		</div>
@@ -62,36 +52,36 @@
 		<div class="table-container">
 			<table class="table topics">
 				<tbody>
-					<tr v-for="{message, likes, isLiked} in paginatedTopics" :key="message.ts">
+					<tr
+						v-for="{ message, likes, isLiked } in paginatedTopics"
+						:key="message.ts"
+					>
 						<td class="topic-text">
 							<nuxt-link
 								v-if="message.user"
 								:to="`/users/${message.user}`"
 								class="topic-user"
 							>
-								<img
-									class="topic-icon"
-									:src="getUserIcon(message)"
-								>
-								{{getUserName(message)}}
+								<img class="topic-icon" :src="getUserIcon(message)">
+								{{ getUserName(message) }}
 							</nuxt-link>
 							<span v-else class="topic-user">
-								<img
-									class="topic-icon"
-									:src="getUserIcon(message)"
-								>
-								{{getUserName(message)}}
+								<img class="topic-icon" :src="getUserIcon(message)">
+								{{ getUserName(message) }}
 							</span>
-							<strong>{{message.text}}</strong>
+							<strong>{{ message.text }}</strong>
 						</td>
 						<td class="topic-like">
-							<span class="icon" @click="() => toggleTopicMessageLike(message, isLiked)">
-								<i v-if="isLiked" class="ri-heart-fill"/>
-								<i v-else class="ri-heart-line"/>
-							</span>{{likes.length}}
+							<span
+								class="icon"
+								@click="() => toggleTopicMessageLike(message, isLiked)"
+							>
+								<i v-if="isLiked" class="ri-heart-fill" />
+								<i v-else class="ri-heart-line" />
+							</span>{{ likes.length }}
 						</td>
 						<td class="topic-timestamp">
-							{{getTime(message.ts)}}
+							{{ getTime(message.ts) }}
 						</td>
 						<td class="topic-slacklog">
 							<a
@@ -99,7 +89,9 @@
 								target="_blank"
 								rel="noopener noreferrer"
 							>
-								slacklog<span class="icon"><i class="ri-external-link-line"/></span>
+								slacklog<span class="icon"
+									><i class="ri-external-link-line" /></span
+								>
 							</a>
 						</td>
 					</tr>
@@ -110,7 +102,6 @@
 		<nav
 			v-if="totalPages > 1"
 			class="pagination is-centered"
-			role="navigation"
 			aria-label="pagination"
 		>
 			<a
@@ -129,16 +120,18 @@
 			</a>
 			<ul class="pagination-list">
 				<li v-for="(page, index) in paginationRange" :key="index">
-					<span v-if="page === '...'" class="pagination-ellipsis">&hellip;</span>
+					<span v-if="page === '...'" class="pagination-ellipsis"
+						>&hellip;</span
+					>
 					<a
 						v-else
 						class="pagination-link"
 						:class="{'is-current': page === currentPage}"
 						:aria-label="`ページ ${page}`"
-						:aria-current="page === currentPage ? 'page' : null"
+						:aria-current="page === currentPage ? 'page' : undefined"
 						@click="() => changePage(page)"
 					>
-						{{page}}
+						{{ page }}
 					</a>
 				</li>
 			</ul>
@@ -146,175 +139,167 @@
 	</div>
 </template>
 
-<script>
+<script setup lang="ts">
 import dayjs from 'dayjs';
-import get from 'lodash/get';
-import sortBy from 'lodash/sortBy';
-import {mapActions, mapGetters, mapState} from 'vuex';
+import sortBy from 'lodash/sortBy.js';
+import {computed, onMounted, ref, watch} from 'vue';
+import type {TopicMessage} from '@/types/store.js';
+import {useStore} from '~/plugins/vuex.js';
+
+useHead({title: 'sandboxのトピックログ - achievement-viewer'});
 
 const ITEMS_PER_PAGE = 100;
 
-export default {
-	data() {
-		return {
-			isLoading: true,
-			sortBy: 'timestamp',
-			currentPage: 1,
-			searchQuery: '',
-		};
-	},
-	async fetch({store}) {
-		if (!process.browser) {
-			await store.dispatch('slackInfos/initUsers');
-			await store.dispatch('slackInfos/initTopicMessages');
-		}
-	},
-	head() {
-		return {
-			title: 'sandboxのトピックログ - achievement-viewer',
-		};
-	},
-	computed: {
-		...mapState({
-			topicMessages: (state) => (
-				state.slackInfos.topicMessages.filter(({message}) => (
-					message?.reactions?.some(({name, count}) => name === 'koresuki' && count >= 3)
-				))
-			),
-		}),
-		...mapGetters('slackInfos', ['getUser']),
-		filteredTopics() {
-			if (!this.searchQuery.trim()) {
-				return this.topicMessages;
-			}
-			const query = this.searchQuery.toLowerCase().normalize('NFKC');
-			return this.topicMessages.filter(({message}) => {
-				const text = (message.text?.toLowerCase() || '').normalize('NFKC');
-				const username = this.getUserName(message).toLowerCase().normalize('NFKC');
-				return text.includes(query) || username.includes(query);
-			});
-		},
-		sortedTopics() {
-			let sorted;
-			if (this.sortBy === 'timestamp') {
-				sorted = sortBy(this.filteredTopics, ({message}) => message.ts).reverse();
-			} else if (this.sortBy === 'username') {
-				sorted = sortBy(this.filteredTopics, [
-					({message}) => this.getUserName(message),
-					({message}) => -parseFloat(message.ts),
-				]);
-			} else if (this.sortBy === 'likes') {
-				sorted = sortBy(this.filteredTopics, [
-					({likes}) => -likes.length,
-					({message}) => -parseFloat(message.ts),
-				]);
-			} else if (this.sortBy === 'random') {
-				sorted = sortBy(this.filteredTopics, [
-					({randomSortKey}) => randomSortKey,
-				]);
-			} else {
-				sorted = this.filteredTopics;
-			}
-			return sorted;
-		},
-		totalPages() {
-			return Math.ceil(this.sortedTopics.length / ITEMS_PER_PAGE);
-		},
-		paginatedTopics() {
-			const start = (this.currentPage - 1) * ITEMS_PER_PAGE;
-			const end = start + ITEMS_PER_PAGE;
-			return this.sortedTopics.slice(start, end);
-		},
-		paginationRange() {
-			const range = [];
-			const total = this.totalPages;
-			const current = this.currentPage;
-			const delta = 2;
+const store = useStore();
+const isLoading = ref(true);
+const sortByValue = ref('timestamp');
+const currentPage = ref(1);
+const searchQuery = ref('');
 
-			for (let i = Math.max(2, current - delta); i <= Math.min(total - 1, current + delta); i++) {
-				range.push(i);
-			}
+const getUser = computed(() => store.getters['slackInfos/getUser']);
 
-			if (current - delta > 2) {
-				range.unshift('...');
-			}
-			if (current + delta < total - 1) {
-				range.push('...');
-			}
+const topicMessages = computed(() =>
+	store.state.slackInfos.topicMessages.filter(({message}) =>
+		message?.reactions?.some(
+			({name, count}) => name === 'koresuki' && count >= 3,
+		),
+	),
+);
 
-			range.unshift(1);
-			if (total > 1) {
-				range.push(total);
-			}
+const filteredTopics = computed(() => {
+	if (!searchQuery.value.trim()) {
+		return topicMessages.value;
+	}
+	const q = searchQuery.value.toLowerCase().normalize('NFKC');
+	return topicMessages.value.filter(({message}) => {
+		const text = (message.text?.toLowerCase() ?? '').normalize('NFKC');
+		const username = getUserName(message).toLowerCase().normalize('NFKC');
+		return text.includes(q) || username.includes(q);
+	});
+});
 
-			return range;
-		},
-	},
-	watch: {
-		sortBy() {
-			this.currentPage = 1;
-		},
-		searchQuery() {
-			this.currentPage = 1;
-		},
-	},
-	mounted() {
-		Promise.all([
-			this.$store.dispatch('slackInfos/initUsers'),
-			this.$store.dispatch('slackInfos/initTopicMessages'),
-		]).then(() => {
-			this.isLoading = false;
-		});
-	},
-	methods: {
-		changePage(page) {
-			if (page >= 1 && page <= this.totalPages) {
-				this.currentPage = page;
-				window.scrollTo({top: 0, behavior: 'smooth'});
-			}
-		},
-		...mapActions({
-			likeTopicMessage: 'slackInfos/likeTopicMessage',
-			unlikeTopicMessage: 'slackInfos/unlikeTopicMessage',
-		}),
-		toggleTopicMessageLike(message, isLiked) {
-			if (isLiked) {
-				this.unlikeTopicMessage({ts: message.ts});
-			} else {
-				this.likeTopicMessage({ts: message.ts});
-			}
-		},
-		getUserName(message) {
-			if (message.username) {
-				return message.username;
-			}
-			if (message.user && message.user.startsWith('U')) {
-				const user = this.getUser(message.user);
-				const name =
-					get(user, ['profile', 'display_name'], false) ||
-					get(user, ['real_name'], false) ||
-					'匿名ユーザー';
-				return `@${name}`;
-			}
-			return '@匿名ユーザー';
-		},
-		getUserIcon(message) {
-			if (message?.icons?.image_48) {
-				return message.icons.image_48;
-			}
-			if (message.user && message.user.startsWith('U')) {
-				const user = this.getUser(message.user);
-				return get(user, ['profile', 'image_24'], '/images/anonymous-icon_24.png');
-			}
-			return '/images/anonymous-icon_24.png';
-		},
-		getTime(ts) {
-			const timestamp = parseFloat(ts);
-			const date = dayjs(timestamp * 1000);
-			return date.format('YYYY/MM/DD');
-		},
-	},
-};
+const sortedTopics = computed(() => {
+	if (sortByValue.value === 'timestamp') {
+		return sortBy(filteredTopics.value, ({message}) => message.ts).reverse();
+	}
+	if (sortByValue.value === 'username') {
+		return sortBy(filteredTopics.value, [
+			({message}) => getUserName(message),
+			({message}) => -Number.parseFloat(message.ts),
+		]);
+	}
+	if (sortByValue.value === 'likes') {
+		return sortBy(filteredTopics.value, [
+			({likes}) => -likes.length,
+			({message}) => -Number.parseFloat(message.ts),
+		]);
+	}
+	if (sortByValue.value === 'random') {
+		return sortBy(filteredTopics.value, [({randomSortKey}) => randomSortKey]);
+	}
+	return filteredTopics.value;
+});
+
+const totalPages = computed(() =>
+	Math.ceil(sortedTopics.value.length / ITEMS_PER_PAGE),
+);
+
+const paginatedTopics = computed(() => {
+	const start = (currentPage.value - 1) * ITEMS_PER_PAGE;
+	return sortedTopics.value.slice(start, start + ITEMS_PER_PAGE);
+});
+
+const paginationRange = computed(() => {
+	const range: Array<number | '...'> = [];
+	const total = totalPages.value;
+	const current = currentPage.value;
+	const delta = 2;
+
+	for (
+		let i = Math.max(2, current - delta);
+		i <= Math.min(total - 1, current + delta);
+		i++
+	) {
+		range.push(i);
+	}
+
+	if (current - delta > 2) {
+		range.unshift('...');
+	}
+	if (current + delta < total - 1) {
+		range.push('...');
+	}
+
+	range.unshift(1);
+	if (total > 1) {
+		range.push(total);
+	}
+
+	return range;
+});
+
+watch(sortByValue, () => {
+	currentPage.value = 1;
+});
+
+watch(searchQuery, () => {
+	currentPage.value = 1;
+});
+
+function changePage(page: number) {
+	if (page >= 1 && page <= totalPages.value) {
+		currentPage.value = page;
+		window.scrollTo({top: 0, behavior: 'smooth'});
+	}
+}
+
+function toggleTopicMessageLike(
+	message: TopicMessage['message'],
+	isLiked: boolean | undefined,
+) {
+	if (isLiked) {
+		store.dispatch('slackInfos/unlikeTopicMessage', {ts: message.ts});
+	} else {
+		store.dispatch('slackInfos/likeTopicMessage', {ts: message.ts});
+	}
+}
+
+function getUserName(message: TopicMessage['message']) {
+	if (message.username) {
+		return message.username;
+	}
+	if (message.user?.startsWith('U')) {
+		const user = getUser.value(message.user);
+		const name =
+			user?.profile?.display_name || user?.real_name || '匿名ユーザー';
+		return `@${name}`;
+	}
+	return '@匿名ユーザー';
+}
+
+function getUserIcon(message: TopicMessage['message']) {
+	if (message?.icons?.image_48) {
+		return message.icons.image_48;
+	}
+	if (message.user?.startsWith('U')) {
+		const user = getUser.value(message.user);
+		return user?.profile?.image_24 ?? '/images/anonymous-icon_24.png';
+	}
+	return '/images/anonymous-icon_24.png';
+}
+
+function getTime(ts: string) {
+	const timestamp = Number.parseFloat(ts);
+	return dayjs(timestamp * 1000).format('YYYY/MM/DD');
+}
+
+onMounted(async () => {
+	await Promise.all([
+		store.dispatch('slackInfos/initUsers'),
+		store.dispatch('slackInfos/initTopicMessages'),
+	]);
+	isLoading.value = false;
+});
 </script>
 
 <style>
@@ -324,7 +309,8 @@ export default {
 	}
 }
 
-.topics.table td, .topics.table th {
+.topics.table td,
+.topics.table th {
 	padding-left: 0.25em;
 	padding-right: 0.25em;
 }
@@ -374,4 +360,3 @@ export default {
 	margin-bottom: 1.5rem;
 }
 </style>
-

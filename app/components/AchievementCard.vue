@@ -1,13 +1,20 @@
 <template>
-	<nuxt-link class="card" :to="`/achievements/${achievement.id}`" :style="{display: 'block'}">
+	<nuxt-link
+		class="card"
+		:to="`/achievements/${achievement.id}`"
+		:style="{display: 'block'}"
+	>
 		<div class="card-image">
-			<div class="image achievements-color" :style="{backgroundColor: getCategoryColor(achievement.category)}"/>
+			<div
+				class="image achievements-color"
+				:style="{backgroundColor: getCategoryColor(achievement.category)}"
+			/>
 		</div>
 		<div class="card-content">
 			<div class="content">
 				<p class="title">
-					{{achievement.title}}
-					<DifficultyBadge :difficulty="achievement.difficulty"/>
+					{{ achievement.title }}
+					<DifficultyBadge :difficulty="achievement.difficulty" />
 				</p>
 				<div class="columns">
 					<div class="column achievements-progress">
@@ -18,26 +25,25 @@
 						/>
 					</div>
 					<div class="column is-narrow">
-						<p class="subtitle is-6 achievements-count"><strong>{{achievement.count || 0}}人</strong>が<wbr>解除済み</p>
+						<p class="subtitle is-6 achievements-count">
+							<strong>{{ achievement.count || 0 }}人</strong>が<wbr>解除済み
+						</p>
 					</div>
 				</div>
-				<p>{{achievement.condition}}</p>
+				<p>{{ achievement.condition }}</p>
 			</div>
 		</div>
 	</nuxt-link>
 </template>
 
-<script>
+<script setup lang="ts">
 import {getCategoryColor} from '@/lib/utils.js';
+import type {AchievementData} from '@/types/store.js';
 
-export default {
-	props: ['achievement', 'countMax'],
-	methods: {
-		getCategoryColor(category) {
-			return getCategoryColor(category);
-		},
-	},
-};
+defineProps<{
+	achievement: AchievementData;
+	countMax: number;
+}>();
 </script>
 
 <style>

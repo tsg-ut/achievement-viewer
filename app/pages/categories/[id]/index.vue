@@ -1,55 +1,59 @@
 <template>
 	<div class="container">
-		<progress v-if="isLoading" class="progress is-small is-primary" max="100"/>
+		<progress v-if="isLoading" class="progress is-small is-primary" max="100" />
 		<p class="title">
-			カテゴリ <span class="category-tag tag is-large" :style="{backgroundColor: categoryColor}">{{$route.params.id}}</span> の実績一覧
+			カテゴリ
+			<span
+				class="category-tag tag is-large"
+				:style="{backgroundColor: categoryColor}"
+				>{{ route.params.id }}</span
+			>
+			の実績一覧
 		</p>
 		<div class="columns is-multiline">
-			<div v-for="achievement in achievements" :key="achievement.id" class="column is-half">
+			<div
+				v-for="achievement in achievements"
+				:key="achievement.id"
+				class="column is-half"
+			>
 				<AchievementCard
 					:achievement="achievement"
-					:count-max="achievements[0].count"
+					:count-max="achievements[0]!.count ?? 0"
 				/>
 			</div>
 		</div>
 	</div>
 </template>
 
-<script>
+<script setup lang="ts">
+import {computed, onMounted, ref} from 'vue';
+import {useRoute} from 'vue-router';
 import {getCategoryColor} from '@/lib/utils.js';
+import {useStore} from '~/plugins/vuex.js';
 
-export default {
-	data() {
-		return {
-			isLoading: true,
-		};
-	},
-	async fetch({store}) {
-		if (!process.browser) {
-			await store.dispatch('achievementsData/bindList');
-		}
-	},
-	head() {
-		return {
-			title: `実績カテゴリ「${this.$route.params.id}」 - achievement-viewer`,
-		};
-	},
-	computed: {
-		achievements() {
-			return this.$store.getters['achievementData/getByCategory'](this.$route.params.id);
-		},
-		categoryColor() {
-			return getCategoryColor(this.$route.params.id);
-		},
-	},
-	mounted() {
-		Promise.all([
-			this.$store.dispatch('achievementData/initList'),
-			this.$store.dispatch('users/initList'),
-		]).then(() => {
-			this.isLoading = false;
-		});
-	},
-};
+const route = useRoute();
+const store = useStore();
+const isLoading = ref(true);
+
+const categoryId = computed(() =>
+	Array.isArray(route.params.id) ? route.params.id[0] : route.params.id,
+);
+
+useHead(() => ({
+	title: `実績カテゴリ「${categoryId.value}」 - achievement-viewer`,
+}));
+
+const achievements = computed(() =>
+	store.getters['achievementData/getByCategory'](categoryId.value),
+);
+
+const categoryColor = computed(() => getCategoryColor(categoryId.value));
+
+onMounted(async () => {
+	await Promise.all([
+		store.dispatch('achievementData/initList'),
+		store.dispatch('users/initList'),
+	]);
+	isLoading.value = false;
+});
 </script>
-

@@ -1,0 +1,70 @@
+{
+	"$schema": "https://biomejs.dev/schemas/2.5.1/schema.json",
+	"assist": { "actions": { "source": { "organizeImports": "on" } } },
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"style": {
+				"noDefaultExport": "off",
+				"noParameterAssign": "error",
+				"useAsConstAssertion": "error",
+				"useDefaultParameterLast": "error",
+				"useEnumInitializers": "error",
+				"useSelfClosingElements": "error",
+				"useSingleVarDeclarator": "error",
+				"noUnusedTemplateLiteral": "error",
+				"useNumberNamespace": "error",
+				"noInferrableTypes": "error",
+				"noUselessElse": "error",
+				"noNonNullAssertion": "off"
+			},
+			"correctness": {
+				"noNodejsModules": "off",
+				"noUnusedImports": "off",
+				"noUnusedVariables": "off"
+			},
+			"suspicious": {
+				"noAssignInExpressions": "off"
+			},
+			"complexity": {
+				"useLiteralKeys": "off",
+				"noBannedTypes": "off"
+			},
+			"a11y": {
+				"useValidAnchor": "off",
+				"noStaticElementInteractions": "off",
+				"useKeyWithClickEvents": "off",
+				"useAltText": "off",
+				"useSemanticElements": "off"
+			}
+		}
+	},
+	"files": {
+		"includes": [
+			"**",
+			"!**/node_modules",
+			"!**/.nuxt",
+			"!**/.output",
+			"!**/dist",
+			"!**/.cache",
+			"!**/playwright-report"
+		]
+	},
+	"javascript": {
+		"formatter": {
+			"bracketSpacing": false,
+			"quoteStyle": "single"
+		}
+	},
+	"css": {
+		"formatter": {
+			"quoteStyle": "single"
+		}
+	},
+	"html": {
+		"formatter": {
+			"enabled": true
+		},
+		"experimentalFullSupportEnabled": true
+	}
+}

@@ -15,10 +15,22 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
+
+      - name: Upgrade npm
+        run: npm install -g npm@11.6.0
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Run Biome lint
+        run: npm run lint
+
+      - name: Nuxt prepare
+        run: npx nuxt prepare
+
+      - name: Run type check
+        run: npm run typecheck
 
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
@@ -46,7 +58,10 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
+
+      - name: Upgrade npm
+        run: npm install -g npm@11.6.0
 
       - name: Install dependencies
         run: npm ci

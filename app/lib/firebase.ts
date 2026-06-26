@@ -1,10 +1,7 @@
-// TODO: Use v9 API
-// https://firebase.google.com/docs/web/modular-upgrade?hl=en
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/firestore';
+import {getApps, initializeApp} from 'firebase/app';
 
-if (firebase.apps.length === 0) {
-	firebase.initializeApp({
+if (getApps().length === 0) {
+	initializeApp({
 		apiKey: 'AIzaSyBiI-MHTxhqNpgJ6FMJaVTN3lcBMmL9cqU',
 		authDomain: 'tsg-slackbot.firebaseapp.com',
 		projectId: 'tsg-slackbot',
@@ -14,5 +11,3 @@ if (firebase.apps.length === 0) {
 		measurementId: 'G-NZD98Q80NG',
 	});
 }
-
-export default firebase.apps[0];

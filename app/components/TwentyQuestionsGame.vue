@@ -1,16 +1,16 @@
 <template>
 	<div :id="game.id" class="TwentyQuestionsGame box">
 		<h2 class="is-size-3 has-text-weight-bold">
-			<a :href="`#${game.id}`">お題: {{game.topic}} ({{game.topicRuby}})</a>
+			<a :href="`#${game.id}`">お題: {{ game.topic }} ({{ game.topicRuby }})</a>
 		</h2>
 
 		<p class="has-text-grey has-text-right is-size-6">
-			{{formattedStartDate}}開始 / {{formattedFinishDate}}終了
+			{{ formattedStartDate }}開始 / {{ formattedFinishDate }}終了
 		</p>
 
 		<div class="players-section">
 			<h3 class="is-size-5 has-text-weight-semibold mb-3">
-				参加者 ({{game.players.length}}人)
+				参加者 ({{ game.players.length }}人)
 			</h3>
 			<div class="table-container">
 				<table class="table is-fullwidth is-striped players-table">
@@ -24,12 +24,11 @@
 						</tr>
 					</thead>
 					<tbody>
-						<!-- eslint-disable-next-line vue/no-v-for-template-key -->
 						<template v-for="player in sortedPlayers" :key="player.userId">
 							<tr>
 								<td>
 									<span v-if="player.score !== null" class="tag is-primary">
-										{{getRank(player)}}位
+										{{ getRank(player) }}位
 									</span>
 									<span v-else class="tag is-light">-</span>
 								</td>
@@ -39,23 +38,25 @@
 										:src="getUserIcon(player.userId)"
 										:srcset="`${getUserIcon(player.userId)} 1x, ${getUserIcon2x(player.userId)} 2x`"
 									>
-									{{getUserName(player.userId)}}
+									{{ getUserName(player.userId) }}
 								</td>
-								<td>{{player.questionCount}}問</td>
+								<td>{{ player.questionCount }}問</td>
 								<td>
 									<span v-if="player.score !== null" class="tag is-success">
-										正解 ({{player.score}}問)
+										正解 ({{ player.score }}問)
 									</span>
 									<span v-else-if="player.questionCount > 0">
 										<span class="tag is-danger">不正解</span>
 										<span v-if="getLastAnswer(player)" class="last-answer">
-											<close-circle-icon class="last-answer-icon" w="20" h="20"/>
-											{{getLastAnswer(player)}}
+											<close-circle-icon
+												class="last-answer-icon"
+												w="20"
+												h="20"
+											/>
+											{{ getLastAnswer(player) }}
 										</span>
 									</span>
-									<span v-else class="tag is-light not-answered">
-										未参加
-									</span>
+									<span v-else class="tag is-light not-answered"> 未参加 </span>
 								</td>
 								<td>
 									<button
@@ -64,15 +65,21 @@
 										class="button is-small"
 										@click="() => togglePlayerLog(player.userId)"
 									>
-										{{expandedPlayers.has(player.userId) ? '履歴を隠す' : '履歴を表示'}}
+										{{ expandedPlayers.has(player.userId) ? '履歴を隠す' : '履歴を表示' }}
 									</button>
 								</td>
 							</tr>
-							<tr v-if="expandedPlayers.has(player.userId) && player.questionCount > 0">
+							<tr
+								v-if="expandedPlayers.has(player.userId) && player.questionCount > 0"
+							>
 								<td colspan="5" class="player-log-cell">
 									<div class="player-log">
 										<div class="questions-list">
-											<div v-for="(question, qIndex) in player.questions" :key="qIndex" class="question-item">
+											<div
+												v-for="(question, qIndex) in player.questions"
+												:key="qIndex"
+												class="question-item"
+											>
 												<span
 													class="question-label"
 													:class="{
@@ -81,15 +88,24 @@
 														'has-text-info': !question.isAnswerAttempt,
 													}"
 												>
-													<span v-if="!question.isAnswerAttempt">Q{{qIndex + 1}}</span>
+													<span v-if="!question.isAnswerAttempt"
+														>Q{{ qIndex + 1 }}</span
+													>
 													<span v-else>A</span>
 												</span>
-												<span class="question-time">{{formatTime(question.timestamp)}}</span>
-												<span class="question-text">{{question.question}}</span>
+												<span class="question-time"
+													>{{ formatTime(question.timestamp) }}</span
+												>
+												<span class="question-text"
+													>{{ question.question }}</span
+												>
 												<span class="question-answer">
 													→
-													<span class="tag answer-tag" :style="getAnswerTagStyle(question.answer)">
-														{{question.answer}}
+													<span
+														class="tag answer-tag"
+														:style="getAnswerTagStyle(question.answer)"
+													>
+														{{ question.answer }}
 													</span>
 												</span>
 											</div>
@@ -104,20 +120,24 @@
 		</div>
 
 		<div class="card game-details mt-4">
-			<header class="card-header" @click="isDetailsPanelShown = !isDetailsPanelShown">
-				<p class="card-header-title">
-					データシートを表示
-				</p>
+			<header
+				class="card-header"
+				@click="isDetailsPanelShown = !isDetailsPanelShown"
+			>
+				<p class="card-header-title">データシートを表示</p>
 				<button type="button" class="card-header-icon">
 					<span class="icon">
-						<arrow-up-icon v-if="isDetailsPanelShown"/>
-						<arrow-down-icon v-else/>
+						<arrow-up-icon v-if="isDetailsPanelShown" />
+						<arrow-down-icon v-else />
 					</span>
 				</button>
 			</header>
 			<div v-if="isDetailsPanelShown" class="card-content">
 				<div class="content">
-					<h4 class="is-size-5 has-text-weight-semibold">{{game.topic}} ({{game.topicRuby}})</h4>
+					<h4 class="is-size-5 has-text-weight-semibold">
+						{{ game.topic }}
+						({{ game.topicRuby }})
+					</h4>
 					<pre class="topic-description">{{game.topicDescription}}</pre>
 				</div>
 			</div>
@@ -125,118 +145,114 @@
 	</div>
 </template>
 
-<script>
+<script setup lang="ts">
 import dayjs from 'dayjs';
-import get from 'lodash/get.js';
+import {computed, ref} from 'vue';
 import ArrowDownIcon from 'vue-ionicons/dist/ios-arrow-down.vue';
 import ArrowUpIcon from 'vue-ionicons/dist/ios-arrow-up.vue';
 import CloseCircleIcon from 'vue-ionicons/dist/ios-close.vue';
-import {mapGetters} from 'vuex';
+import {
+	getUserIcon2x as getUserIcon2xByUser,
+	getUserIcon as getUserIconByUser,
+	getUserName as getUserNameByUser,
+} from '@/lib/utils.js';
+import type {
+	TwentyQuestionsGame,
+	TwentyQuestionsPlayer,
+} from '@/types/store.js';
+import {useStore} from '~/plugins/vuex.js';
 
-export default {
-	components: {
-		ArrowDownIcon,
-		ArrowUpIcon,
-		CloseCircleIcon,
-	},
-	props: {
-		game: {
-			type: Object,
-			required: true,
-		},
-	},
-	data() {
-		return {
-			expandedPlayers: new Set(),
-			isDetailsPanelShown: false,
-		};
-	},
-	computed: {
-		...mapGetters('slackInfos', ['getUser']),
-		formattedStartDate() {
-			return dayjs(this.game.startedAt.toDate()).format('YYYY年M月D日 HH:mm');
-		},
-		formattedFinishDate() {
-			return dayjs(this.game.finishedAt.toDate()).format('YYYY年M月D日 HH:mm');
-		},
-		sortedPlayers() {
-			// Sort by score (ascending, nulls last), then by questionCount (ascending)
-			return [...this.game.players].sort((a, b) => {
-				if (a.score !== null && b.score !== null) {
-					return a.score - b.score;
-				}
-				if (a.score !== null) {
-					return -1;
-				}
-				if (b.score !== null) {
-					return 1;
-				}
-				return b.questionCount - a.questionCount;
-			});
-		},
-	},
-	methods: {
-		getUserName(userId) {
-			const user = this.getUser(userId);
-			const name = get(user, ['profile', 'display_name'], false) || get(user, ['real_name'], false) || '匿名ユーザー';
-			return `@${name}`;
-		},
-		getUserIcon(userId) {
-			const user = this.getUser(userId);
-			return get(user, ['profile', 'image_24'], '/images/anonymous-icon_24.png');
-		},
-		getUserIcon2x(userId) {
-			const user = this.getUser(userId);
-			return get(user, ['profile', 'image_48'], '/images/anonymous-icon_48.png');
-		},
-		formatTime(timestamp) {
-			return dayjs(timestamp).format('HH:mm:ss');
-		},
-		togglePlayerLog(userId) {
-			if (this.expandedPlayers.has(userId)) {
-				this.expandedPlayers.delete(userId);
-			} else {
-				this.expandedPlayers.add(userId);
-			}
-			// Force reactivity
-			this.expandedPlayers = new Set(this.expandedPlayers);
-		},
-		getRank(player) {
-			const correctPlayers = this.sortedPlayers.filter((p) => p.score !== null);
-			return correctPlayers.findIndex((p) => p.userId === player.userId) + 1;
-		},
-		getLastAnswer(player) {
-			if (!player.questions || player.questions.length === 0) {
-				return '';
-			}
-			// isAnswerAttemptがtrueのものだけを抽出
-			const answerAttempts = player.questions.filter((q) => q.isAnswerAttempt);
-			if (answerAttempts.length === 0) {
-				return '';
-			}
-			// 最後の回答を取得
-			const lastAnswer = answerAttempts[answerAttempts.length - 1];
-			const question = lastAnswer.question || '';
-			// 先頭の「答え: 」を除去
-			return question.replace(/^答え:\s*/, '');
-		},
-		getAnswerTagStyle(answer) {
-			// Map different answers to custom colors
-			const answerColorMap = {
-				はい: {backgroundColor: '#48c774', color: '#fff'},
-				いいえ: {backgroundColor: '#f14668', color: '#fff'},
-				どちらかと言えばはい: {backgroundColor: '#a3e5b6', color: '#000'},
-				どちらかと言えばいいえ: {backgroundColor: '#f9a7b8', color: '#000'},
-				どちらともいえない: {backgroundColor: '#ffe08a', color: '#000'},
-				わかりません: {backgroundColor: '#3e8ed0', color: '#fff'},
-				答えられません: {backgroundColor: '#363636', color: '#fff'},
-				'正解！': {backgroundColor: '#00aa17', color: '#fff'},
-				不正解: {backgroundColor: '#ca0000', color: '#fff'},
-			};
-			return answerColorMap[answer] || {backgroundColor: '#f5f5f5', color: '#000'};
-		},
-	},
-};
+const props = defineProps<{
+	game: TwentyQuestionsGame;
+}>();
+
+const store = useStore();
+const expandedPlayers = ref(new Set<string>());
+const isDetailsPanelShown = ref(false);
+
+const getUser = computed(() => store.getters['slackInfos/getUser']);
+
+const formattedStartDate = computed(() =>
+	dayjs(props.game.startedAt.toDate()).format('YYYY年M月D日 HH:mm'),
+);
+const formattedFinishDate = computed(() =>
+	dayjs(props.game.finishedAt.toDate()).format('YYYY年M月D日 HH:mm'),
+);
+
+const sortedPlayers = computed(() =>
+	[...props.game.players].sort((a, b) => {
+		if (a.score !== null && b.score !== null) {
+			return a.score - b.score;
+		}
+		if (a.score !== null) {
+			return -1;
+		}
+		if (b.score !== null) {
+			return 1;
+		}
+		return b.questionCount - a.questionCount;
+	}),
+);
+
+function getUserName(userId: string) {
+	return getUserNameByUser(getUser.value(userId));
+}
+
+function getUserIcon(userId: string) {
+	return getUserIconByUser(getUser.value(userId));
+}
+
+function getUserIcon2x(userId: string) {
+	return getUserIcon2xByUser(getUser.value(userId));
+}
+
+function formatTime(timestamp: number) {
+	return dayjs(timestamp).format('HH:mm:ss');
+}
+
+function togglePlayerLog(userId: string) {
+	if (expandedPlayers.value.has(userId)) {
+		expandedPlayers.value.delete(userId);
+	} else {
+		expandedPlayers.value.add(userId);
+	}
+	expandedPlayers.value = new Set(expandedPlayers.value);
+}
+
+function getRank(player: TwentyQuestionsPlayer) {
+	const correctPlayers = sortedPlayers.value.filter((p) => p.score !== null);
+	return correctPlayers.findIndex((p) => p.userId === player.userId) + 1;
+}
+
+function getLastAnswer(player: TwentyQuestionsPlayer) {
+	if (!player.questions || player.questions.length === 0) {
+		return '';
+	}
+	const answerAttempts = player.questions.filter((q) => q.isAnswerAttempt);
+	if (answerAttempts.length === 0) {
+		return '';
+	}
+	const lastAnswer = answerAttempts[answerAttempts.length - 1];
+	const question = lastAnswer?.question ?? '';
+	return question.replace(/^答え:\s*/, '');
+}
+
+const answerColorMap: Record<string, {backgroundColor: string; color: string}> =
+	{
+		はい: {backgroundColor: '#48c774', color: '#fff'},
+		いいえ: {backgroundColor: '#f14668', color: '#fff'},
+		どちらかと言えばはい: {backgroundColor: '#a3e5b6', color: '#000'},
+		どちらかと言えばいいえ: {backgroundColor: '#f9a7b8', color: '#000'},
+		どちらともいえない: {backgroundColor: '#ffe08a', color: '#000'},
+		わかりません: {backgroundColor: '#3e8ed0', color: '#fff'},
+		答えられません: {backgroundColor: '#363636', color: '#fff'},
+		'正解！': {backgroundColor: '#00aa17', color: '#fff'},
+		不正解: {backgroundColor: '#ca0000', color: '#fff'},
+	};
+
+function getAnswerTagStyle(answer: string) {
+	return answerColorMap[answer] ?? {backgroundColor: '#f5f5f5', color: '#000'};
+}
 </script>
 
 <style scoped>
@@ -283,7 +299,7 @@ export default {
 }
 
 .TwentyQuestionsGame .player-log-cell {
-	padding: 0 !important;
+	padding: 0;
 }
 
 .TwentyQuestionsGame .player-log {
@@ -350,6 +366,7 @@ export default {
 	flex-shrink: 0;
 }
 
+/* biome-ignore lint/correctness/noUnknownPseudoClass: Vue 3 SFC scoped style pseudo-class */
 .TwentyQuestionsGame .last-answer-icon :deep(svg) {
 	display: block;
 	fill: #ff3860;

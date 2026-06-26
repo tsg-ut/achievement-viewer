@@ -11,7 +11,11 @@ export default defineNuxtConfig({
 				{name: 'description', content: 'TSGerが集めた実績を見られるページ'},
 			],
 			link: [
-				{rel: 'icon', type: 'image/png', href: 'https://img.icons8.com/flat_round/512/trophy'},
+				{
+					rel: 'icon',
+					type: 'image/png',
+					href: 'https://img.icons8.com/flat_round/512/trophy',
+				},
 			],
 			htmlAttrs: {
 				lang: 'ja',

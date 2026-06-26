@@ -1,7 +1,9 @@
 <template>
 	<div class="container content">
-		<progress v-if="isLoading" class="progress is-small is-primary" max="100">15%</progress>
-		<unauthorized-notification/>
+		<progress v-if="isLoading" class="progress is-small is-primary" max="100">
+			15%
+		</progress>
+		<unauthorized-notification />
 
 		<h2>最近のアクティビティ</h2>
 		<table class="table">
@@ -12,17 +14,26 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr v-for="achievement in latestAchievements" :key="achievement.date.toString()">
-					<td>{{getDateStringJa(achievement.date)}}</td>
+				<tr
+					v-for="achievement in latestAchievements"
+					:key="achievement.date.toString()"
+				>
+					<td>{{ getDateStringJa(achievement.date) }}</td>
 					<td>
 						<nuxt-link :to="`/users/${achievement.user}`">
-							<img class="index-icon" :src="getUserIcon(getUser(achievement.user))" :srcset="`${getUserIcon(getUser(achievement.user))} 1x, ${getUserIcon2x(getUser(achievement.user))} 2x`">
-							{{getUserName(getUser(achievement.user))}}
+							<img
+								class="index-icon"
+								:src="getUserIcon(getUser(achievement.user))"
+								:srcset="`${getUserIcon(getUser(achievement.user))} 1x, ${getUserIcon2x(getUser(achievement.user))} 2x`"
+							>
+							{{ getUserName(getUser(achievement.user)) }}
 						</nuxt-link>
 						が
 						<nuxt-link :to="`/achievements/${achievement.name}`">
-							<strong>{{getAchievement(achievement.name).title}}</strong>
-							<DifficultyBadge :difficulty="getAchievement(achievement.name).difficulty"/>
+							<strong>{{ getAchievement(achievement.name).title }}</strong>
+							<DifficultyBadge
+								:difficulty="getAchievement(achievement.name).difficulty"
+							/>
 						</nuxt-link>
 						を解除しました。
 					</td>
@@ -32,13 +43,13 @@
 		<h2>統計情報</h2>
 		<div class="columns is-multiline block">
 			<div class="column is-half">
-				<PieChartStat id="doughnut-chart" :chart-data="statsByDifficulty"/>
+				<PieChartStat id="doughnut-chart" :chart-data="statsByDifficulty" />
 			</div>
 			<div class="column is-half">
-				<PieChartStat :chart-data="statsByCategory"/>
+				<PieChartStat :chart-data="statsByCategory" />
 			</div>
 			<div class="column is-full">
-				<TimeSeriesStat :chart-data="statsByMonth"/>
+				<TimeSeriesStat :chart-data="statsByMonth" />
 			</div>
 		</div>
 		<h2>ユーザー一覧</h2>
@@ -52,8 +63,12 @@
 				<tr v-for="user in users" :key="user.id">
 					<td>
 						<nuxt-link :to="`/users/${user.id}`">
-							<img class="index-icon" :src="getUserIcon(getUser(user.id))" :srcset="`${getUserIcon(getUser(user.id))} 1x, ${getUserIcon2x(getUser(user.id))} 2x`">
-							{{getUserName(getUser(user.id))}}
+							<img
+								class="index-icon"
+								:src="getUserIcon(getUser(user.id))"
+								:srcset="`${getUserIcon(getUser(user.id))} 1x, ${getUserIcon2x(getUser(user.id))} 2x`"
+							>
+							{{ getUserName(getUser(user.id)) }}
 						</nuxt-link>
 					</td>
 				</tr>
@@ -62,122 +77,118 @@
 	</div>
 </template>
 
-<script>
-import get from 'lodash/get.js';
-import {mapGetters, mapState} from 'vuex';
+<script setup lang="ts">
+import {computed, onMounted, ref} from 'vue';
+import {
+	getCategoryColor,
+	getUserIcon,
+	getUserIcon2x,
+	getUserName,
+} from '@/lib/utils.js';
+import type {AchievementData, SlackUser} from '@/types/store.js';
+import {useStore} from '~/plugins/vuex.js';
 
-import UnauthorizedNotification from '../components/UnauthorizedNotification.vue';
-import {getCategoryColor} from '@/lib/utils.js';
+useHead({title: 'achievement-viewer'});
 
-export default {
-	components: {UnauthorizedNotification},
-	data() {
-		return {
-			online: true,
-			isLoading: true,
-			datacollection: null,
-		};
-	},
-	async fetch({store}) {
-		if (!process.browser) {
-			await store.dispatch('users/bindList');
-			await store.dispatch('slackInfos/initUsers');
-			await store.dispatch('achievements/bindLatestAchievements');
-			await store.dispatch('achievementsData/bindList');
-			await store.dispatch('achievementStatsByDifficulty/bindList');
-			await store.dispatch('achievementStatsByCategory/bindList');
-			await store.dispatch('achievementStatsByMonth/bindList');
+const store = useStore();
+const isLoading = ref(true);
+
+const users = computed(() => store.state.users.list);
+const achievementData = computed(() => store.state.achievementData.list);
+const achievementStatsByDifficulty = computed(
+	() => store.state.achievementStatsByDifficulty.list,
+);
+const achievementStatsByCategory = computed(
+	() => store.state.achievementStatsByCategory.list,
+);
+const achievementStatsByMonth = computed(
+	() => store.state.achievementStatsByMonth.list,
+);
+const latestAchievements = computed(
+	() => store.state.achievements.latestAchievements,
+);
+const getUser = computed(() => store.getters['slackInfos/getUser']);
+
+const statsByDifficulty = computed(() => {
+	const labels = ['baby', 'easy', 'medium', 'hard', 'professional'];
+	return {
+		datasets: [
+			{
+				data: labels.map((label) => {
+					const stat = achievementStatsByDifficulty.value.find(
+						(s) => s.id === label,
+					);
+					return stat ? stat.count : 0;
+				}),
+				backgroundColor: [
+					'whitesmoke',
+					'#48c774',
+					'#3273dc',
+					'#ffdd57',
+					'#f14668',
+				],
+			},
+		],
+		labels,
+	};
+});
+
+const statsByCategory = computed(() => ({
+	datasets: [
+		{
+			data: achievementStatsByCategory.value.map((stat) => stat.count),
+			backgroundColor: achievementStatsByCategory.value.map((stat) =>
+				getCategoryColor(stat.id),
+			),
+		},
+	],
+	labels: achievementStatsByCategory.value.map((stat) => stat.id),
+}));
+
+const statsByMonth = computed(() => ({
+	datasets: [
+		{
+			label: '実績解除数',
+			data: achievementStatsByMonth.value.map((stat) => stat.count),
+			backgroundColor: '#3273dc',
+		},
+	],
+	labels: achievementStatsByMonth.value.map((stat) => stat.id),
+}));
+
+function getAchievement(id: string): AchievementData {
+	return (
+		achievementData.value.find((datum) => datum.id === id) ?? {
+			id,
+			title: '---',
+			difficulty: 'baby',
+			condition: '',
+			category: '',
+			counter: null,
+			value: 0,
 		}
-	},
-	head() {
-		return {
-			title: 'achievement-viewer',
-		};
-	},
-	computed: {
-		...mapState({
-			users: (state) => state.users.list,
-			achievementData: (state) => state.achievementData.list,
-			achievementStatsByDifficulty: (state) => state.achievementStatsByDifficulty.list,
-			achievementStatsByCategory: (state) => state.achievementStatsByCategory.list,
-			achievementStatsByMonth: (state) => state.achievementStatsByMonth.list,
-			latestAchievements: (state) => state.achievements.latestAchievements,
-		}),
-		...mapGetters('slackInfos', ['getUser']),
-		statsByDifficulty() {
-			const labels = ['baby', 'easy', 'medium', 'hard', 'professional'];
-			return {
-				datasets: [{
-					data: labels.map((label) => {
-						const stat = this.achievementStatsByDifficulty.find((s) => s.id === label);
-						if (stat) {
-							return stat.count;
-						}
-						return 0;
-					}),
-					backgroundColor: ['whitesmoke', '#48c774', '#3273dc', '#ffdd57', '#f14668'],
-				}],
-				labels,
-			};
-		},
-		statsByCategory() {
-			return {
-				datasets: [{
-					data: this.achievementStatsByCategory.map((stat) => stat.count),
-					backgroundColor: this.achievementStatsByCategory.map((stat) => getCategoryColor(stat.id)),
-				}],
-				labels: this.achievementStatsByCategory.map((stat) => stat.id),
-			};
-		},
-		statsByMonth() {
-			return {
-				datasets: [{
-					label: '実績解除数',
-					data: this.achievementStatsByMonth.map((stat) => stat.count),
-					backgroundColor: '#3273dc',
-				}],
-				labels: this.achievementStatsByMonth.map((stat) => stat.id),
-			};
-		},
-	},
-	mounted() {
-		Promise.all([
-			this.$store.dispatch('users/initList'),
-			this.$store.dispatch('slackInfos/initUsers'),
-			this.$store.dispatch('achievements/initLatestAchievements'),
-			this.$store.dispatch('achievementData/initList'),
-			this.$store.dispatch('achievementStatsByDifficulty/initList'),
-			this.$store.dispatch('achievementStatsByCategory/initList'),
-			this.$store.dispatch('achievementStatsByMonth/initList'),
-		]).then(() => {
-			this.isLoading = false;
-		});
-	},
-	methods: {
-		getUserName(user) {
-			const name = get(user, ['profile', 'display_name'], false) || get(user, ['real_name'], false) || '匿名ユーザー';
-			return `@${name}`;
-		},
-		getUserIcon(user) {
-			return get(user, ['profile', 'image_24'], '/images/anonymous-icon_24.png');
-		},
-		getUserIcon2x(user) {
-			return get(user, ['profile', 'image_48'], '/images/anonymous-icon_48.png');
-		},
-		getCategoryColor(category) {
-			return getCategoryColor(category);
-		},
-		getAchievement(id) {
-			return this.achievementData.find((achievementDatum) => achievementDatum.id === id) || {title: '---', difficulty: 'baby'};
-		},
-		getDateStringJa(date) {
-			const d = new Date(date.seconds * 1000);
-			const h = d.getHours().toString().padStart(2, '0');
-			const m = d.getMinutes().toString().padStart(2, '0');
-			return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日 ${h}:${m}`;
-		},
-	},
-};
+	);
+}
+
+function getDateStringJa(date: {seconds: number}) {
+	const d = new Date(date.seconds * 1000);
+	const h = d.getHours().toString().padStart(2, '0');
+	const m = d.getMinutes().toString().padStart(2, '0');
+	return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日 ${h}:${m}`;
+}
+
+onMounted(async () => {
+	await Promise.all([
+		store.dispatch('users/initList'),
+		store.dispatch('slackInfos/initUsers'),
+		store.dispatch('achievements/initLatestAchievements'),
+		store.dispatch('achievementData/initList'),
+		store.dispatch('achievementStatsByDifficulty/initList'),
+		store.dispatch('achievementStatsByCategory/initList'),
+		store.dispatch('achievementStatsByMonth/initList'),
+	]);
+	isLoading.value = false;
+});
 </script>
 
 <style>

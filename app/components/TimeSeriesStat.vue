@@ -1,33 +1,37 @@
 <template>
-	<bar :data="chartData" :options="chartOptions"/>
+	<bar :data="chartData" :options="chartOptions" />
 </template>
 
-<script>
-import {Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend} from 'chart.js';
+<script setup lang="ts">
+import type {ChartData} from 'chart.js';
+import {
+	BarElement,
+	CategoryScale,
+	Chart as ChartJS,
+	Legend,
+	LinearScale,
+	Title,
+	Tooltip,
+} from 'chart.js';
 import {Bar} from 'vue-chartjs';
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+ChartJS.register(
+	CategoryScale,
+	LinearScale,
+	BarElement,
+	Title,
+	Tooltip,
+	Legend,
+);
 
-export default {
-	name: 'TimeSeriesStat',
-	components: {
-		Bar,
-	},
-	props: {
-		chartData: {
-			type: Object,
-			required: true,
-		},
-	},
-	computed: {
-		chartOptions() {
-			return {
-				responsive: true,
-				maintainAspectRatio: true,
-				aspectRatio: 4,
-			};
-		},
-	},
+defineProps<{
+	chartData: ChartData<'bar'>;
+}>();
+
+const chartOptions = {
+	responsive: true,
+	maintainAspectRatio: true,
+	aspectRatio: 4,
 };
 </script>
 

@@ -1,4 +1,4 @@
-const {test, expect} = require('@playwright/test');
+import {expect, test} from '@playwright/test';
 
 test('has title', async ({page}) => {
 	await page.goto('/');
@@ -8,10 +8,8 @@ test('has title', async ({page}) => {
 test('charts.js canvas is rendered', async ({page}) => {
 	await page.goto('/');
 
-	// Wait for the statistics section to be visible
 	await page.locator('h2:has-text("統計情報")').waitFor({state: 'visible'});
 
-	// Wait for any canvas element to be visible
 	const canvas = page.locator('canvas').first();
 	await canvas.waitFor({state: 'visible', timeout: 10000});
 
@@ -28,15 +26,9 @@ test('table is rendered', async ({page}) => {
 
 	expect(h2).not.toBeNull();
 
-	const tr = page.locator('h2 + table tr').first();
-	await tr.waitFor({state: 'visible'});
-
-	const trCount = await h2.evaluateHandle((el) => (
-		Array.from(
-			el.nextElementSibling
-				.querySelectorAll('tr'),
-		).length
-	));
+	const trCount = await h2.evaluateHandle(
+		(el) => Array.from(el.nextElementSibling!.querySelectorAll('tr')).length,
+	);
 
 	expect(await trCount.jsonValue()).toBeGreaterThan(0);
 });
