@@ -32,6 +32,9 @@
 							<nuxt-link class="navbar-item" to="/records/twenty-questions">
 								20の扉
 							</nuxt-link>
+							<nuxt-link class="navbar-item" to="/records/tahoiya">
+								たほいや
+							</nuxt-link>
 							<nuxt-link class="navbar-item" to="/records/topic">
 								トピック
 							</nuxt-link>
