@@ -17,6 +17,8 @@ import type {SlackInfosState} from '~/store/slackInfos.js';
 import * as slackInfos from '~/store/slackInfos.js';
 import type {SlowQuizGamesState} from '~/store/slowQuizGames.js';
 import * as slowQuizGames from '~/store/slowQuizGames.js';
+import type {TahoiyaGamesState} from '~/store/tahoiyaGames.js';
+import * as tahoiyaGames from '~/store/tahoiyaGames.js';
 import type {TwentyQuestionsGamesState} from '~/store/twentyQuestionsGames.js';
 import * as twentyQuestionsGames from '~/store/twentyQuestionsGames.js';
 import type {UsersState} from '~/store/users.js';
@@ -31,6 +33,7 @@ export interface RootState {
 	achievementStatsByMonth: AchievementStatsByMonthState;
 	slowQuizGames: SlowQuizGamesState;
 	twentyQuestionsGames: TwentyQuestionsGamesState;
+	tahoiyaGames: TahoiyaGamesState;
 	users: UsersState;
 	oneiromancies: OneiromanciesState;
 	slackInfos: SlackInfosState;
@@ -72,6 +75,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 			achievementStatsByMonth: {namespaced: true, ...achievementStatsByMonth},
 			slowQuizGames: {namespaced: true, ...slowQuizGames},
 			twentyQuestionsGames: {namespaced: true, ...twentyQuestionsGames},
+			tahoiyaGames: {namespaced: true, ...tahoiyaGames},
 			users: {namespaced: true, ...users},
 			oneiromancies: {namespaced: true, ...oneiromancies},
 			slackInfos: {namespaced: true, ...slackInfos},

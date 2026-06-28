@@ -101,3 +101,31 @@ export interface TwentyQuestionsGame {
 	finishedAt: {toDate(): Date};
 	players: TwentyQuestionsPlayer[];
 }
+
+export interface TahoiyaGameMeaning {
+	text: string;
+	type: 'correct' | 'user' | 'dummy';
+	user?: string;
+	source?: string;
+	voters: {user: string}[];
+}
+
+export interface TahoiyaGameComment {
+	user: string;
+	text: string;
+	timestamp: number;
+}
+
+export interface TahoiyaGame {
+	id: string;
+	timestamp: number;
+	theme: string;
+	word: string;
+	type: 'dictionary' | 'arbitrary';
+	sourceString: string;
+	url: string;
+	meanings: TahoiyaGameMeaning[];
+	comments: TahoiyaGameComment[];
+	author: string | null;
+	participants: string[];
+}
