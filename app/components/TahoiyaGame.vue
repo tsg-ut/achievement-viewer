@@ -38,10 +38,7 @@
 							<span v-if="meaning.type === 'correct'" class="tag is-success"
 								>正解</span
 							>
-							<span
-								v-else-if="meaning.type === 'user'"
-								class="meaning-user tag is-info"
-							>
+							<span v-else-if="meaning.type === 'user'" class="meaning-user">
 								<img
 									class="meaning-user-icon"
 									:src="getUserIcon(meaning.user ?? '')"
@@ -49,7 +46,7 @@
 								>
 								{{ getUserName(meaning.user ?? '') }}
 							</span>
-							<span v-else class="tag is-light">ダミー</span>
+							<span v-else class="has-text-grey">ダミー</span>
 						</td>
 						<td class="meaning-text">{{ meaning.text }}</td>
 						<td>
@@ -187,8 +184,6 @@ function getUserIcon2x(userId: string) {
 	display: inline-flex;
 	align-items: center;
 	gap: 0.25rem;
-	height: auto;
-	white-space: normal;
 }
 
 .TahoiyaGame .meaning-user-icon {
