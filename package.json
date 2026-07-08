@@ -18,7 +18,7 @@
 		"test": "playwright test"
 	},
 	"dependencies": {
-		"@rolldown/binding-linux-x64-gnu": "^1.1.4",
+		"@rolldown/binding-linux-x64-gnu": "^1.1.5",
 		"bulma": "^1.0.2",
 		"bulma-o-steps": "^1.1.0",
 		"bulma-switch-control": "^1.2.2",
