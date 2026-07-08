@@ -45,7 +45,7 @@
 		"randomcolor": "^0.6.2",
 		"serve": "^14.2.6",
 		"typescript": "^6.0.3",
-		"vue-tsc": "^3.3.6",
+		"vue-tsc": "^3.3.7",
 		"vuex": "^4.1.0"
 	}
 }
