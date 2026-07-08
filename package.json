@@ -35,7 +35,7 @@
 		"vue-ionicons": "^3.0.5"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^2.5.2",
+		"@biomejs/biome": "^2.5.3",
 		"@playwright/test": "^1.61.1",
 		"@types/lodash": "^4.17.24",
 		"@types/node": "^26.1.1",
