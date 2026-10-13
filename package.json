@@ -37,7 +37,7 @@
 	"devDependencies": {
 		"@biomejs/biome": "^2.5.8",
 		"@playwright/test": "^1.64.0",
-		"@types/lodash": "^4.17.25",
+		"@types/lodash": "^4.17.26",
 		"@types/node": "^26.6.5",
 		"@types/randomcolor": "^0.5.9",
 		"firebase": "^13.0.0",
