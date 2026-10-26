@@ -40,7 +40,7 @@
 		"@types/lodash": "^4.17.27",
 		"@types/node": "^26.6.5",
 		"@types/randomcolor": "^0.5.9",
-		"firebase": "^13.0.0",
+		"firebase": "^13.1.0",
 		"nodemon": "^3.1.14",
 		"randomcolor": "^0.6.2",
 		"serve": "^14.2.6",
